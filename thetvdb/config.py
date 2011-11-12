@@ -15,14 +15,16 @@
 # You should have received a copy of the GNU General Public License
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-"""
 
+class config(object):
+    """"""
+    __data = dict()
 
-class tvdb(object):
-    """ """
-    def __init__(self, **kwargs):
+    def __init__(self):
         pass
 
-    def search(self):
+    def __getitem__(self, item):
+        pass
+
+    def __getattribute__(self, item):
         pass
