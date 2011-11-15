@@ -37,29 +37,41 @@ urls = dict(mirrors="http://www.thetvdb.com/api/%(api_key)s/mirrors.xml",
     time="http://www.thetvdb.com/api/Updates.php?type=none",
     languages="http://www.thetvdb.com/api/%(api_key)s/languages.xml",
     search="http://www.thetvdb.com/api/GetSeries.php?seriesname=%(series)s",
-    series="%{mirror}s/api/%(api_key)s/series/%(seriesid)d/all/%(language)s \
-    .zip")
+    series=("%(mirror)s/api/%(api_key)s/series/%(seriesid)s/all/%(language)s.zip"))
 
-class Show(object):
-    """Holds data about a show in thetvdb"""
-    def __init__(self, api):
-        pass
+def parser( xml_data, root = None ):
+    """Converts the raw xml data into an element tree"""
 
-    def __getitem__(self, item):
-        pass
+    try:
+        if type(xml_data) in (str, unicode):
+            tree = etree.fromstring( xml_data )
+        elif type(xml_data) in (bytes):
+            tree = etree.parse(xml_data)
+    except etree.ParseError:
+        raise error.BadData("Invalid XML data passed")
+
+    if root:
+        return tree.find(root)
+    else:
+        return tree
 
 
-class Season(object):
-    def __init__(self, show):
-        self.show = show
+def _parse_xml(etree, element):
+    """
 
-    def __getitem__(self, item):
-        pass
+    :param etree:
+    :param element:
+    :return:
+    """
 
+    logger.debug("Parsing element tree for {0}".format(element))
 
-class Episode(object):
-    def __init__(self, season):
-        self.season = season
+    _list = list()
+    for item in etree.findall( element ):
+        _list.append( { i.tag:i.text for i in item.getchildren() } )
+
+    logger.debug("Found {0} element".format(len(_list)))
+    return _list
 
 class TypeMask(object):
     """An enum like class with the mask flags for the mirrors"""
@@ -75,7 +87,7 @@ class Mirror(object):
 
     def __repr__(self):
         return "<{0} ({1}:{{2}})>".format(
-            self.__class__.name, self.url, self.bit_mask )
+            "Mirror", self.url, self.type_mask )
 
 
 class MirrorList(object):
@@ -89,7 +101,8 @@ class MirrorList(object):
     def get_mirror(self, type_mask):
         try:
             return random.choice(
-                [m for m in self.data if m.type_mask & type_mask == type_mask])
+                [m for m in self.data if
+                 int(m.type_mask) & int(type_mask) ==  int(type_mask)])
         except IndexError:
             raise error.TheTvDBError("No Mirror matching {0} found".
                 format(type_mask))
@@ -118,8 +131,49 @@ class LanguageList(object):
     def __getitem__(self, item):
         return self.data[item]
 
+class Season(object):
+    def __init__(self, show):
+        self.show = show
+
+    def __getitem__(self, item):
+        pass
+
+
+class Episode(object):
+    def __init__(self, season):
+        self.season = season
+
+class Show(object):
+    """Holds data about a show in thetvdb"""
+    def __init__(self, data, api, language):
+        self.api, self.data, self.language = api, data, language
+        self.seasons = dict()
+
+    def __getattr__(self, item):
+        try:
+            return self.data[item]
+        except KeyError:
+            try:
+                return self.__dict__[item]
+            except KeyError:
+                raise AttributeError("Attribute not found")
+
+    def __getitem__(self, item):
+        if not item in self.seasons:
+            context = {'mirror':self.api.mirrors.get_mirror(TypeMask.ZIP).url,
+                       'api_key':self.api.config['api_key'],
+                       'seriesid':self.id,
+                       'language':self.language}
+            
+            data = parser(self.api.loader.load(urls['series'] % context))
+            episodes = [Episode(d) for d in _parse_xml( data, "Episode")]
+            for episode in episodes:
+                print episode
+
+    
 class Search(object):
-    pass
+    def __init__(self, result, search, language):
+        self.result, self.search, self.language = result, search, language
 
 
 class Loader(object):
@@ -131,7 +185,7 @@ class Loader(object):
         header = dict()
         if not cache:
             header['cache-control'] = 'no-cache'
-
+            
         try:
             response, content = self.http.request( url, headers= header )
         except ( httplib2.RelativeURIError, httplib2.ServerNotFoundError ):
@@ -140,35 +194,6 @@ class Loader(object):
         else:
             return content
 
-def parser( xml_data, root = None ):
-    """Converts the raw xml data into an element tree"""
-    try:
-        tree = etree.fromstring( xml_data )
-    except etree.ParseError:
-        raise error.BadData("Invalid XML data passed")
-
-    if root:
-        return tree.find(root)
-    else:
-        return tree
-    
-
-def _parse_xml(etree, element):
-    """
-
-    :param etree:
-    :param element:
-    :return:
-    """
-
-    logger.debug("Parsing element tree for {0}".format(element))
-
-    _list = list()
-    for item in etree.findall( element ):
-        _list.append( { i.tag:i.text for i in item.getchildren() } )
-
-    logger.debug("Found {0} element".format(len(_list)))
-    return _list
 
 class tvdb(object):
     """ """
@@ -206,6 +231,16 @@ class tvdb(object):
         logger.debug("Searching for {0} using language {1}"
             .format(show, language))
 
+        if (show, language) not in self.search_buffer:
+            data = parser(self.loader.load( urls['search']
+                            % {'series': show }, cache ))
+            shows = [Show(d, self, language)
+                     for d in _parse_xml(data, "Series")]
+
+            self.search_buffer[(show, language)] = shows
+
+        return Search(self.search_buffer[(show, language)], show, language)
+
 
 
 
@@ -216,5 +251,9 @@ if __name__ == '__main__':
         logger.setLevel(logging.DEBUG)
         
         t = tvdb( )
-        t.search( "Dexter", "en" )
+        r = t.search( "Dexter", "en" ).result
+        for s in r:
+            print s.id
+        dex = r[0]
+        #print dex[1]
     sys.exit(main())
