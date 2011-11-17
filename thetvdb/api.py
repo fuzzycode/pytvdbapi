@@ -162,8 +162,8 @@ class Season(object):
 
     def __iter__(self):
         return iter(sorted(self.episodes.items(),
-            cmp=lambda lhs, rhs: cmp(lhs[1].EpisodeNumber,
-                                     rhs[1].EpisodeNumber)))
+            cmp=lambda lhs, rhs: cmp(int(lhs[1].EpisodeNumber),
+                                     int(rhs[1].EpisodeNumber))))
 
     def __repr__(self):
         return "<Season {0}>".format( self.season_number )
@@ -195,8 +195,8 @@ class Show(object):
             self._populate_seasons()
 
         return iter(sorted(self.seasons.items(),
-            cmp=lambda lhs, rhs: cmp(lhs[1].season_number,
-                                     rhs[1].season_number)))
+            cmp=lambda lhs, rhs: cmp(int(lhs[1].season_number),
+                                     int(rhs[1].season_number))))
 
 
     def __getitem__(self, item):
@@ -310,14 +310,13 @@ if __name__ == '__main__':
         logger.setLevel(logging.DEBUG)
         
         t = tvdb( )
-        r = t.search( "Dexter", "en" ).result
+        r = t.search( "Dexter", "it" ).result
         for s in r:
             print s.id
         dex = r[0]
 
         print("Seasons--------")
         for s in dex:
-            print type(s)
             for e in s[1]:
                 print e
 
