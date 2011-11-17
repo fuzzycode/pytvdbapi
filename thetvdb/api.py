@@ -160,6 +160,11 @@ class Season(object):
             logger.error("Episode {0} not found".format(item))
             raise error.TVDBIndexError()
 
+    def __iter__(self):
+        return iter(sorted(self.episodes.items(),
+            cmp=lambda lhs, rhs: cmp(lhs[1].EpisodeNumber,
+                                     rhs[1].EpisodeNumber)))
+
     def __repr__(self):
         return "<Season {0}>".format( self.season_number )
 
@@ -185,31 +190,43 @@ class Show(object):
             raise error.TVDBAttributeError("Show has no attribute names %s" %
                                            item)
 
+    def __iter__(self):
+        if not self.seasons:
+            self._populate_seasons()
+
+        return iter(sorted(self.seasons.items(),
+            cmp=lambda lhs, rhs: cmp(lhs[1].season_number,
+                                     rhs[1].season_number)))
+
+
     def __getitem__(self, item):
         if not item in self.seasons:
             logger.debug("Season data missing, will load from url")
-            
-            context = {'mirror':self.api.mirrors.get_mirror(TypeMask.ZIP).url,
-                       'api_key':self.api.config['api_key'],
-                       'seriesid':self.id,
-                       'language':self.language}
-
-            data = parser(self.api.loader.load(urls['series'] % context))
-            episodes = [d for d in _parse_xml( data, "Episode")]
-
-            for episode in episodes:
-                season_nr = int(episode['SeasonNumber'])
-                if not season_nr in self.seasons:
-                    self.seasons[ season_nr ] = Season(season_nr, self)
-
-                ep = Episode( episode, self.seasons[season_nr] )
-                self.seasons[season_nr].append(ep)
+            self._populate_seasons()
 
         try:
             return self.seasons[item]
         except IndexError:
             logger.error("Season {0} not found".format(item))
             raise error.TVDBIndexError()
+
+
+    def _populate_seasons(self):
+        context = {'mirror':self.api.mirrors.get_mirror(TypeMask.ZIP).url,
+                       'api_key':self.api.config['api_key'],
+                       'seriesid':self.id,
+                       'language':self.language}
+
+        data = parser(self.api.loader.load(urls['series'] % context))
+        episodes = [d for d in _parse_xml( data, "Episode")]
+
+        for episode in episodes:
+            season_nr = int(episode['SeasonNumber'])
+            if not season_nr in self.seasons:
+                self.seasons[ season_nr ] = Season(season_nr, self)
+
+            ep = Episode( episode, self.seasons[season_nr] )
+            self.seasons[season_nr].append(ep)
 
     
 class Search(object):
@@ -297,5 +314,11 @@ if __name__ == '__main__':
         for s in r:
             print s.id
         dex = r[0]
-        print dex[1][1]
+
+        print("Seasons--------")
+        for s in dex:
+            print type(s)
+            for e in s[1]:
+                print e
+
     sys.exit(main())
