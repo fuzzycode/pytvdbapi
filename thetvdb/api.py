@@ -154,7 +154,11 @@ class Season(object):
         self.episodes = dict()
 
     def __getitem__(self, item):
-        pass
+        try:
+            return self.episodes[item]
+        except IndexError:
+            logger.error("Episode {0} not found".format(item))
+            raise error.TVDBIndexError()
 
     def __repr__(self):
         return "<Season {0}>".format( self.season_number )
@@ -164,7 +168,7 @@ class Season(object):
         logger.debug("{0} adding episode {1}".
                     format(self, episode))
 
-        self.episodes[episode.EpisodeNumber] = episode
+        self.episodes[int(episode.EpisodeNumber)] = episode
 
 
 class Show(object):
@@ -194,14 +198,18 @@ class Show(object):
             episodes = [d for d in _parse_xml( data, "Episode")]
 
             for episode in episodes:
-                season_nr = episode['SeasonNumber']
+                season_nr = int(episode['SeasonNumber'])
                 if not season_nr in self.seasons:
                     self.seasons[ season_nr ] = Season(season_nr, self)
 
                 ep = Episode( episode, self.seasons[season_nr] )
                 self.seasons[season_nr].append(ep)
 
-
+        try:
+            return self.seasons[item]
+        except IndexError:
+            logger.error("Season {0} not found".format(item))
+            raise error.TVDBIndexError()
 
     
 class Search(object):
@@ -289,5 +297,5 @@ if __name__ == '__main__':
         for s in r:
             print s.id
         dex = r[0]
-        dex[1]
+        print dex[1][1]
     sys.exit(main())
