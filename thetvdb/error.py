@@ -27,10 +27,17 @@ logger.addHandler( logging.NullHandler() )
 
 class TheTvDBError(Exception):
     """Base exception for all exceptions raised by thetvdb"""
+    pass
 
 
 class BadData(TheTvDBError):
     pass
 
 class ConnectionError(TheTvDBError):
+    pass
+
+class TVDBAttributeError(TheTvDBError):
+    pass
+
+class TVDBIndexError(TheTvDBError):
     pass

@@ -37,7 +37,7 @@ urls = dict(mirrors="http://www.thetvdb.com/api/%(api_key)s/mirrors.xml",
     time="http://www.thetvdb.com/api/Updates.php?type=none",
     languages="http://www.thetvdb.com/api/%(api_key)s/languages.xml",
     search="http://www.thetvdb.com/api/GetSeries.php?seriesname=%(series)s",
-    series=("%(mirror)s/api/%(api_key)s/series/%(seriesid)s/all/%(language)s.zip"))
+    series=("%(mirror)s/api/%(api_key)s/series/%(seriesid)s/all/%(language)s.xml"))
 
 def parser( xml_data, root = None ):
     """Converts the raw xml data into an element tree"""
@@ -131,17 +131,41 @@ class LanguageList(object):
     def __getitem__(self, item):
         return self.data[item]
 
+class Episode(object):
+    def __init__(self, data, season):
+        self.data, self.season = data, season
+
+    def __getattr__(self, item):
+        try:
+            return self.data[item]
+        except IndexError:
+            logger.error("Episode has no attribute {0}".format(item))
+            raise error.TVDBAttributeError
+
+    def __repr__(self):
+        try:
+            return "<Episode {0}>".format(self.EpisodeName)
+        except error.TVDBAttributeError:
+            return "<Episode>"
+
 class Season(object):
-    def __init__(self, show):
-        self.show = show
+    def __init__(self, season_number, show):
+        self.show, self.season_number = show, season_number
+        self.episodes = dict()
 
     def __getitem__(self, item):
         pass
 
+    def __repr__(self):
+        return "<Season {0}>".format( self.season_number )
 
-class Episode(object):
-    def __init__(self, season):
-        self.season = season
+    def append(self, episode):
+        assert type(episode) in (Episode,)
+        logger.debug("{0} adding episode {1}".
+                    format(self, episode))
+
+        self.episodes[episode.EpisodeNumber] = episode
+
 
 class Show(object):
     """Holds data about a show in thetvdb"""
@@ -153,22 +177,31 @@ class Show(object):
         try:
             return self.data[item]
         except KeyError:
-            try:
-                return self.__dict__[item]
-            except KeyError:
-                raise AttributeError("Attribute not found")
+            logger.debug( "Attribute not found" )
+            raise error.TVDBAttributeError("Show has no attribute names %s" %
+                                           item)
 
     def __getitem__(self, item):
         if not item in self.seasons:
+            logger.debug("Season data missing, will load from url")
+            
             context = {'mirror':self.api.mirrors.get_mirror(TypeMask.ZIP).url,
                        'api_key':self.api.config['api_key'],
                        'seriesid':self.id,
                        'language':self.language}
-            
+
             data = parser(self.api.loader.load(urls['series'] % context))
-            episodes = [Episode(d) for d in _parse_xml( data, "Episode")]
+            episodes = [d for d in _parse_xml( data, "Episode")]
+
             for episode in episodes:
-                print episode
+                season_nr = episode['SeasonNumber']
+                if not season_nr in self.seasons:
+                    self.seasons[ season_nr ] = Season(season_nr, self)
+
+                ep = Episode( episode, self.seasons[season_nr] )
+                self.seasons[season_nr].append(ep)
+
+
 
     
 class Search(object):
@@ -212,6 +245,7 @@ class tvdb(object):
 
         #Create the loader object to use
         self.loader = Loader(self.config['cache_dir'])
+        #self.loader = BasicLoader()
 
         #If requested, update the local language file from the server
         if self.config['force_lang']:
@@ -255,5 +289,5 @@ if __name__ == '__main__':
         for s in r:
             print s.id
         dex = r[0]
-        #print dex[1]
+        dex[1]
     sys.exit(main())
