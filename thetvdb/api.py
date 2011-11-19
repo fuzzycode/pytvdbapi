@@ -162,7 +162,7 @@ class Search(object):
 
 class tvdb(object):
     """ """
-    def __init__(self, **kwargs):
+    def __init__(self, api_key, **kwargs):
         self.config = dict()
 
         #cache old searches to avoid hitting the server
@@ -171,7 +171,7 @@ class tvdb(object):
         #extract all argument and store for later use
         self.config['force_lang'] = getattr(kwargs, 'force_lang', False)
         # TODO: Apply for a new api key for the new name??
-        self.config['api_key'] = getattr(kwargs, 'api_key', 'B43FF87DE395DF56')
+        self.config['api_key'] = api_key
         self.config['cache_dir'] = getattr(kwargs, 'cache_dir',
                 os.path.join(tempfile.gettempdir(), name))
 
@@ -213,7 +213,7 @@ if __name__ == '__main__':
         logger.addHandler(logging.StreamHandler(stream=sys.stdout))
         logger.setLevel(logging.DEBUG)
 
-        api = tvdb( )
+        api = tvdb("B43FF87DE395DF56")
         search = api.search( "Dexter", "en" )
 
         for s in search:
