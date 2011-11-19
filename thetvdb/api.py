@@ -1,32 +1,37 @@
 # -*- coding: utf-8 -*-
 
+# Copyright 2011 Björn Larsson
+
 # This file is part of thetvdb.
 #
 # thetvdb is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
+# it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # thetvdb is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# GNU Lesser General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
+# You should have received a copy of the GNU Lesser General Public License
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 """
 
 import logging
-import random
 import tempfile
-import httplib2
 import os
 import sys
 from thetvdb import error
 from thetvdb.__init__ import __NAME__ as name
-import xml.etree.ElementTree as etree
+from thetvdb.language import LanguageList
+from thetvdb.loader import Loader
+from thetvdb.mirror import MirrorList, TypeMask
+from thetvdb.xmlhelpers import parse_xml, generate_tree
+
+__all__ = ['Episode', 'Season', 'Show', 'Search', 'tvdb']
 
 #Module logger object
 logger = logging.getLogger(__name__)
@@ -39,97 +44,6 @@ urls = dict(mirrors="http://www.thetvdb.com/api/%(api_key)s/mirrors.xml",
     search="http://www.thetvdb.com/api/GetSeries.php?seriesname=%(series)s",
     series=("%(mirror)s/api/%(api_key)s/series/%(seriesid)s/all/%(language)s.xml"))
 
-def parser( xml_data, root = None ):
-    """Converts the raw xml data into an element tree"""
-
-    try:
-        if type(xml_data) in (str, unicode):
-            tree = etree.fromstring( xml_data )
-        elif type(xml_data) in (bytes):
-            tree = etree.parse(xml_data)
-    except etree.ParseError:
-        raise error.BadData("Invalid XML data passed")
-
-    if root:
-        return tree.find(root)
-    else:
-        return tree
-
-
-def _parse_xml(etree, element):
-    """
-
-    :param etree:
-    :param element:
-    :return:
-    """
-
-    logger.debug("Parsing element tree for {0}".format(element))
-
-    _list = list()
-    for item in etree.findall( element ):
-        _list.append( { i.tag:i.text for i in item.getchildren() } )
-
-    logger.debug("Found {0} element".format(len(_list)))
-    return _list
-
-class TypeMask(object):
-    """An enum like class with the mask flags for the mirrors"""
-    XML = 1
-    BANNER = 2
-    ZIP = 4
-
-class Mirror(object):
-    """Stores data about a thetvdb.com mirror server"""
-
-    def __init__(self, id, url, type_mask):
-        self.id, self.url, self.type_mask = id, url, type_mask
-
-    def __repr__(self):
-        return "<{0} ({1}:{{2}})>".format(
-            "Mirror", self.url, self.type_mask )
-
-
-class MirrorList(object):
-    """Managing a list available mirrors"""
-    def __init__(self, etree):
-        self.data = [
-            Mirror(m['id'], m['mirrorpath'], m['typemask'])
-            for m in _parse_xml( etree, 'Mirror' )
-        ]
-
-    def get_mirror(self, type_mask):
-        try:
-            return random.choice(
-                [m for m in self.data if
-                 int(m.type_mask) & int(type_mask) ==  int(type_mask)])
-        except IndexError:
-            raise error.TheTvDBError("No Mirror matching {0} found".
-                format(type_mask))
-
-
-class Language(object):
-    """Holds information about a language instance"""
-    def __init__(self, name, abbreviation, id):
-        self.name, self.abbreviation, self.id = name, abbreviation, id
-
-    def __repr__(self):
-        return "<{0} ({1}:{2}:{3})>".format(
-            self.__class__.name, self.name, self.abbreviation, self.id )
-
-
-class LanguageList(object):
-    """Managing a list of language objects"""
-    def __init__(self, etree):
-        self.data = [
-            Language(lang['name'], lang['abbreviation'], lang['id'])
-            for lang in  _parse_xml( etree, "Language" ) ]
-
-    def __contains__(self, item):
-        return item in self.data
-
-    def __getitem__(self, item):
-        return self.data[item]
 
 class Episode(object):
     def __init__(self, data, season):
@@ -203,7 +117,6 @@ class Show(object):
         if not item in self.seasons:
             logger.debug("Season data missing, will load from url")
             self._populate_seasons()
-
         try:
             return self.seasons[item]
         except IndexError:
@@ -212,13 +125,13 @@ class Show(object):
 
 
     def _populate_seasons(self):
-        context = {'mirror':self.api.mirrors.get_mirror(TypeMask.ZIP).url,
+        context = {'mirror':self.api.mirrors.get_mirror(TypeMask.XML).url,
                        'api_key':self.api.config['api_key'],
                        'seriesid':self.id,
                        'language':self.language}
 
-        data = parser(self.api.loader.load(urls['series'] % context))
-        episodes = [d for d in _parse_xml( data, "Episode")]
+        data = generate_tree(self.api.loader.load(urls['series'] % context))
+        episodes = [d for d in parse_xml( data, "Episode")]
 
         for episode in episodes:
             season_nr = int(episode['SeasonNumber'])
@@ -233,24 +146,18 @@ class Search(object):
     def __init__(self, result, search, language):
         self.result, self.search, self.language = result, search, language
 
+    def __len__(self):
+        return len( self.result )
 
-class Loader(object):
-    def __init__(self, cache_path):
-        self.http = httplib2.Http( cache = os.path.abspath( cache_path ) )
-
-    def load(self, url, cache=True):
-
-        header = dict()
-        if not cache:
-            header['cache-control'] = 'no-cache'
-            
+    def __getitem__(self, item):
         try:
-            response, content = self.http.request( url, headers= header )
-        except ( httplib2.RelativeURIError, httplib2.ServerNotFoundError ):
-            raise error.ConnectionError(
-                "Unable to connect to {0}".format(url))
-        else:
-            return content
+            return self.result[item]
+        except IndexError:
+            logger.warning("Index out of range")
+            raise error.TVDBIndexError("Index out of range")
+
+    def __iter__(self):
+        return iter( self.result )
 
 
 class tvdb(object):
@@ -270,7 +177,6 @@ class tvdb(object):
 
         #Create the loader object to use
         self.loader = Loader(self.config['cache_dir'])
-        #self.loader = BasicLoader()
 
         #If requested, update the local language file from the server
         if self.config['force_lang']:
@@ -280,44 +186,38 @@ class tvdb(object):
 
         #Setup the list of supported languages
         self.languages = LanguageList(
-            parser(open('../data/languages.xml', 'rt').read()))
+            generate_tree(open('../data/languages.xml', 'rt').read()))
 
         #Create the list of available mirrors
         self.mirrors = MirrorList(
-            parser(self.loader.load(urls['mirrors'] % self.config)))
+            generate_tree(self.loader.load(urls['mirrors'] % self.config)))
 
     def search(self, show, language, cache=True):
         logger.debug("Searching for {0} using language {1}"
             .format(show, language))
 
         if (show, language) not in self.search_buffer:
-            data = parser(self.loader.load( urls['search']
-                            % {'series': show }, cache ))
+            data = generate_tree(self.loader.load( urls['search']
+                           % {'series': show }, cache ))
             shows = [Show(d, self, language)
-                     for d in _parse_xml(data, "Series")]
+                     for d in parse_xml(data, "Series")]
 
             self.search_buffer[(show, language)] = shows
 
         return Search(self.search_buffer[(show, language)], show, language)
 
 
-
-
-#a small sample usage
+#A small sample usage
 if __name__ == '__main__':
     def main():
         logger.addHandler(logging.StreamHandler(stream=sys.stdout))
         logger.setLevel(logging.DEBUG)
-        
-        t = tvdb( )
-        r = t.search( "Dexter", "it" ).result
-        for s in r:
-            print s.id
-        dex = r[0]
 
-        print("Seasons--------")
-        for s in dex:
-            for e in s[1]:
-                print e
+        api = tvdb( )
+        search = api.search( "Dexter", "en" )
+
+        for s in search:
+            print s
+
 
     sys.exit(main())

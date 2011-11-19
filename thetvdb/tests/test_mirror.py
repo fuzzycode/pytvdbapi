@@ -17,32 +17,3 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-A module containing all the errors raised by thetvdb
-"""
-
-import logging
-
-__all__ = ['TheTvDBError', 'BadData', 'ConnectionError', 'TVDBAttributeError',
-            'TVDBIndexError']
-
-#Module level logger
-logger = logging.getLogger(__name__)
-logger.addHandler( logging.NullHandler() )
-
-class TheTvDBError(Exception):
-    """Base exception for all exceptions raised by thetvdb"""
-    pass
-
-
-class BadData(TheTvDBError):
-    pass
-
-class ConnectionError(TheTvDBError):
-    pass
-
-class TVDBAttributeError(TheTvDBError):
-    pass
-
-class TVDBIndexError(TheTvDBError):
-    pass

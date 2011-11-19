@@ -17,32 +17,30 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-A module containing all the errors raised by thetvdb
-"""
-
 import logging
+import os
+import httplib2
+from thetvdb import error
 
-__all__ = ['TheTvDBError', 'BadData', 'ConnectionError', 'TVDBAttributeError',
-            'TVDBIndexError']
 
-#Module level logger
+#Module logger object
 logger = logging.getLogger(__name__)
-logger.addHandler( logging.NullHandler() )
+logger.addHandler(logging.NullHandler())
 
-class TheTvDBError(Exception):
-    """Base exception for all exceptions raised by thetvdb"""
-    pass
+class Loader(object):
+    def __init__(self, cache_path):
+        self.http = httplib2.Http( cache = os.path.abspath( cache_path ) )
 
+    def load(self, url, cache=True):
 
-class BadData(TheTvDBError):
-    pass
+        header = dict()
+        if not cache:
+            header['cache-control'] = 'no-cache'
 
-class ConnectionError(TheTvDBError):
-    pass
-
-class TVDBAttributeError(TheTvDBError):
-    pass
-
-class TVDBIndexError(TheTvDBError):
-    pass
+        try:
+            response, content = self.http.request( url, headers= header )
+        except ( httplib2.RelativeURIError, httplib2.ServerNotFoundError ):
+            raise error.ConnectionError(
+                "Unable to connect to {0}".format(url))
+        else:
+            return content
