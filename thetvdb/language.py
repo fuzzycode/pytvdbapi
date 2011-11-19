@@ -18,6 +18,7 @@
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+from thetvdb import error
 
 from thetvdb.xmlhelpers import parse_xml
 
@@ -39,12 +40,19 @@ class Language(object):
 class LanguageList(object):
     """Managing a list of language objects"""
     def __init__(self, etree):
-        self.data = [
-            Language(lang['name'], lang['abbreviation'], lang['id'])
-            for lang in  parse_xml( etree, "Language" ) ]
+        self.data = {lang['abbreviation'] : Language(lang['name'],
+                        lang['abbreviation'], lang['id'])
+            for lang in  parse_xml( etree, "Language" ) }
 
     def __contains__(self, item):
         return item in self.data
 
+    def __iter__(self):
+        return self.data.iteritems()
+
     def __getitem__(self, item):
-        return self.data[item]
+        try:
+            return self.data[item]
+        except KeyError:
+            logger.warning("Language {0} not found.".format(item))
+            raise error.TVDBIndexError("Item {0} not found".format(item))

@@ -32,9 +32,19 @@ class Loader(object):
         self.http = httplib2.Http( cache = os.path.abspath( cache_path ) )
 
     def load(self, url, cache=True):
+        """
 
+        :param url: The URL to be loaded
+        :param cache: Optional. Set if the cache should be ignored or not.
+        :return: The content of the url as bytes
+        :raise: ConnectionError if the url could not be loaded
+        """
+
+        logger.debug("Loading data from {0}".format(url))
+        
         header = dict()
         if not cache:
+            logger.debug("Ignoring cached data.")
             header['cache-control'] = 'no-cache'
 
         try:

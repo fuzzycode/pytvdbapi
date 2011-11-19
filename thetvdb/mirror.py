@@ -39,7 +39,7 @@ class Mirror(object):
     """Stores data about a thetvdb.com mirror server"""
 
     def __init__(self, id, url, type_mask):
-        self.id, self.url, self.type_mask = id, url, type_mask
+        self.id, self.url, self.type_mask = id, url, int(type_mask)
 
     def __repr__(self):
         return "<{0} ({1}:{{2}})>".format(
@@ -53,6 +53,12 @@ class MirrorList(object):
             Mirror(m['id'], m['mirrorpath'], m['typemask'])
             for m in parse_xml( etree, 'Mirror' )
         ]
+
+    def __len__(self):
+        return len(self.data)
+
+    def __iter__(self):
+        return iter(self.data)
 
     def get_mirror(self, type_mask):
         try:
