@@ -168,6 +168,9 @@ class tvdb(object):
         #cache old searches to avoid hitting the server
         self.search_buffer = dict()
 
+        #Store the path to where we are
+        self.path = os.path.abspath(os.path.dirname(__file__))
+
         #extract all argument and store for later use
         self.config['force_lang'] = getattr(kwargs, 'force_lang', False)
         # TODO: Apply for a new api key for the new name??
@@ -181,12 +184,14 @@ class tvdb(object):
         #If requested, update the local language file from the server
         if self.config['force_lang']:
             logger.debug("updating Language file from server")
-            with open('../data/languages.xml', 'wt') as f:
+            with open(os.path.join(self.path, '../data/languages.xml'),
+                                   'wt') as f:
                 f.write(self.loader.load(urls['languages'] % self.config))
 
         #Setup the list of supported languages
         self.languages = LanguageList(
-            generate_tree(open('../data/languages.xml', 'rt').read()))
+            generate_tree(open(os.path.join(self.path,
+                                    '../data/languages.xml'), 'rt').read()))
 
         #Create the list of available mirrors
         self.mirrors = MirrorList(
