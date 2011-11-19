@@ -112,7 +112,6 @@ class Show(object):
             cmp=lambda lhs, rhs: cmp(int(lhs[1].season_number),
                                      int(rhs[1].season_number))))
 
-
     def __len__(self):
         if not len(self.seasons):
             self._populate_seasons()
@@ -120,16 +119,18 @@ class Show(object):
 
     def __getitem__(self, item):
         if not item in self.seasons:
-            logger.debug("Season data missing, will load from url")
             self._populate_seasons()
+        
         try:
             return self.seasons[item]
-        except IndexError:
+        except KeyError:
             logger.error("Season {0} not found".format(item))
             raise error.TVDBIndexError()
 
 
     def _populate_seasons(self):
+        logger.debug("Populating season data from URL.")
+        
         context = {'mirror':self.api.mirrors.get_mirror(TypeMask.XML).url,
                        'api_key':self.api.config['api_key'],
                        'seriesid':self.id,
