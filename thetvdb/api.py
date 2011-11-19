@@ -113,6 +113,11 @@ class Show(object):
                                      int(rhs[1].season_number))))
 
 
+    def __len__(self):
+        if not len(self.seasons):
+            self._populate_seasons()
+        return len(self.seasons)
+
     def __getitem__(self, item):
         if not item in self.seasons:
             logger.debug("Season data missing, will load from url")
