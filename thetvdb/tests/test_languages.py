@@ -17,8 +17,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
 
-from unittest import TestCase
 import sys
+import unittest
 import os
 
 from thetvdb import xmlhelpers, language, error
@@ -37,4 +37,30 @@ class TestLanguage(basetest.TheTVDBTest):
         super(TestLanguage, self).tearDown()
 
     def test_language_list(self):
-        """"""
+        """It should be able to test if a language exists in the language list"""
+        langs = ( 'da', 'fi', 'nl', 'de', 'it', 'es', 'fr', 'pl', 'hu', 'el',
+                  'tr', 'ru', 'he', 'ja', 'pt', 'zh', 'cs', 'sl', 'hr', 'ko',
+                  'en', 'sv', 'no')
+
+        for l in langs:
+            self.assertEquals(l in self.languages, True)
+            self.assertEqual(self.languages[l].abbreviation, l)
+
+    def test_invalid_languages(self):
+        """Function should raise TVDBIndexError when trying to access an
+        invalid language"""
+
+        langs = ('pe', 'bz', 'bu')
+
+        for l in langs:
+            self.assertRaises(error.TVDBIndexError,
+                              self.languages.__getitem__, l)
+
+    def test_iterate_languages(self):
+        """It should be able to iterate over the language list"""
+
+        for l in self.languages:
+            pass
+
+if __name__ == "__main__":
+    sys.exit( unittest.main() )
