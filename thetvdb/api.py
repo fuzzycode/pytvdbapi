@@ -75,9 +75,9 @@ class Season(object):
             raise error.TVDBIndexError()
 
     def __iter__(self):
-        return iter(sorted(self.episodes.items(),
-            cmp=lambda lhs, rhs: cmp(int(lhs[1].EpisodeNumber),
-                                     int(rhs[1].EpisodeNumber))))
+        return iter(sorted(self.episodes.values(),
+            cmp=lambda lhs, rhs: cmp(int(lhs.EpisodeNumber),
+                                     int(rhs.EpisodeNumber))))
 
     def __repr__(self):
         return "<Season {0}>".format( self.season_number )
@@ -108,9 +108,9 @@ class Show(object):
         if not self.seasons:
             self._populate_seasons()
 
-        return iter(sorted(self.seasons.items(),
-            cmp=lambda lhs, rhs: cmp(int(lhs[1].season_number),
-                                     int(rhs[1].season_number))))
+        return iter(sorted(self.seasons.values(),
+            cmp=lambda lhs, rhs: cmp(int(lhs.season_number),
+                                     int(rhs.season_number))))
 
     def __len__(self):
         if not len(self.seasons):

@@ -76,8 +76,7 @@ class TestApi(basetest.TheTVDBTest):
         count = 0
         for s in friends:
             count += 1
-            #self.assertEqual(type(s), thetvdb.api.Episode)
-            #TODO: Fix this test
+            self.assertEqual(type(s), thetvdb.api.Season)
 
         self.assertEqual(count, 11)
 
@@ -106,9 +105,8 @@ class TestApi(basetest.TheTVDBTest):
         friends = _load_show("friends")
         season1 = friends[1]
 
-        #TODO: Fix this test up
-        #for ep in season1:
-        #    self.assertEqual(type(ep), thetvdb.api.Episode)
+        for ep in season1:
+            self.assertEqual(type(ep), thetvdb.api.Episode)
 
     def test_invalid_episode_index(self):
         """The show should raise TVDBIndexError when trying to access invalid
