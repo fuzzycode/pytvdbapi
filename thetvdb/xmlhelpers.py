@@ -19,6 +19,7 @@
 
 import logging
 import xml.etree.ElementTree as etree
+import datetime
 from thetvdb import error
 
 __all__ = ['generate_tree', 'parse_xml']
@@ -52,7 +53,23 @@ def parse_xml(etree, element):
 
     _list = list()
     for item in etree.findall( element ):
-        _list.append( { i.tag:i.text for i in item.getchildren() } )
+        data = dict()
+        for child in item.getchildren():
+            tag, value = child.tag, child.text
 
+            if value:
+                value = value.strip()
+            else:
+                value = ""
+            
+
+            try: #Try to format as a datetime object
+                value = datetime.datetime.strptime(value, "%Y-%m-%d").date()
+            except ValueError:
+                if '|' in value: #Split piped values into a list
+                    value = value.strip("|").split("|")
+
+            data[tag] = value
+        _list.append(data)
     logger.debug("Found {0} element".format(len(_list)))
     return _list

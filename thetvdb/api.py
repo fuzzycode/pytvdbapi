@@ -52,9 +52,9 @@ class Episode(object):
     def __getattr__(self, item):
         try:
             return self.data[item]
-        except IndexError:
+        except KeyError:
             logger.error("Episode has no attribute {0}".format(item))
-            raise error.TVDBAttributeError
+            raise error.TVDBAttributeError("Episode has no attribute {0}".format(item))
 
     def __repr__(self):
         try:
@@ -158,9 +158,10 @@ class Search(object):
     def __getitem__(self, item):
         try:
             return self.result[item]
-        except IndexError:
+        except (IndexError, TypeError):
             logger.warning("Index out of range")
             raise error.TVDBIndexError("Index out of range")
+
 
     def __iter__(self):
         return iter( self.result )
