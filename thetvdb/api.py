@@ -29,6 +29,7 @@ from thetvdb.__init__ import __NAME__ as name
 from thetvdb.language import LanguageList
 from thetvdb.loader import Loader
 from thetvdb.mirror import MirrorList, TypeMask
+from thetvdb.utils import merge
 from thetvdb.xmlhelpers import parse_xml, generate_tree
 
 __all__ = ['Episode', 'Season', 'Show', 'Search', 'tvdb']
@@ -74,6 +75,9 @@ class Season(object):
             logger.error("Episode {0} not found".format(item))
             raise error.TVDBIndexError()
 
+    def __len__(self):
+        return len(self.episodes)
+    
     def __iter__(self):
         return iter(sorted(self.episodes.values(),
             cmp=lambda lhs, rhs: cmp(int(lhs.EpisodeNumber),
@@ -106,7 +110,7 @@ class Show(object):
 
     def __iter__(self):
         if not self.seasons:
-            self._populate_seasons()
+            self._populate_data()
 
         return iter(sorted(self.seasons.values(),
             cmp=lambda lhs, rhs: cmp(int(lhs.season_number),
@@ -114,12 +118,12 @@ class Show(object):
 
     def __len__(self):
         if not len(self.seasons):
-            self._populate_seasons()
+            self._populate_data()
         return len(self.seasons)
 
     def __getitem__(self, item):
         if not item in self.seasons:
-            self._populate_seasons()
+            self._populate_data()
         
         try:
             return self.seasons[item]
@@ -127,8 +131,10 @@ class Show(object):
             logger.error("Season {0} not found".format(item))
             raise error.TVDBIndexError()
 
+    def update(self):
+        self._populate_data()
 
-    def _populate_seasons(self):
+    def _populate_data(self):
         logger.debug("Populating season data from URL.")
         
         context = {'mirror':self.api.mirrors.get_mirror(TypeMask.XML).url,
@@ -138,6 +144,12 @@ class Show(object):
 
         data = generate_tree(self.api.loader.load(urls['series'] % context))
         episodes = [d for d in parse_xml( data, "Episode")]
+
+        show_data = parse_xml(data, "Series")
+        assert len(show_data) == 1, "there should only be 1 Series element in\
+        the xml data"
+
+        self.data = merge( self.data, show_data[0] )
 
         for episode in episodes:
             season_nr = int(episode['SeasonNumber'])

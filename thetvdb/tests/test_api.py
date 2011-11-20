@@ -94,11 +94,34 @@ class TestApi(basetest.TheTVDBTest):
         """The show instance should have correct attributes"""
         friends = _load_show("friends")
 
+        self.assertEqual(friends.SeriesName, "Friends")
+        self.assertEqual(friends.id, "79168")
+
+        #This should not yet be loaded so should raise an error
+        self.assertRaises(error.TVDBAttributeError, friends.__getattr__, "Genre")
+
+        #Load in the rest of the attributes
+        friends.update()
+
+        #Now this data should be available
+        self.assertEqual(friends.Genre, ['Comedy'])
+
     def test_invalid_show_attribute(self):
-        """"""
+        """The Show object should raise TVDBAttributeError when you try to
+        access an invalid attribute"""
+        friends = _load_show("friends")
+
+        self.assertRaises(error.TVDBAttributeError, friends.__getattr__, "foo")
+        self.assertRaises(error.TVDBAttributeError, friends.__getattr__, "baar")
+        self.assertRaises(error.TVDBAttributeError, friends.__getattr__, "laba_laba")
+
 
     def test_episodes(self):
-        """"""
+        """The episodes should function properly"""
+        friends = _load_show("friends")
+        season1 = friends[1]
+
+        self.assertEqual(len(season1), 24)
 
     def test_iterate_season(self):
         """It should be possible to iterate over a season to get all episodes"""
