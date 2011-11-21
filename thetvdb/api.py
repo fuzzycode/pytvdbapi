@@ -59,6 +59,10 @@ class Episode(object):
             raise error.TVDBAttributeError(u"Episode has no attribute {0}"
             .format(item))
 
+    def __dir__(self):
+        return self.data.keys() + \
+               [d for d in self.__dict__.keys() if d != "data"]
+    
     def __repr__(self):
         try:
             return u"<Episode {0}>".format(self.EpisodeName)
@@ -109,6 +113,10 @@ class Show(object):
             logger.debug( u"Attribute not found" )
             raise error.TVDBAttributeError(u"Show has no attribute names %s" %
                                            item)
+
+    def __dir__(self):
+        return self.data.keys() + \
+               [d for d in self.__dict__.keys() if d != "data"]
 
     def __iter__(self):
         if not self.seasons:
