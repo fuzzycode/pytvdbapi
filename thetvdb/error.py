@@ -46,3 +46,6 @@ class TVDBAttributeError(TheTvDBError):
 
 class TVDBIndexError(TheTvDBError):
     pass
+
+class TVDBValueError(TheTvDBError):
+    pass

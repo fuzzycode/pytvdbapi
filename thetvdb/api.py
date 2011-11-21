@@ -22,6 +22,7 @@
 
 import logging
 import tempfile
+import urllib
 import os
 import sys
 from thetvdb import error
@@ -42,7 +43,7 @@ logger.addHandler(logging.NullHandler())
 urls = dict(mirrors="http://www.thetvdb.com/api/%(api_key)s/mirrors.xml",
     time="http://www.thetvdb.com/api/Updates.php?type=none",
     languages="http://www.thetvdb.com/api/%(api_key)s/languages.xml",
-    search="http://www.thetvdb.com/api/GetSeries.php?seriesname=%(series)s",
+    search=("http://www.thetvdb.com/api/GetSeries.php?seriesname=%(series)s&language=%(language)s"),
     series=("%(mirror)s/api/%(api_key)s/series/%(seriesid)s/all/%(language)s.xml"))
 
 
@@ -54,14 +55,15 @@ class Episode(object):
         try:
             return self.data[item]
         except KeyError:
-            logger.error("Episode has no attribute {0}".format(item))
-            raise error.TVDBAttributeError("Episode has no attribute {0}".format(item))
+            logger.error(u"Episode has no attribute {0}".format(item))
+            raise error.TVDBAttributeError(u"Episode has no attribute {0}"
+            .format(item))
 
     def __repr__(self):
         try:
-            return "<Episode {0}>".format(self.EpisodeName)
+            return u"<Episode {0}>".format(self.EpisodeName)
         except error.TVDBAttributeError:
-            return "<Episode>"
+            return u"<Episode>"
 
 class Season(object):
     def __init__(self, season_number, show):
@@ -72,7 +74,7 @@ class Season(object):
         try:
             return self.episodes[item]
         except IndexError:
-            logger.error("Episode {0} not found".format(item))
+            logger.error(u"Episode {0} not found".format(item))
             raise error.TVDBIndexError()
 
     def __len__(self):
@@ -84,11 +86,11 @@ class Season(object):
                                      int(rhs.EpisodeNumber))))
 
     def __repr__(self):
-        return "<Season {0}>".format( self.season_number )
+        return u"<Season {0}>".format( self.season_number )
 
     def append(self, episode):
         assert type(episode) in (Episode,)
-        logger.debug("{0} adding episode {1}".
+        logger.debug(u"{0} adding episode {1}".
                     format(self, episode))
 
         self.episodes[int(episode.EpisodeNumber)] = episode
@@ -104,8 +106,8 @@ class Show(object):
         try:
             return self.data[item]
         except KeyError:
-            logger.debug( "Attribute not found" )
-            raise error.TVDBAttributeError("Show has no attribute names %s" %
+            logger.debug( u"Attribute not found" )
+            raise error.TVDBAttributeError(u"Show has no attribute names %s" %
                                            item)
 
     def __iter__(self):
@@ -128,14 +130,14 @@ class Show(object):
         try:
             return self.seasons[item]
         except KeyError:
-            logger.error("Season {0} not found".format(item))
+            logger.error(u"Season {0} not found".format(item))
             raise error.TVDBIndexError()
 
     def update(self):
         self._populate_data()
 
     def _populate_data(self):
-        logger.debug("Populating season data from URL.")
+        logger.debug(u"Populating season data from URL.")
         
         context = {'mirror':self.api.mirrors.get_mirror(TypeMask.XML).url,
                        'api_key':self.api.config['api_key'],
@@ -146,7 +148,7 @@ class Show(object):
         episodes = [d for d in parse_xml( data, "Episode")]
 
         show_data = parse_xml(data, "Series")
-        assert len(show_data) == 1, "there should only be 1 Series element in\
+        assert len(show_data) == 1, u"there should only be 1 Series element in\
         the xml data"
 
         self.data = merge( self.data, show_data[0] )
@@ -220,9 +222,13 @@ class tvdb(object):
         logger.debug("Searching for {0} using language {1}"
             .format(show, language))
 
+        if language != 'all' and language not in self.languages:
+            raise error.TVDBValueError("{0} is not a valid language")
+
         if (show, language) not in self.search_buffer:
-            data = generate_tree(self.loader.load( urls['search']
-                           % {'series': show }, cache ))
+            context = {'series': urllib.quote(show), "language":language}
+            data = generate_tree(self.loader.load( urls['search'] % context,
+                                                   cache ))
             shows = [Show(d, self, language)
                      for d in parse_xml(data, "Series")]
 
