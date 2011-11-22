@@ -139,6 +139,13 @@ class TestApi(basetest.TheTVDBTest):
         show = search[0]
         self.assertEqual(show[1][1].EpisodeName, u"3年B組金八先生")
 
+    def test_names_with_spaces(self):
+        """It should be possible to search for shows with spaces in the name"""
+        api = tvdb("B43FF87DE395DF56")
+        search = api.search("100 höjdare", "sv")
+
+        self.assertEqual(len(search), 1)
+
     def test_invalid_language(self):
         """Search function should raise TVDBValueError when trying to search
         with an invalid language
