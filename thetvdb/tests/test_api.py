@@ -144,7 +144,7 @@ class TestApi(basetest.TheTVDBTest):
         api = tvdb("B43FF87DE395DF56")
         search = api.search("100 höjdare", "sv")
 
-        self.assertEqual(len(search), 1)
+        self.assertEqual(len(search), 2)
 
     def test_invalid_language(self):
         """Search function should raise TVDBValueError when trying to search
