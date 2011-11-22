@@ -65,7 +65,10 @@ class Episode(object):
     
     def __repr__(self):
         try:
-            return u"<Episode {0}>".format(self.EpisodeName)
+            return u"<Episode S{0:03d}E{1:03d} - {2}>".format(
+                                                int(self.SeasonNumber),
+                                                int(self.EpisodeNumber),
+                                                self.EpisodeName)
         except error.TVDBAttributeError:
             return u"<Episode>"
 
@@ -90,7 +93,7 @@ class Season(object):
                                      int(rhs.EpisodeNumber))))
 
     def __repr__(self):
-        return u"<Season {0}>".format( self.season_number )
+        return u"<Season {0:03}>".format( self.season_number )
 
     def append(self, episode):
         assert type(episode) in (Episode,)
