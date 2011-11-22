@@ -16,3 +16,37 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
+
+from distutils.core import setup
+from thetvdb.__init__ import __VERSION__, __NAME__, __AUTHOR__
+
+def get_description():
+    try:
+        return open("README.rst").read() + '\n' + open('CHANGES.rst').read()
+    except Exception:
+        return "No description"
+
+setup(
+    name = __NAME__,
+    version = '.'.join([str(d) for d in __VERSION__]),
+    author = __AUTHOR__,
+    author_email = "a@b.com",
+    packages = ['thetvdb'],
+    url = 'https://github.com/fuzzycode/thetvdb',
+    download_url = 'https://github.com/fuzzycode/thetvdb/downloads',
+    license = "LGPLv3",
+    keywords = ['thetvdb', 'tvdb', 'tv', 'episodes', 'API'],
+    description = "A clean and easy to use API for the thetvdb.com service.",
+    long_description = get_description(),
+    classifiers = [
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2.5",
+        "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2.7",
+        "Operating System :: OS Independent",
+        "Intended Audience :: Developers",
+        "Development Status :: 3 - Alpha",
+        "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+        "Topic :: Internet",
+    ]
+)

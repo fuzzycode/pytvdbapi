@@ -20,3 +20,4 @@
 __VERSION__ = (0,1,0)
 __NAME__ = 'thetvdb'
 __AUTHOR__ = 'Björn Larsson'
+__EMAIL__ = ""

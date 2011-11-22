@@ -23,6 +23,8 @@ pip-log.txt
 .coverage
 .tox
 
+MANIFEST
+
 # OSX Stuff
 ################################################
 
