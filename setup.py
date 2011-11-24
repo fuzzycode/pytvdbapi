@@ -22,7 +22,7 @@ from thetvdb.__init__ import __VERSION__, __NAME__, __AUTHOR__
 
 def get_description():
     try:
-        return open("README.rst").read() + '\n' + open('CHANGES.rst').read()
+        return open("README.rst").read() + '\n' + open('CHANGES.txt').read()
     except Exception:
         return "No description"
 
@@ -30,7 +30,7 @@ setup(
     name = __NAME__,
     version = '.'.join([str(d) for d in __VERSION__]),
     author = __AUTHOR__,
-    author_email = "a@b.com",
+    author_email = "develop@bjornlarsson.net",
     packages = ['thetvdb'],
     url = 'https://github.com/fuzzycode/thetvdb',
     download_url = 'https://github.com/fuzzycode/thetvdb/downloads',
