@@ -1,0 +1,127 @@
+About
+=====
+thetvdb is a python API for thetvdb.com_ online database for tv-shows. The
+API is designed to be as easy and intuitive as possible to use.
+
+The API is designed to respect the functionality of thetvdb.com_ as far as
+possible. It uses caching as much as possible to reduce the workload of the
+servers.
+
+If you enjoy the service, you should consider contributing to the database if
+possible.
+
+Dependencies
+============
+thetvdb depends on *httplib2* to properly follow the http protocol and to
+make caching easy and straight forward.
+
+Install
+=======
+The package has not yet been added to PyPI so you have two options to install
+thetvdb. The easiest and recommended way is to use pip_ and,
+replacing X, Y, Z for the version you want, executing::
+
+    $pip install https://github.com/fuzzycode/thetvdb/downloads/thetvdb-X.Y.Z.tar.gz
+
+Or you can download the desired version from https://github.com/fuzzycode/thetvdb/downloads/
+and unpack it and execute::
+
+    $cd thetvdb/
+    $python setup.py install
+
+To get the latest development version you can install directly from source.
+Note that no guaranties are made as to the stability of the source tree::
+
+    $pip install git+git://github.com/fuzzycode/thetvdb.git
+
+
+Usage
+=====
+To use the API you should apply for a API Key for your particular application
+. An API Key can be obtained from thetvdb.com_. Note that the key used in the
+examples is only intended for testing purposes and should not be used for
+other purposes.
+
+To search for a specific show::
+
+    >>> from thetvdb import api
+    >>> db = api.tvdb("B43FF87DE395DF56")
+    >>> search = db.search("How I met your mother", "en")
+    >>> len(search)
+    1
+    >>> show = search[0]
+    >>> dir(show)
+    ['FirstAired', 'IMDB_ID', 'Overview', 'SeriesName', 'api', 'banner', 'id', 'language', 'language', 'seasons', 'seriesid', 'zap2it_id']
+    >>> show.SeriesName
+    'How I Met Your Mother'
+
+
+You can index individual seasons and individual episodes using convenient
+indexing::
+
+    >>> from thetvdb import api
+    >>> db = api.tvdb("B43FF87DE395DF56")
+    >>> search = db.search("How I met your mother", "en")
+    >>> show = search[0]
+    >>> show[1]
+    <Season 001>
+
+    >>> show[1][4]
+    <Episode S001E004 - Return of the Shirt>
+
+
+To list all episodes of a show::
+
+    >>> from thetvdb import api
+    >>> db = api.tvdb("B43FF87DE395DF56")
+    >>> search = db.search("How I met your mother", "en")
+    >>> show = search[0]
+    >>> for season in show:
+    ...     for episode in season:
+    ...         print episode
+    ...
+    <Episode S000E001 - Robin Sparkles Music Video - Let's Go to the Mall>
+    <Episode S000E002 - Robin Sparkles Music Video - Sandcastles In the Sand>
+    <Episode S000E003 - Marshall's Music Video - You Just Got Slapped>
+    <Episode S000E004 - Lily and Marshall's Honeymoon Videos>
+    <Episode S000E005 - Barney Stinson's Video Resume>
+    <Episode S000E006 - Nothing Suits Me Like A Suit>
+    <Episode S000E007 - A Night With Your Mother Panel Discussion>
+    <Episode S000E008 - The Beaver Song>
+    <Episode S000E009 - Best Night Ever>
+    <Episode S000E010 - Best Night Ever: Behind the Scenes>
+    <Episode S001E001 - Pilot>
+    <Episode S001E002 - Purple Giraffe>
+    ...
+    ...
+    <Episode S007E010 - Tick Tick Tick...>
+    <Episode S007E011 - The Rebound Girl>
+    <Episode S007E012 - Symphony of Illumination>
+
+Documentation
+=============
+
+
+Bugs
+====
+If you find any bug or want to request a new feature to the API please use
+the issue tracker associated with the project.
+
+Try to be as detailed as possible when filing a bug, preferably providing a
+patch or a test case illustrating the issue.
+
+Contact
+=======
+To get in contact with me, you can send me an email at
+develop@bjornlarsson.net or you can follow me on twitter
+`@fuzzycode <https://twitter.com/#!/fuzzycode>`__
+
+
+
+
+
+
+
+.. _thetvdb.com: http://thetvdb.com
+.. _PyPI: http://pypi.python.org/pypi
+.. _pip: http://www.pip-installer.org/en/latest/index.html
