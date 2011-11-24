@@ -16,4 +16,17 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
+"""
+A module containing classes and functions needed to be backwards compatible
+with python 2.5 and 2.6.
+"""
 
+import logging
+
+class NullHandler(logging.Handler):
+    """A replacement NullHandler for the one found in the standard library as
+     of version 2.7"""
+
+    def emit(self, record):
+        """A do nothing emitter"""
+        pass

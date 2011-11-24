@@ -22,4 +22,15 @@ __NAME__ = 'thetvdb'
 __AUTHOR__ = 'Björn Larsson'
 __EMAIL__ = ""
 
-__all__ = ['api']
+__all__ = ['api', 'get_logger']
+
+def get_logger(name=__name__):
+    import logging
+    try:
+        from logging import NullHandler
+    except ImportError:
+        from backport import NullHandler
+
+    logger = logging.getLogger(name)
+    logger.addHandler(NullHandler())
+    return logger

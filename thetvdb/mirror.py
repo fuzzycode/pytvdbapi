@@ -17,17 +17,19 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
 
-import logging
+"""
+
+"""
+
 import random
 
-from thetvdb import error
+from thetvdb import error, get_logger
 from thetvdb.xmlhelpers import parse_xml
 
 __all__ = ['TypeMask', 'Mirror', 'MirrorList']
 
 #Module logger object
-logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
+logger = get_logger(__name__)
 
 class TypeMask(object):
     """An enum like class with the mask flags for the mirrors"""

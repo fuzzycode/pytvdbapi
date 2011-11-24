@@ -17,15 +17,13 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
 
-import logging
-from thetvdb import error
-
+from thetvdb import error, get_logger
 from thetvdb.xmlhelpers import parse_xml
 
 __all__ = ['Language', 'LanguageList']
 
-logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
+#Module logger object
+logger = get_logger(__name__)
 
 class Language(object):
     """Holds information about a language instance"""
@@ -40,9 +38,10 @@ class Language(object):
 class LanguageList(object):
     """Managing a list of language objects"""
     def __init__(self, etree):
-        self.data = {lang['abbreviation'] : Language(lang['name'],
-                        lang['abbreviation'], lang['id'])
-            for lang in  parse_xml( etree, "Language" ) }
+        langs = [Language(l['name'], l['abbreviation'], l['id'])
+                 for l in parse_xml(etree, "Language")]
+        self.data = dict((l.abbreviation, l) for l in langs)
+        
 
     def __contains__(self, item):
         return item in self.data

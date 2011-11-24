@@ -21,14 +21,13 @@
 A module containing all the errors raised by thetvdb
 """
 
-import logging
+from thetvdb import get_logger
 
 __all__ = ['TheTvDBError', 'BadData', 'ConnectionError', 'TVDBAttributeError',
             'TVDBIndexError']
 
 #Module level logger
-logger = logging.getLogger(__name__)
-logger.addHandler( logging.NullHandler() )
+logger = get_logger(__name__)
 
 class TheTvDBError(Exception):
     """Base exception for all exceptions raised by thetvdb"""

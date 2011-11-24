@@ -20,12 +20,11 @@
 """
 """
 
-import logging
 import tempfile
 import urllib
 import os
 import sys
-from thetvdb import error
+from thetvdb import error, get_logger
 from thetvdb.__init__ import __NAME__ as name
 from thetvdb.language import LanguageList
 from thetvdb.loader import Loader
@@ -36,8 +35,7 @@ from thetvdb.xmlhelpers import parse_xml, generate_tree
 __all__ = ['Episode', 'Season', 'Show', 'Search', 'tvdb']
 
 #Module logger object
-logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
+logger = get_logger(__name__)
 
 # List the URLs that we need
 urls = dict(mirrors="http://www.thetvdb.com/api/%(api_key)s/mirrors.xml",
@@ -250,6 +248,7 @@ class tvdb(object):
 #A small sample usage
 if __name__ == '__main__':
     def main():
+        import logging
         logger.addHandler(logging.StreamHandler(stream=sys.stdout))
         logger.setLevel(logging.DEBUG)
 

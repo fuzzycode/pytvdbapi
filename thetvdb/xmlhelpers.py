@@ -17,15 +17,18 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
 
-import logging
-import xml.etree.ElementTree as etree
+"""
+"""
+
 import datetime
-from thetvdb import error
+import xml.etree.ElementTree as etree
+
+from thetvdb import error, get_logger
 
 __all__ = ['generate_tree', 'parse_xml']
 
-logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler()) 
+#Module level logger object
+logger = get_logger(__name__)
 
 def generate_tree( xml_data, root = None ):
     """Converts the raw xml data into an element tree"""
@@ -43,10 +46,10 @@ def generate_tree( xml_data, root = None ):
 
 def parse_xml(etree, element):
     """
-
     :param etree:
     :param element:
     :return:
+
     """
 
     logger.debug("Parsing element tree for {0}".format(element))
