@@ -18,9 +18,11 @@
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
 
 """
+A helper module for parsing a XML data.
 """
 
 import datetime
+import re
 import xml.etree.ElementTree as etree
 
 from thetvdb import error, get_logger
@@ -48,8 +50,20 @@ def parse_xml(etree, element):
     """
     :param etree:
     :param element:
-    :return:
+    :return: A list of dictionaries containing the data of the format tag:value
 
+    Parses the element tree for elements of type *element* and converts the
+    data into a dictionary.
+
+    It will attempt some attempts to convert the data into native Python
+    types. The following conversions will be applied.
+
+      * yyyy-mm-dd will be converted into a datetime.date object.
+      * Integers will be converted to int
+      * Floats will be converted to float
+      * Lists separated by | will be converted into a list. Eg. |foo|bar|
+      will be converted into ['foo', 'bar']. Note that even if there is only
+      one element it will be converted into a one element list.
     """
 
     logger.debug("Parsing element tree for {0}".format(element))
@@ -64,13 +78,17 @@ def parse_xml(etree, element):
                 value = value.strip()
             else:
                 value = ""
-            
 
             try: #Try to format as a datetime object
                 value = datetime.datetime.strptime(value, "%Y-%m-%d").date()
             except ValueError:
                 if '|' in value: #Split piped values into a list
                     value = value.strip("|").split("|")
+                else:
+                    if re.match(r"^\d+\.\d+$", value):
+                        value = float(value)
+                    elif re.match(r"^\d+$", value):
+                        value = int(value)
 
             data[tag] = value
         _list.append(data)

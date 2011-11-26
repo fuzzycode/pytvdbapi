@@ -95,7 +95,7 @@ class TestApi(basetest.TheTVDBTest):
         friends = _load_show("friends")
 
         self.assertEqual(friends.SeriesName, "Friends")
-        self.assertEqual(friends.id, "79168")
+        self.assertEqual(friends.id, 79168)
 
         #This should not yet be loaded so should raise an error
         self.assertRaises(error.TVDBAttributeError, friends.__getattr__, "Genre")
@@ -186,7 +186,6 @@ class TestApi(basetest.TheTVDBTest):
         ep = friends[1][1]
 
         self.assertEqual(ep.EpisodeName, "The One Where Monica Gets A Roommate")
-        self.assertEqual(ep.Rating, "7.5")
         self.assertEqual(ep.Writer, ["David Crane", "Marta Kauffman"])
         self.assertEqual(ep.FirstAired, datetime.date(year=1994, month=9, day=22))
 
@@ -234,5 +233,15 @@ class TestApi(basetest.TheTVDBTest):
         self.assertRaises(error.TVDBIndexError, search.__getitem__, 100)
         self.assertRaises(error.TVDBIndexError, search.__getitem__, "foo")
 
+    def test_type_convertion(self):
+        """Data types should be properly converted"""
+        friends = _load_show("friends")
+        ep = friends[1][2]
+
+        self.assertEquals(type(ep.RatingCount), int)
+        self.assertEquals(type(ep.Rating), float)
+        self.assertEquals(type(ep.GuestStars), list)
+        self.assertEquals(type(ep.FirstAired), datetime.date)
+        
 if __name__ == "__main__":
     sys.exit(unittest.main())
