@@ -335,7 +335,7 @@ class Show(object):
     
 class Search(object):
     """
-    A search result returned from calling :func:`tvdb.search(). It supports
+    A search result returned from calling :func:`tvdb.search()`. It supports
     iterating and the individual shows matching the search can be accessed
     using the [ ] syntax.
 
