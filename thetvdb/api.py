@@ -201,9 +201,10 @@ class Show(object):
     :raise: TVDBAttributeError, TVDBIndexError
 
     Holds attributes about a single show and contains all seasons associated
-    with a show. The attributes are named exactly as returned from thetvdb
-    .com_. Some type conversion of of the attributes will take place as
-    follows:
+    with a show. The attributes are named exactly as returned from thetvdb.com_.
+    This object should be considered a read only container of data
+    provided from the server. Some type conversion of of the attributes will
+    take place as follows:
 
     * Strings of the format yyyy-mm-dd will be converted into a\
         :class:`datetime.date` object.
@@ -334,9 +335,9 @@ class Show(object):
     
 class Search(object):
     """
-    A search result returned from calling tvdb.search(). It supports
+    A search result returned from calling :func:`tvdb.search(). It supports
     iterating and the individual shows matching the search can be accessed
-    using the [] syntax.
+    using the [ ] syntax.
 
     The search will contain 0 or more :class:`Show()` instances matching the
     search.
