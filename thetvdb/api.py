@@ -18,6 +18,20 @@
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
 
 """
+A small, clean and easy to use API for the thetvdb.com online DB service. It
+is designed to be fast, easy to use and to respect the functionality of the
+thetvdb.com API.
+
+This module is the public interface for the package.
+
+Usage::
+
+    >>> from thetvdb import api
+    >>> db = api.tvdb("B43FF87DE395DF56")
+    >>> search = db.search("How I met your mother", "en")
+    >>> show = search[0]
+    >>> show.SeriesName
+    'How I Met Your Mother'
 """
 
 import tempfile
@@ -46,6 +60,49 @@ urls = dict(mirrors="http://www.thetvdb.com/api/%(api_key)s/mirrors.xml",
 
 
 class Episode(object):
+    """
+    :raise: TVDBAttributeError
+
+    Holds all information about an individual episode. This should be treated
+    as a read-only object to obtain the attributes of the episode.
+
+    All episode values returned from thetvdb.com_ are
+    accessible as attributes of the episode object. The attributes will be
+    named exactly as returned from thetvdb.com_ and are case sensitive.
+    TVDBAttributeError will be raised if accessing an invalid attribute. Some
+    type conversions of the attributes will take place as follows:
+
+    * Strings of the format yyyy-mm-dd will be converted into a\
+        :class:`datetime.date` object.
+    * Pipe separated strings will be converted into a list. E.g "foo | bar" =>\
+        ["foo", "bar"]
+    * Numbers with a decimal point will be converted to float
+    * A number will be converted into an int
+    
+
+    It is possible to obtain the containing season through the Episode.season
+    attribute.
+
+    Example::
+
+        >>> from thetvdb import api
+        >>> db = api.tvdb("B43FF87DE395DF56")
+        >>> search = db.search("Dexter", "en")
+        >>> show = search[0]
+        >>> episode = show[1][5]
+        >>> dir(episode)
+        ['Combined_episodenumber', 'Combined_season', 'DVD_chapter', 'DVD_discid', 'DVD_episodenumber', 'DVD_season', 'Director', 'EpImgFlag', 'EpisodeName', 'EpisodeNumber', 'FirstAired', 'GuestStars', 'IMDB_ID', 'Language', 'Overview', 'ProductionCode', 'Rating', 'RatingCount', 'SeasonNumber', 'Writer', 'absolute_number', 'filename', 'id', 'lastupdated', 'season', 'seasonid', 'seriesid']
+        >>> episode.EpisodeName
+        'Love American Style'
+        >>> episode.GuestStars
+        ['Terry Woodberry', ' Carmen Olivares', ' Ashley Rose Orr', ' Demetrius Grosse', ' Monique Curnen', ' June Angela', ' Valerie Dillman', ' Brad Henke', ' Jose Zuniga', ' Allysa Tacher', ' Lizette Carrion', ' Norma Fontana', ' Minerva Garcia', ' Josh Daugherty', ' Geoffrey Rivas']
+        >>> episode.FirstAired
+        datetime.date(2006, 10, 29)
+        >>> episode.season
+        <Season 001>
+
+    .. _thetvdb.com: http://thetvdb.com
+    """
     def __init__(self, data, season):
         self.data, self.season = data, season
 
@@ -71,6 +128,44 @@ class Episode(object):
             return u"<Episode>"
 
 class Season(object):
+    """
+    :raise: TVDBIndexError
+
+    Holds all the episodes that belong to a specific season. It is possible
+    to iterate over the Season to obtain the individual :class:`Episode`
+    instances. It is also possible to obtain an individual episode using the
+    [ ] syntax. It will raise :class:`error.TVDBIndexError` if trying to index
+    an invalid episode index.
+
+    Example::
+
+        >>> from thetvdb import api
+        >>> db = api.tvdb("B43FF87DE395DF56")
+        >>> search = db.search("Dexter", "en")
+        >>> show = search[0]
+        >>> seson = show[1]
+        >>> season = show[1]
+        >>> len(season)
+        12
+        >>> season[3]
+        <Episode S001E003 - Popping Cherry>
+        >>> for episode in season:
+        ...     print episode
+        ...
+        <Episode S001E001 - Dexter>
+        <Episode S001E002 - Crocodile>
+        <Episode S001E003 - Popping Cherry>
+        <Episode S001E004 - Let's Give the Boy a Hand>
+        <Episode S001E005 - Love American Style>
+        <Episode S001E006 - Return to Sender>
+        <Episode S001E007 - Circle of Friends>
+        <Episode S001E008 - Shrink Wrap>
+        <Episode S001E009 - Father Knows Best>
+        <Episode S001E010 - Seeing Red>
+        <Episode S001E011 - Truth Be Told>
+        <Episode S001E012 - Born Free>
+    """
+    
     def __init__(self, season_number, show):
         self.show, self.season_number = show, season_number
         self.episodes = dict()
@@ -80,7 +175,7 @@ class Season(object):
             return self.episodes[item]
         except IndexError:
             logger.error(u"Episode {0} not found".format(item))
-            raise error.TVDBIndexError()
+            raise error.TVDBIndexError("Index {0} not found".format(item))
 
     def __len__(self):
         return len(self.episodes)
@@ -102,9 +197,69 @@ class Season(object):
 
 
 class Show(object):
-    """Holds data about a show in thetvdb"""
+    """
+    :raise: TVDBAttributeError, TVDBIndexError
+
+    Holds attributes about a single show and contains all seasons associated
+    with a show. The attributes are named exactly as returned from thetvdb
+    .com_. Some type conversion of of the attributes will take place as
+    follows:
+
+    * Strings of the format yyyy-mm-dd will be converted into a\
+        :class:`datetime.date` object.
+    * Pipe separated strings will be converted into a list. E.g "foo | bar" =>\
+        ["foo", "bar"]
+    * Numbers with a decimal point will be converted to float
+    * A number will be converted into an int
+
+    
+    The Show uses lazy evaluation and will only load the full data set from
+    the server when this data is needed. This is to speed up the searches and
+    to reduce the workload of the servers. This way,
+    data will only be loaded when actually needed.
+
+    The Show supports iteration to iterate over the Seasons contained in the
+    Show. You can also index individual seasons with the [ ] syntax.
+
+    .. note:: When searching, thetvdb.com_ provides a basic set of attributes
+        for the show. When the full data set is loaded thetvdb.com_ provides a
+        complete set of attributes for the show. The full data set is loaded when
+        accessing the season data of the show. If you need access to the full set
+        of attributes you can force the loading of the full data set by calling
+        the :func:`update()` function.
+
+
+    Example::
+
+        >>> from thetvdb import api
+        >>> db = api.tvdb("B43FF87DE395DF56")
+        >>> search = db.search("Dexter", "en")
+        >>> show = search[0]
+        >>> dir(show)
+        ['FirstAired', 'IMDB_ID', 'Overview', 'SeriesName', 'api', 'banner', 'id', 'lang', 'language', 'seasons', 'seriesid', 'zap2it_id']
+        >>> show.update()
+        >>> dir(show)
+        ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'ContentRating', 'FirstAired', 'Genre', 'IMDB_ID', 'Language', 'Network', 'NetworkID', 'Overview', 'Rating', 'RatingCount', 'Runtime', 'SeriesID', 'SeriesName', 'Status', 'added', 'addedBy', 'api', 'banner', 'fanart', 'id', 'lang', 'language', 'lastupdated', 'poster', 'seasons', 'seriesid', 'zap2it_id']
+        >>> len(show)
+        7
+        >>> show[5]
+        <Season 005>
+        >>> for season in show:
+        ...     print season
+        ...
+        <Season 000>
+        <Season 001>
+        <Season 002>
+        <Season 003>
+        <Season 004>
+        <Season 005>
+        <Season 006>
+
+
+    .. _thetvdb.com: http://thetvdb.com
+    """
     def __init__(self, data, api, language):
-        self.api, self.data, self.language = api, data, language
+        self.api, self.data, self.lang = api, data, language
         self.seasons = dict()
 
     def __getattr__(self, item):
@@ -114,6 +269,9 @@ class Show(object):
             logger.debug( u"Attribute not found" )
             raise error.TVDBAttributeError(u"Show has no attribute names %s" %
                                            item)
+
+    def __repr__(self):
+        return "<Show - {0}>".format(self.SeriesName)
 
     def __dir__(self):
         return self.data.keys() + \
@@ -143,6 +301,9 @@ class Show(object):
             raise error.TVDBIndexError()
 
     def update(self):
+        """
+        Updates the data structure with data from the server.
+        """
         self._populate_data()
 
     def _populate_data(self):
@@ -151,7 +312,7 @@ class Show(object):
         context = {'mirror':self.api.mirrors.get_mirror(TypeMask.XML).url,
                        'api_key':self.api.config['api_key'],
                        'seriesid':self.id,
-                       'language':self.language}
+                       'language':self.lang}
 
         data = generate_tree(self.api.loader.load(urls['series'] % context))
         episodes = [d for d in parse_xml( data, "Episode")]
@@ -172,11 +333,35 @@ class Show(object):
 
     
 class Search(object):
+    """
+    A search result returned from calling tvdb.search(). It supports
+    iterating and the individual shows matching the search can be accessed
+    using the [] syntax.
+
+    The search will contain 0 or more :class:`Show()` instances matching the
+    search.
+
+    The shows will be stored in the same order as they are returned from
+    `thetvdb.com <http://thetvdb.com>`_. They state that if there is a
+    perfect match to the search, it will be the first element returned.
+
+    Example::
+
+        >>> from thetvdb import api
+        >>> db = api.tvdb("B43FF87DE395DF56")
+        >>> search = db.search("Dexter", "en")
+        >>> for s in search:
+        ...     print s
+        ...
+        <Show - Dexter>
+        <Show - Cliff Dexter>
+    """
+    
     def __init__(self, result, search, language):
         self.result, self.search, self.language = result, search, language
 
     def __len__(self):
-        return len( self.result )
+        return len(self.result)
 
     def __getitem__(self, item):
         try:
@@ -185,13 +370,32 @@ class Search(object):
             logger.warning("Index out of range")
             raise error.TVDBIndexError("Index out of range")
 
-
     def __iter__(self):
-        return iter( self.result )
+        return iter(self.result)
 
 
 class tvdb(object):
-    """ """
+    """
+    :param api_key: The API key to use to communicate with the server
+    :param kwargs:
+
+    This is the main entry point for the API. The functionality of the API is
+    controlled by configuring the key word arguments. The supported key word
+    arguments are:
+
+    * *force_lang* default=False. If set to True, the API will reload the\
+        language list from the server. If False, the local preloaded file\
+        will be used. The language list is relative stable but if there are\
+        changes it could be useful to set this to True to obtain a new version\
+        from the server. It is only necessary to do this once since the API\
+        stores the reloaded data for further use.
+    * *cache_dir* default=/tmp/thetvdb/. Specifies the directory to use\
+        for caching the server requests. It will default to a directory\
+        within the platform specific temp folder.\
+
+        
+    """
+
     def __init__(self, api_key, **kwargs):
         self.config = dict()
 
@@ -227,6 +431,39 @@ class tvdb(object):
             generate_tree(self.loader.load(urls['mirrors'] % self.config)))
 
     def search(self, show, language, cache=True):
+        """
+        :param show: The show name to search for
+        :param language: The language abbreviation to search for. E.g. "en"
+        :param cache: If False, the local cache will not be used and the
+            resources will be reloaded from server.
+        :return: A :class:`Search()` instance
+        :raise: TVDBValueError
+
+        Searches the server for a show with the provided show name in the
+        provided language. The language should be one of the supported
+        language abbreviations or it could be set to *all* to search all
+        languages. It will raise :class:`TVDBValueError` if an invalid
+        language is provided.
+
+        Searches are always cached within a session to make subsequent
+        searches with the same parameters really cheap and fast. If *cache*
+        is set to True searches will also be cached across sessions,
+        this is recommended to increase speed and to reduce the workload of
+        the servers.
+
+        Example::
+        
+            >>> from thetvdb import api
+            >>> db = api.tvdb("B43FF87DE395DF56")
+            >>> search = db.search("Dexter", "en")
+            >>> for s in search:
+            ...     print s
+            ...
+            <Show - Dexter>
+            <Show - Cliff Dexter>
+
+        """
+        
         logger.debug("Searching for {0} using language {1}"
             .format(show, language))
 
