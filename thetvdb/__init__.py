@@ -22,8 +22,6 @@ __NAME__ = 'thetvdb'
 __AUTHOR__ = 'Björn Larsson'
 __EMAIL__ = ""
 
-__all__ = ['api', 'get_logger']
-
 def get_logger(name=__name__):
     import logging
     try:
