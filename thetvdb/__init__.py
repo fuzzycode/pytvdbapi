@@ -18,9 +18,9 @@
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
 
 __VERSION__ = (0,1,0)
-__NAME__ = 'thetvdb'
-__AUTHOR__ = 'Björn Larsson'
-__EMAIL__ = ""
+__NAME__ = u'thetvdb'
+__AUTHOR__ = u'Björn Larsson'
+__EMAIL__ = u"develop@bjornlarsson.net"
 
 def get_logger(name=__name__):
     import logging

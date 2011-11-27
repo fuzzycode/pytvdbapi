@@ -18,7 +18,7 @@
 # along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
 
 from distutils.core import setup
-from thetvdb.__init__ import __VERSION__, __NAME__, __AUTHOR__
+from thetvdb.__init__ import __VERSION__, __NAME__, __AUTHOR__, __EMAIL__
 
 def get_description():
     try:
@@ -30,7 +30,7 @@ setup(
     name = __NAME__,
     version = '.'.join([str(d) for d in __VERSION__]),
     author = __AUTHOR__,
-    author_email = "develop@bjornlarsson.net",
+    author_email = __EMAIL__,
     packages = ['thetvdb'],
     url = 'https://github.com/fuzzycode/thetvdb',
     download_url = 'https://github.com/fuzzycode/thetvdb/downloads',
@@ -41,7 +41,6 @@ setup(
     long_description = get_description(),
     classifiers = [
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.5",
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Operating System :: OS Independent",
