@@ -21,10 +21,15 @@ __all__ = ['merge']
 
 def merge(d1, d2, decision = lambda x,y:y):
     """
+    :param d1: First dictionary to merge
+    :param d2: Second dictionary to merge
+    :param decision: A callable taking two values v1, v2 returning the value
+        to keep. The default is to keep values in d2.
+    :return: A new dictionary with the merged result
+
     Merging two dictionaries together using *decision* to determine what
     values will be used.
     """
-
     result = dict(d1)
     for k,v in d2.iteritems():
         if k in result:
