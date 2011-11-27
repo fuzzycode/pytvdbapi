@@ -12,8 +12,9 @@ possible.
 
 Dependencies
 ============
-thetvdb depends on *httplib2* to properly follow the http protocol and to
-make caching easy and straight forward.
+thetvdb depends on the following packages to function.
+
+  * httplib2
 
 Install
 =======
@@ -37,7 +38,7 @@ Note that no guaranties are made as to the stability of the source tree::
 
 Usage
 =====
-To use the API you should apply for a API Key for your particular application
+To use the API you should apply for an API Key for your particular application
 . An API Key can be obtained from thetvdb.com_. Note that the key used in the
 examples is only intended for testing purposes and should not be used for
 other purposes.
@@ -50,8 +51,6 @@ To search for a specific show::
     >>> len(search)
     1
     >>> show = search[0]
-    >>> dir(show)
-    ['FirstAired', 'IMDB_ID', 'Overview', 'SeriesName', 'api', 'banner', 'id', 'language', 'language', 'seasons', 'seriesid', 'zap2it_id']
     >>> show.SeriesName
     'How I Met Your Mother'
 
@@ -98,8 +97,12 @@ To list all episodes of a show::
     <Episode S007E011 - The Rebound Girl>
     <Episode S007E012 - Symphony of Illumination>
 
+Testing
+======
+
 Documentation
 =============
+
 
 
 Bugs
