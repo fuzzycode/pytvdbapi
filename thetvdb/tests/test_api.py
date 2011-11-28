@@ -170,15 +170,16 @@ class TestApi(basetest.TheTVDBTest):
             self.assertEqual(type(ep), thetvdb.api.Episode)
 
     def test_invalid_episode_index(self):
-        """The show should raise TVDBIndexError when trying to access invalid
+        """The Season should raise TVDBIndexError when trying to access invalid
          indexes
          """
         friends = _load_show("friends")
+        episode = friends[2]
 
-        self.assertRaises(error.TVDBIndexError, friends.__getitem__, -1)
-        self.assertRaises(error.TVDBIndexError, friends.__getitem__, 12)
-        self.assertRaises(error.TVDBIndexError, friends.__getitem__, 100)
-        self.assertRaises(error.TVDBIndexError, friends.__getitem__, "foo")
+        self.assertRaises(error.TVDBIndexError, episode.__getitem__, -1)
+        self.assertRaises(error.TVDBIndexError, episode.__getitem__, 100)
+        self.assertRaises(error.TVDBIndexError, episode.__getitem__, 1000)
+        self.assertRaises(error.TVDBIndexError, episode.__getitem__, "foo")
 
     def test_episode_attributes(self):
         """Episode should have correct attributes with correct values"""

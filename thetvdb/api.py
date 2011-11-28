@@ -173,7 +173,7 @@ class Season(object):
     def __getitem__(self, item):
         try:
             return self.episodes[item]
-        except IndexError:
+        except KeyError:
             logger.error(u"Episode {0} not found".format(item))
             raise error.TVDBIndexError("Index {0} not found".format(item))
 
