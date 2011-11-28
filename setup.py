@@ -37,7 +37,7 @@ setup(
     license = "LGPLv3",
     keywords = ['thetvdb', 'tvdb', 'tv', 'episodes', 'API'],
     description = "A clean and easy to use API for the thetvdb.com service.",
-    install_requires = ['httplib2'],
+    requires = ['httplib2'],
     long_description = get_description(),
     classifiers = [
         "Programming Language :: Python",
