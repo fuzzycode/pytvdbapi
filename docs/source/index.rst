@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to pytvdbapi's documentation!
-===================================
+=====================================
 
 Contents:
 
