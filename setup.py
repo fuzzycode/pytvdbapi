@@ -16,9 +16,14 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
+import sys
 
-from distutils.core import setup
 from pytvdbapi.__init__ import __VERSION__, __NAME__, __AUTHOR__, __EMAIL__
+
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
 def get_description():
     try:
@@ -26,27 +31,44 @@ def get_description():
     except Exception:
         return "No description"
 
-setup(
-    name = __NAME__,
-    version = '.'.join([str(d) for d in __VERSION__]),
-    author = __AUTHOR__,
-    author_email = __EMAIL__,
-    packages = ['pytvdbapi'],
-    url = 'https://github.com/fuzzycode/pytvdbapi',
-    download_url = 'https://github.com/fuzzycode/pytvdbapi/downloads',
-    license = "LGPLv3",
-    keywords = ['pytvdbapi', 'tvdb', 'tv', 'episodes', 'API'],
-    description = "A clean and easy to use API for the pytvdbapi.com service.",
-    requires = ['httplib2'],
-    long_description = get_description(),
-    classifiers = [
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 2.6",
-        "Programming Language :: Python :: 2.7",
-        "Operating System :: OS Independent",
-        "Intended Audience :: Developers",
-        "Development Status :: 3 - Alpha",
-        "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
-        "Topic :: Internet",
-    ]
-)
+
+def main(args):
+
+    meta_data = dict(
+        name = __NAME__,
+        version = '.'.join([str(d) for d in __VERSION__]),
+        author = __AUTHOR__,
+        author_email = __EMAIL__,
+        packages = ['pytvdbapi'],
+        url = 'https://github.com/fuzzycode/pytvdbapi',
+        download_url = 'https://github.com/fuzzycode/pytvdbapi/downloads',
+        license = "LGPLv3",
+        keywords = ['pytvdbapi', 'tvdb', 'tv', 'episodes', 'API'],
+        description = "A clean, resource friendly and easy to use API for the \
+             pytvdbapi.com service.",
+        long_description = get_description(),
+        classifiers = [
+            "Programming Language :: Python",
+            "Programming Language :: Python :: 2.6",
+            "Programming Language :: Python :: 2.7",
+            "Operating System :: OS Independent",
+            "Intended Audience :: Developers",
+            "Development Status :: 3 - Alpha",
+            "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+            "Topic :: Internet",
+        ]
+    )
+
+    if 'setuptools' in sys.modules:
+        meta_data['install_requires'] = 'httplib2'
+    else:
+        meta_data['requires'] = 'httplib2'
+
+    setup(**meta_data)
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main(sys.argv[1:]))
+    except KeyboardInterrupt:
+        sys.exit(1)
