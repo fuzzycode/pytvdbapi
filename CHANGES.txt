@@ -3,6 +3,11 @@ CHANGELOG
 
 2011-11-28, 0.1.0
 -----------------
-Initial alpha release of the package.
+  * Initial alpha release of the package.
 
 
+2011-11-29, 0.1.1
+-----------------
+  * Renamed the package to pytvdbapi to avoid any confusion with the official
+   thetvdb.com service.
+  * Updated the setup.py to use setuptools if available
