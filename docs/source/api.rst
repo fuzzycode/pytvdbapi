@@ -1,5 +1,5 @@
 API
 ===
 
-.. automodule:: thetvdb.api
+.. automodule:: pytvdbapi.api
     :members:

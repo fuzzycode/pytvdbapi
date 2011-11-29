@@ -2,32 +2,32 @@
 
 # Copyright 2011 Björn Larsson
 
-# This file is part of thetvdb.
+# This file is part of pytvdbapi.
 #
-# thetvdb is free software: you can redistribute it and/or modify
+# pytvdbapi is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# thetvdb is distributed in the hope that it will be useful,
+# pytvdbapi is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public License
-# along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
+# along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 import shutil
 import sys
 import tempfile
 import unittest
 import os
-from thetvdb import error
-from thetvdb.loader import Loader
-from thetvdb.tests import utils, basetest
+from pytvdbapi import error
+from pytvdbapi.loader import Loader
+from pytvdbapi.tests import utils, basetest
 
 
-class TestLoader(basetest.TheTVDBTest):
+class TestLoader(basetest.pytvdbapiTest):
     """tests the loader class. At the moment, this also co-tests the httplib2
      and could fail if the network connection is not working or the remote
      server is down. This is certainly not an ideal situation and I have to

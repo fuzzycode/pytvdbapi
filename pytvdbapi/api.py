@@ -2,31 +2,31 @@
 
 # Copyright 2011 Björn Larsson
 
-# This file is part of thetvdb.
+# This file is part of pytvdbapi.
 #
-# thetvdb is free software: you can redistribute it and/or modify
+# pytvdbapi is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# thetvdb is distributed in the hope that it will be useful,
+# pytvdbapi is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public License
-# along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
+# along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-A small, clean and easy to use API for the thetvdb.com online DB service. It
+A small, clean and easy to use API for the pytvdbapi.com online DB service. It
 is designed to be fast, easy to use and to respect the functionality of the
-thetvdb.com API.
+pytvdbapi.com API.
 
 This module is the public interface for the package.
 
 Usage::
 
-    >>> from thetvdb import api
+    >>> from pytvdbapi import api
     >>> db = api.tvdb("B43FF87DE395DF56")
     >>> search = db.search("How I met your mother", "en")
     >>> show = search[0]
@@ -38,13 +38,13 @@ import tempfile
 import urllib
 import os
 import sys
-from thetvdb import error, get_logger
-from thetvdb.__init__ import __NAME__ as name
-from thetvdb.language import LanguageList
-from thetvdb.loader import Loader
-from thetvdb.mirror import MirrorList, TypeMask
-from thetvdb.utils import merge
-from thetvdb.xmlhelpers import parse_xml, generate_tree
+from pytvdbapi import error, get_logger
+from pytvdbapi.__init__ import __NAME__ as name
+from pytvdbapi.language import LanguageList
+from pytvdbapi.loader import Loader
+from pytvdbapi.mirror import MirrorList, TypeMask
+from pytvdbapi.utils import merge
+from pytvdbapi.xmlhelpers import parse_xml, generate_tree
 
 __all__ = ['Episode', 'Season', 'Show', 'Search', 'tvdb']
 
@@ -66,9 +66,9 @@ class Episode(object):
     Holds all information about an individual episode. This should be treated
     as a read-only object to obtain the attributes of the episode.
 
-    All episode values returned from thetvdb.com_ are
+    All episode values returned from pytvdbapi.com_ are
     accessible as attributes of the episode object. The attributes will be
-    named exactly as returned from thetvdb.com_ and are case sensitive.
+    named exactly as returned from pytvdbapi.com_ and are case sensitive.
     TVDBAttributeError will be raised if accessing an invalid attribute. Some
     type conversions of the attributes will take place as follows:
 
@@ -85,7 +85,7 @@ class Episode(object):
 
     Example::
 
-        >>> from thetvdb import api
+        >>> from pytvdbapi import api
         >>> db = api.tvdb("B43FF87DE395DF56")
         >>> search = db.search("Dexter", "en")
         >>> show = search[0]
@@ -101,7 +101,7 @@ class Episode(object):
         >>> episode.season
         <Season 001>
 
-    .. _thetvdb.com: http://thetvdb.com
+    .. _pytvdbapi.com: http://pytvdbapi.com
     """
     def __init__(self, data, season):
         self.data, self.season = data, season
@@ -139,7 +139,7 @@ class Season(object):
 
     Example::
 
-        >>> from thetvdb import api
+        >>> from pytvdbapi import api
         >>> db = api.tvdb("B43FF87DE395DF56")
         >>> search = db.search("Dexter", "en")
         >>> show = search[0]
@@ -201,7 +201,7 @@ class Show(object):
     :raise: TVDBAttributeError, TVDBIndexError
 
     Holds attributes about a single show and contains all seasons associated
-    with a show. The attributes are named exactly as returned from thetvdb.com_.
+    with a show. The attributes are named exactly as returned from pytvdbapi.com_.
     This object should be considered a read only container of data
     provided from the server. Some type conversion of of the attributes will
     take place as follows:
@@ -222,8 +222,8 @@ class Show(object):
     The Show supports iteration to iterate over the Seasons contained in the
     Show. You can also index individual seasons with the [ ] syntax.
 
-    .. note:: When searching, thetvdb.com_ provides a basic set of attributes
-        for the show. When the full data set is loaded thetvdb.com_ provides a
+    .. note:: When searching, pytvdbapi.com_ provides a basic set of attributes
+        for the show. When the full data set is loaded pytvdbapi.com_ provides a
         complete set of attributes for the show. The full data set is loaded when
         accessing the season data of the show. If you need access to the full set
         of attributes you can force the loading of the full data set by calling
@@ -232,7 +232,7 @@ class Show(object):
 
     Example::
 
-        >>> from thetvdb import api
+        >>> from pytvdbapi import api
         >>> db = api.tvdb("B43FF87DE395DF56")
         >>> search = db.search("Dexter", "en")
         >>> show = search[0]
@@ -257,7 +257,7 @@ class Show(object):
         <Season 006>
 
 
-    .. _thetvdb.com: http://thetvdb.com
+    .. _pytvdbapi.com: http://pytvdbapi.com
     """
     def __init__(self, data, api, language):
         self.api, self.data, self.lang = api, data, language
@@ -343,12 +343,12 @@ class Search(object):
     search.
 
     The shows will be stored in the same order as they are returned from
-    `thetvdb.com <http://thetvdb.com>`_. They state that if there is a
+    `pytvdbapi.com <http://pytvdbapi.com>`_. They state that if there is a
     perfect match to the search, it will be the first element returned.
 
     Example::
 
-        >>> from thetvdb import api
+        >>> from pytvdbapi import api
         >>> db = api.tvdb("B43FF87DE395DF56")
         >>> search = db.search("Dexter", "en")
         >>> for s in search:
@@ -390,7 +390,7 @@ class tvdb(object):
         changes it could be useful to set this to True to obtain a new version\
         from the server. It is only necessary to do this once since the API\
         stores the reloaded data for further use.
-    * *cache_dir* default=/tmp/thetvdb/. Specifies the directory to use\
+    * *cache_dir* default=/tmp/pytvdbapi/. Specifies the directory to use\
         for caching the server requests. It will default to a directory\
         within the platform specific temp folder.\
 
@@ -454,7 +454,7 @@ class tvdb(object):
 
         Example::
         
-            >>> from thetvdb import api
+            >>> from pytvdbapi import api
             >>> db = api.tvdb("B43FF87DE395DF56")
             >>> search = db.search("Dexter", "en")
             >>> for s in search:

@@ -2,7 +2,7 @@
 <Mirrors>
   <Mirror>
     <id>1</id>
-    <mirrorpath>http://thetvdb.com</mirrorpath>
+    <mirrorpath>http://pytvdbapi.com</mirrorpath>
     <typemask>7</typemask>
   </Mirror>
 </Mirrors>

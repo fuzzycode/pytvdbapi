@@ -2,20 +2,20 @@
 
 # Copyright 2011 Björn Larsson
 
-# This file is part of thetvdb.
+# This file is part of pytvdbapi.
 #
-# thetvdb is free software: you can redistribute it and/or modify
+# pytvdbapi is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# thetvdb is distributed in the hope that it will be useful,
+# pytvdbapi is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public License
-# along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
+# along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 
@@ -23,8 +23,8 @@
 
 import random
 
-from thetvdb import error, get_logger
-from thetvdb.xmlhelpers import parse_xml
+from pytvdbapi import error, get_logger
+from pytvdbapi.xmlhelpers import parse_xml
 
 __all__ = ['TypeMask', 'Mirror', 'MirrorList']
 
@@ -38,7 +38,7 @@ class TypeMask(object):
     ZIP = 4
 
 class Mirror(object):
-    """Stores data about a thetvdb.com mirror server"""
+    """Stores data about a pytvdbapi.com mirror server"""
 
     def __init__(self, id, url, type_mask):
         self.id, self.url, self.type_mask = id, url, int(type_mask)
@@ -68,5 +68,5 @@ class MirrorList(object):
                 [m for m in self.data if
                  int(m.type_mask) & int(type_mask) ==  int(type_mask)])
         except IndexError:
-            raise error.TheTvDBError("No Mirror matching {0} found".
+            raise error.pytvdbapiError("No Mirror matching {0} found".
                 format(type_mask))

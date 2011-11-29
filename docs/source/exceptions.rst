@@ -1,7 +1,7 @@
 Exceptions
 ==========
 
-.. automodule:: thetvdb.error
+.. automodule:: pytvdbapi.error
     :members:
     :undoc-members:
     

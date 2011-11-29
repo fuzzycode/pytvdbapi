@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# thetvdb documentation build configuration file, created by
+# pytvdbapi documentation build configuration file, created by
 # sphinx-quickstart on Wed Nov 23 21:00:33 2011.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -18,7 +18,7 @@ import sys, os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath(os.path.join(__file__, "../../../")))
 
-from thetvdb.__init__ import __AUTHOR__, __NAME__, __VERSION__
+from pytvdbapi.__init__ import __AUTHOR__, __NAME__, __VERSION__
 
 
 # -- General configuration -----------------------------------------------------
@@ -167,7 +167,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'thetvdbdoc'
+htmlhelp_basename = 'pytvdbapidoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -186,7 +186,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'thetvdb.tex', u'thetvdb Documentation',
+  ('index', 'pytvdbapi.tex', u'pytvdbapi Documentation',
    u'Bjorn Larsson', 'manual'),
 ]
 
@@ -216,7 +216,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'thetvdb', u'thetvdb Documentation',
+    ('index', 'pytvdbapi', u'pytvdbapi Documentation',
      [u'Bjorn Larsson'], 1)
 ]
 
@@ -230,8 +230,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'thetvdb', u'thetvdb Documentation',
-   u'Bjorn Larsson', 'thetvdb', 'One line description of project.',
+  ('index', 'pytvdbapi', u'pytvdbapi Documentation',
+   u'Bjorn Larsson', 'pytvdbapi', 'One line description of project.',
    'Miscellaneous'),
 ]
 

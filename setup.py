@@ -2,23 +2,23 @@
 
 # Copyright 2011 Björn Larsson
 
-# This file is part of thetvdb.
+# This file is part of pytvdbapi.
 #
-# thetvdb is free software: you can redistribute it and/or modify
+# pytvdbapi is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# thetvdb is distributed in the hope that it will be useful,
+# pytvdbapi is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public License
-# along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
+# along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 from distutils.core import setup
-from thetvdb.__init__ import __VERSION__, __NAME__, __AUTHOR__, __EMAIL__
+from pytvdbapi.__init__ import __VERSION__, __NAME__, __AUTHOR__, __EMAIL__
 
 def get_description():
     try:
@@ -31,12 +31,12 @@ setup(
     version = '.'.join([str(d) for d in __VERSION__]),
     author = __AUTHOR__,
     author_email = __EMAIL__,
-    packages = ['thetvdb'],
-    url = 'https://github.com/fuzzycode/thetvdb',
-    download_url = 'https://github.com/fuzzycode/thetvdb/downloads',
+    packages = ['pytvdbapi'],
+    url = 'https://github.com/fuzzycode/pytvdbapi',
+    download_url = 'https://github.com/fuzzycode/pytvdbapi/downloads',
     license = "LGPLv3",
-    keywords = ['thetvdb', 'tvdb', 'tv', 'episodes', 'API'],
-    description = "A clean and easy to use API for the thetvdb.com service.",
+    keywords = ['pytvdbapi', 'tvdb', 'tv', 'episodes', 'API'],
+    description = "A clean and easy to use API for the pytvdbapi.com service.",
     requires = ['httplib2'],
     long_description = get_description(),
     classifiers = [

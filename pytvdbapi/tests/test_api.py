@@ -2,29 +2,29 @@
 
 # Copyright 2011 Björn Larsson
 
-# This file is part of thetvdb.
+# This file is part of pytvdbapi.
 #
-# thetvdb is free software: you can redistribute it and/or modify
+# pytvdbapi is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# thetvdb is distributed in the hope that it will be useful,
+# pytvdbapi is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public License
-# along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
+# along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 import unittest
 import datetime
-from thetvdb import error
-import thetvdb
-from thetvdb.api import tvdb
+from pytvdbapi import error
+import pytvdbapi
+from pytvdbapi.api import tvdb
 
-from thetvdb.tests import basetest
+from pytvdbapi.tests import basetest
 
 
 def _load_show(show):
@@ -34,7 +34,7 @@ def _load_show(show):
     search = api.search(show, "en")
     return search[0]
 
-class TestApi(basetest.TheTVDBTest):
+class TestApi(basetest.pytvdbapiTest):
     """
     These tests involve loading data from a remote server. This is far from
     ideal as the test results ends up being influenced by network
@@ -76,7 +76,7 @@ class TestApi(basetest.TheTVDBTest):
         count = 0
         for s in friends:
             count += 1
-            self.assertEqual(type(s), thetvdb.api.Season)
+            self.assertEqual(type(s), pytvdbapi.api.Season)
 
         self.assertEqual(count, 11)
 
@@ -167,7 +167,7 @@ class TestApi(basetest.TheTVDBTest):
         season1 = friends[1]
 
         for ep in season1:
-            self.assertEqual(type(ep), thetvdb.api.Episode)
+            self.assertEqual(type(ep), pytvdbapi.api.Episode)
 
     def test_invalid_episode_index(self):
         """The Season should raise TVDBIndexError when trying to access invalid
@@ -219,7 +219,7 @@ class TestApi(basetest.TheTVDBTest):
         search = api.search("house", "en")
 
         for s in search:
-            self.assertEqual(type(s), thetvdb.api.Show)
+            self.assertEqual(type(s), pytvdbapi.api.Show)
 
 
     def test_invalid_search_index(self):

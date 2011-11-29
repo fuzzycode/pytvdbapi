@@ -1,2 +1,2 @@
 include data/*.xml
-recursive-include thetvdb/tests/ *.py *.xml
+recursive-include pytvdbapi/tests/ *.py *.xml

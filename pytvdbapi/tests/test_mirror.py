@@ -2,29 +2,29 @@
 
 # Copyright 2011 Björn Larsson
 
-# This file is part of thetvdb.
+# This file is part of pytvdbapi.
 #
-# thetvdb is free software: you can redistribute it and/or modify
+# pytvdbapi is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# thetvdb is distributed in the hope that it will be useful,
+# pytvdbapi is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public License
-# along with thetvdb.  If not, see <http://www.gnu.org/licenses/>.
+# along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 import os
 
-from thetvdb import xmlhelpers, mirror, error
+from pytvdbapi import xmlhelpers, mirror, error
 import utils
 import basetest
 
-class TestMirror(basetest.TheTVDBTest):
+class TestMirror(basetest.pytvdbapiTest):
     def setUp(self):
         super(TestMirror, self).setUp()
 
@@ -59,10 +59,10 @@ class TestMirror(basetest.TheTVDBTest):
             pass
 
     def test_invalid_mirror_type(self):
-        """function should raise TheTvDBError if no mirror is found or an
+        """function should raise pytvdbapiError if no mirror is found or an
         invalid type is used"""
 
-        self.assertRaises( error.TheTvDBError, self.mirrors.get_mirror, 100)
+        self.assertRaises( error.pytvdbapiError, self.mirrors.get_mirror, 100)
 
 
 if __name__ == "main":

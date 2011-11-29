@@ -1,9 +1,9 @@
-.. thetvdb documentation master file, created by
+.. pytvdbapi documentation master file, created by
    sphinx-quickstart on Wed Nov 23 21:00:33 2011.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to thetvdb's documentation!
+Welcome to pytvdbapi's documentation!
 ===================================
 
 Contents:

@@ -1,9 +1,9 @@
 About
 =====
-thetvdb is a python API for thetvdb.com_ online database for tv-shows. The
+pytvdbapi is a python API for pytvdbapi.com_ online database for tv-shows. The
 API is designed to be as easy and intuitive as possible to use.
 
-The API is designed to respect the functionality of thetvdb.com_ as far as
+The API is designed to respect the functionality of pytvdbapi.com_ as far as
 possible. It uses caching as much as possible to reduce the workload of the
 servers.
 
@@ -12,40 +12,40 @@ possible.
 
 Dependencies
 ============
-thetvdb depends on the following packages to function.
+pytvdbapi depends on the following packages to function.
 
   * httplib2
 
 Install
 =======
 The package has not yet been added to PyPI so you have two options to install
-thetvdb. The easiest and recommended way is to use pip_ and,
+pytvdbapi. The easiest and recommended way is to use pip_ and,
 replacing X, Y, Z for the version you want, executing::
 
-    $pip install https://github.com/fuzzycode/thetvdb/downloads/thetvdb-X.Y.Z.tar.gz
+    $pip install https://github.com/fuzzycode/pytvdbapi/downloads/pytvdbapi-X.Y.Z.tar.gz
 
-Or you can download the desired version from https://github.com/fuzzycode/thetvdb/downloads/
+Or you can download the desired version from https://github.com/fuzzycode/pytvdbapi/downloads/
 and unpack it and execute::
 
-    $cd thetvdb/
+    $cd pytvdbapi/
     $python setup.py install
 
 To get the latest development version you can install directly from source.
 Note that no guaranties are made as to the stability of the source tree::
 
-    $pip install git+git://github.com/fuzzycode/thetvdb.git
+    $pip install git+git://github.com/fuzzycode/pytvdbapi.git
 
 
 Usage
 =====
 To use the API you should apply for an API Key for your particular application
-. An API Key can be obtained from thetvdb.com_. Note that the key used in the
+. An API Key can be obtained from pytvdbapi.com_. Note that the key used in the
 examples is only intended for testing purposes and should not be used for
 other purposes.
 
 To search for a specific show::
 
-    >>> from thetvdb import api
+    >>> from pytvdbapi import api
     >>> db = api.tvdb("B43FF87DE395DF56")
     >>> search = db.search("How I met your mother", "en")
     >>> len(search)
@@ -58,7 +58,7 @@ To search for a specific show::
 You can index individual seasons and individual episodes using convenient
 indexing::
 
-    >>> from thetvdb import api
+    >>> from pytvdbapi import api
     >>> db = api.tvdb("B43FF87DE395DF56")
     >>> search = db.search("How I met your mother", "en")
     >>> show = search[0]
@@ -71,7 +71,7 @@ indexing::
 
 To list all episodes of a show::
 
-    >>> from thetvdb import api
+    >>> from pytvdbapi import api
     >>> db = api.tvdb("B43FF87DE395DF56")
     >>> search = db.search("How I met your mother", "en")
     >>> show = search[0]
@@ -125,6 +125,6 @@ develop@bjornlarsson.net or you can follow me on twitter
 
 
 
-.. _thetvdb.com: http://thetvdb.com
+.. _pytvdbapi.com: http://pytvdbapi.com
 .. _PyPI: http://pypi.python.org/pypi
 .. _pip: http://www.pip-installer.org/en/latest/index.html
