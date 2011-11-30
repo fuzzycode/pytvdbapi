@@ -1,9 +1,9 @@
 About
 =====
-pytvdbapi is a python API for pytvdbapi.com_ online database for tv-shows. The
+pytvdbapi is a python API for thetvdb.com_ online database for tv-shows. The
 API is designed to be as easy and intuitive as possible to use.
 
-The API is designed to respect the functionality of pytvdbapi.com_ as far as
+The API is designed to respect the functionality of thetvdb.com_ as far as
 possible. It uses caching as much as possible to reduce the workload of the
 servers.
 
