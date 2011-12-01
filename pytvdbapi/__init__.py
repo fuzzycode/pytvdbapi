@@ -19,8 +19,11 @@
 
 __VERSION__ = (0,1,1)
 __NAME__ = 'pytvdbapi'
-__AUTHOR__ = u'Björn Larsson'
 __EMAIL__ = 'develop@bjornlarsson.net'
+
+def version():
+    """Returns the version as a string"""
+    return '.'.join([str(d) for d in __VERSION__])
 
 def get_logger(name=__name__):
     import logging
