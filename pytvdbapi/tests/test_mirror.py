@@ -18,6 +18,7 @@
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+import unittest
 import os
 
 from pytvdbapi import xmlhelpers, mirror, error
@@ -65,5 +66,5 @@ class TestMirror(basetest.pytvdbapiTest):
         self.assertRaises( error.pytvdbapiError, self.mirrors.get_mirror, 100)
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     sys.exit( unittest.main() )
