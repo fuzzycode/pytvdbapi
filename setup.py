@@ -16,59 +16,41 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
+import distribute_setup
+distribute_setup.use_setuptools()
+
+from setuptools import setup, find_packages
 import sys
 
-from pytvdbapi.__init__ import __VERSION__, __NAME__, __AUTHOR__, __EMAIL__
-
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from pytvdbapi.__init__ import __NAME__, version
 
 def get_description():
     try:
-        return open("README.rst").read() + '\n' + open('CHANGES.txt').read()
+        return open("README.rst").read() + '\n' + open("CHANGES.txt").read()
     except Exception:
         return "No description"
 
+extra = {}
+if sys.version_info >= (3,):
+    extra['use_2to3'] = True
+    extra['convert_2to3_doctests'] = ['README.rst']
+    author = "Björn Larsson"
+else:
+    author = unicode("Björn Larsson", "utf-8")
 
-def main(args):
-
-    meta_data = dict(
-        name = __NAME__,
-        version = '.'.join([str(d) for d in __VERSION__]),
-        author = __AUTHOR__,
-        author_email = __EMAIL__,
-        packages = ['pytvdbapi'],
-        url = 'https://github.com/fuzzycode/pytvdbapi',
-        download_url = 'https://github.com/fuzzycode/pytvdbapi/downloads',
-        license = "LGPLv3",
-        keywords = ['pytvdbapi', 'tvdb', 'tv', 'episodes', 'API'],
-        description = "A clean, resource friendly and easy to use API for the \
-             pytvdbapi.com service.",
-        long_description = get_description(),
-        classifiers = [
-            "Programming Language :: Python",
-            "Programming Language :: Python :: 2.6",
-            "Programming Language :: Python :: 2.7",
-            "Operating System :: OS Independent",
-            "Intended Audience :: Developers",
-            "Development Status :: 3 - Alpha",
-            "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
-            "Topic :: Internet",
-        ]
-    )
-
-    if 'setuptools' in sys.modules:
-        meta_data['install_requires'] = 'httplib2'
-    else:
-        meta_data['requires'] = 'httplib2'
-
-    setup(**meta_data)
-
-
-if __name__ == "__main__":
-    try:
-        sys.exit(main(sys.argv[1:]))
-    except KeyboardInterrupt:
-        sys.exit(1)
+setup(
+    name=__NAME__,
+    version = version(),
+    description='A clean, resource friendly and easy to use API for thetvdb.com',
+    long_description = get_description(),
+    author=author,
+    author_email='develop@bjornlarsson.net',
+    license = "LGPLv3",
+    packages = find_packages(),
+    test_suite = 'pytvdbapi.tests',
+    package_data = {'' : ['data/*.xml'] },
+    exclude_package_data = { '': ['./README.rst', './MANIFEST.in',
+                                  './CHANGES.txt'] },
+    install_requires = ['httplib2'],
+    **extra
+)

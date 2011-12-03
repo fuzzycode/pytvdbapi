@@ -17,13 +17,15 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
+#Imports for a more Py3K functionality
+from __future__ import absolute_import, print_function
+
 import sys
 import unittest
 import os
 
 from pytvdbapi import xmlhelpers, mirror, error
-import utils
-import basetest
+from pytvdbapi.tests import utils, basetest
 
 class TestMirror(basetest.pytvdbapiTest):
     def setUp(self):

@@ -31,7 +31,7 @@ def merge(d1, d2, decision = lambda x,y:y):
     values will be used.
     """
     result = dict(d1)
-    for k,v in d2.iteritems():
+    for k,v in list(d2.items()):
         if k in result:
             result[k] = decision(result[k], v)
         else:

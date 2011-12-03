@@ -47,7 +47,7 @@ class LanguageList(object):
         return item in self.data
 
     def __iter__(self):
-        return self.data.iteritems()
+        return iter(list(self.data.items()))
 
     def __getitem__(self, item):
         try:

@@ -1,2 +1,11 @@
-include data/*.xml
-recursive-include pytvdbapi/tests/ *.py *.xml
+#The include section
+include  distribute_setup.py
+include COPYING.txt
+include LICENSE.txt
+#include the documentation
+recursive-include docs/build/html/ *.*
+
+#The exclude section
+exclude README.rst
+exclude CHANGES.txt
+exclude MANIFEST*

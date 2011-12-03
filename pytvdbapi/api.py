@@ -33,13 +33,19 @@ Usage::
     >>> show.SeriesName
     'How I Met Your Mother'
 """
+#Imports for a more Py3K functionality
+from __future__ import absolute_import, print_function, unicode_literals
 
 import tempfile
-import urllib
-import os
 import sys
+import os
 from operator import attrgetter
 from pkg_resources import resource_filename
+
+if sys.version_info < (3,0):
+    from  urllib import quote
+else:
+    from  urllib.parse import quote
 
 from pytvdbapi import error, get_logger
 from pytvdbapi.__init__ import __NAME__ as name
@@ -114,22 +120,22 @@ class Episode(object):
         try:
             return self.data[item]
         except KeyError:
-            logger.error(u"Episode has no attribute {0}".format(item))
-            raise error.TVDBAttributeError(u"Episode has no attribute {0}"
+            logger.error("Episode has no attribute {0}".format(item))
+            raise error.TVDBAttributeError("Episode has no attribute {0}"
             .format(item))
 
     def __dir__(self):
-        return self.data.keys() + \
-               [d for d in self.__dict__.keys() if d != "data"]
+        return list(self.data.keys()) + \
+               [d for d in list(self.__dict__.keys()) if d != "data"]
     
     def __repr__(self):
         try:
-            return u"<Episode S{0:03d}E{1:03d} - {2}>".format(
+            return "<Episode S{0:03d}E{1:03d} - {2}>".format(
                                                 int(self.SeasonNumber),
                                                 int(self.EpisodeNumber),
                                                 self.EpisodeName)
         except error.TVDBAttributeError:
-            return u"<Episode>"
+            return "<Episode>"
 
 class Season(object):
     """
@@ -154,7 +160,7 @@ class Season(object):
         >>> season[3]
         <Episode S001E003 - Popping Cherry>
         >>> for episode in season:
-        ...     print episode
+        ...     print(episode)
         ...
         <Episode S001E001 - Dexter>
         <Episode S001E002 - Crocodile>
@@ -178,7 +184,7 @@ class Season(object):
         try:
             return self.episodes[item]
         except KeyError:
-            logger.error(u"Episode {0} not found".format(item))
+            logger.error("Episode {0} not found".format(item))
             raise error.TVDBIndexError("Index {0} not found".format(item))
 
     def __len__(self):
@@ -189,11 +195,11 @@ class Season(object):
                             key=lambda ep: ep.EpisodeNumber))
 
     def __repr__(self):
-        return u"<Season {0:03}>".format( self.season_number )
+        return "<Season {0:03}>".format( self.season_number )
 
     def append(self, episode):
         assert type(episode) in (Episode,)
-        logger.debug(u"{0} adding episode {1}".
+        logger.debug("{0} adding episode {1}".
                     format(self, episode))
 
         self.episodes[int(episode.EpisodeNumber)] = episode
@@ -249,7 +255,7 @@ class Show(object):
         >>> show[5]
         <Season 005>
         >>> for season in show:
-        ...     print season
+        ...     print(season)
         ...
         <Season 000>
         <Season 001>
@@ -270,16 +276,16 @@ class Show(object):
         try:
             return self.data[item]
         except KeyError:
-            logger.debug( u"Attribute not found" )
-            raise error.TVDBAttributeError(u"Show has no attribute names %s" %
+            logger.debug( "Attribute not found" )
+            raise error.TVDBAttributeError("Show has no attribute names %s" %
                                            item)
 
     def __repr__(self):
         return "<Show - {0}>".format(self.SeriesName)
 
     def __dir__(self):
-        return self.data.keys() + \
-               [d for d in self.__dict__.keys() if d != "data"]
+        return list(self.data.keys()) + \
+               [d for d in list(self.__dict__.keys()) if d != "data"]
 
     def __iter__(self):
         if not self.seasons:
@@ -300,7 +306,7 @@ class Show(object):
         try:
             return self.seasons[item]
         except KeyError:
-            logger.error(u"Season {0} not found".format(item))
+            logger.error("Season {0} not found".format(item))
             raise error.TVDBIndexError()
 
     def update(self):
@@ -310,7 +316,7 @@ class Show(object):
         self._populate_data()
 
     def _populate_data(self):
-        logger.debug(u"Populating season data from URL.")
+        logger.debug("Populating season data from URL.")
         
         context = {'mirror':self.api.mirrors.get_mirror(TypeMask.XML).url,
                        'api_key':self.api.config['api_key'],
@@ -321,7 +327,7 @@ class Show(object):
         episodes = [d for d in parse_xml( data, "Episode")]
 
         show_data = parse_xml(data, "Series")
-        assert len(show_data) == 1, u"there should only be 1 Series element in\
+        assert len(show_data) == 1, "there should only be 1 Series element in\
         the xml data"
 
         self.data = merge( self.data, show_data[0] )
@@ -354,7 +360,7 @@ class Search(object):
         >>> db = api.tvdb("B43FF87DE395DF56")
         >>> search = db.search("Dexter", "en")
         >>> for s in search:
-        ...     print s
+        ...     print(s)
         ...
         <Show - Dexter>
         <Show - Cliff Dexter>
@@ -460,7 +466,7 @@ class tvdb(object):
             >>> db = api.tvdb("B43FF87DE395DF56")
             >>> search = db.search("Dexter", "en")
             >>> for s in search:
-            ...     print s
+            ...     print(s)
             ...
             <Show - Dexter>
             <Show - Cliff Dexter>
@@ -474,7 +480,7 @@ class tvdb(object):
             raise error.TVDBValueError("{0} is not a valid language")
 
         if (show, language) not in self.search_buffer:
-            context = {'series': urllib.quote(show), "language":language}
+            context = {'series': quote(show), "language":language}
             data = generate_tree(self.loader.load( urls['search'] % context,
                                                    cache ))
             shows = [Show(d, self, language)

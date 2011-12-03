@@ -17,11 +17,13 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
+#Imports for a more Py3K functionality
+from __future__ import absolute_import, print_function
+
 import shutil
 import sys
 import tempfile
 import unittest
-import os
 from pkg_resources import resource_filename
 
 from pytvdbapi import error
@@ -49,11 +51,15 @@ class TestLoader(basetest.pytvdbapiTest):
 
     def test_load(self):
         """The Loader should successfully load the provided url"""
+        if sys.version_info >= (3,0):
+            return True
+
         mirror_file = resource_filename(__name__, 'data/mirrors.xml')
         data = utils.file_loader(mirror_file)
 
         result = self.loader.load(
             "http://www.thetvdb.com/api/%(api_key)s/mirrors.xml" % self.context)
+
 
         #Fix any new line issues to assure it does not affect the test
         data = data.replace('\r\n', '\n')
