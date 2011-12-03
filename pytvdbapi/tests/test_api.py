@@ -80,6 +80,17 @@ class TestApi(basetest.pytvdbapiTest):
 
         self.assertEqual(count, 11)
 
+    def test_show_sort_order(self):
+        """The seasons should be sorted on season number when iterating over
+        a show
+        """
+        friends = _load_show("friends")
+
+        counter = 0
+        for season in friends:
+            self.assertEqual( counter, season.season_number )
+            counter += 1
+
     def test_invalid_season_index(self):
         """Show should raise TVDBIndexError if trying to access invalid
         season indexes"""
@@ -168,6 +179,18 @@ class TestApi(basetest.pytvdbapiTest):
 
         for ep in season1:
             self.assertEqual(type(ep), pytvdbapi.api.Episode)
+
+    def test_season_sort_order(self):
+        """The Episodes should be sorted on the episode number when iterating
+         over a season
+         """
+        friends = _load_show("friends")
+        season1 = friends[1]
+
+        counter = 0
+        for ep in season1:
+            self.assertEqual( counter + 1, ep.EpisodeNumber )
+            counter += 1
 
     def test_invalid_episode_index(self):
         """The Season should raise TVDBIndexError when trying to access invalid
