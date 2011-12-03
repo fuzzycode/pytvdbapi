@@ -71,7 +71,7 @@ def parse_xml(etree, element):
     _list = list()
     for item in etree.findall( element ):
         data = dict()
-        for child in item.getchildren():
+        for child in list(item):
             tag, value = child.tag, child.text
 
             if value:
