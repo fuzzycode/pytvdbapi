@@ -22,6 +22,8 @@ import sys
 import tempfile
 import unittest
 import os
+from pkg_resources import resource_filename
+
 from pytvdbapi import error
 from pytvdbapi.loader import Loader
 from pytvdbapi.tests import utils, basetest
@@ -47,7 +49,8 @@ class TestLoader(basetest.pytvdbapiTest):
 
     def test_load(self):
         """The Loader should successfully load the provided url"""
-        data = utils.file_loader(os.path.join(self.path, "mirrors.xml"))
+        mirror_file = resource_filename(__name__, 'data/mirrors.xml')
+        data = utils.file_loader(mirror_file)
 
         result = self.loader.load(
             "http://www.thetvdb.com/api/%(api_key)s/mirrors.xml" % self.context)
