@@ -480,6 +480,9 @@ class tvdb(object):
             raise error.TVDBValueError("{0} is not a valid language")
 
         if (show, language) not in self.search_buffer:
+            if sys.version_info < (3,0):
+                show = str(show.encode('utf-8'))
+            
             context = {'series': quote(show), "language":language}
             data = generate_tree(self.loader.load( urls['search'] % context,
                                                    cache ))

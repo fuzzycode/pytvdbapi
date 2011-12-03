@@ -139,8 +139,6 @@ class TestApi(basetest.pytvdbapiTest):
 
     def test_unicode_search(self):
         """It should be possible to search for shows containing non ascii chars"""
-        if sys.version_info < (3,0):
-            return True
 
         api = tvdb("B43FF87DE395DF56")
 
