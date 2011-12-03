@@ -38,6 +38,9 @@ import tempfile
 import urllib
 import os
 import sys
+from operator import attrgetter
+from pkg_resources import resource_filename
+
 from pytvdbapi import error, get_logger
 from pytvdbapi.__init__ import __NAME__ as name
 from pytvdbapi.language import LanguageList
@@ -45,6 +48,7 @@ from pytvdbapi.loader import Loader
 from pytvdbapi.mirror import MirrorList, TypeMask
 from pytvdbapi.utils import merge
 from pytvdbapi.xmlhelpers import parse_xml, generate_tree
+
 
 __all__ = ['Episode', 'Season', 'Show', 'Search', 'tvdb']
 
@@ -181,9 +185,8 @@ class Season(object):
         return len(self.episodes)
     
     def __iter__(self):
-        return iter(sorted(self.episodes.values(),
-            cmp=lambda lhs, rhs: cmp(int(lhs.EpisodeNumber),
-                                     int(rhs.EpisodeNumber))))
+        return iter( sorted(list(self.episodes.values()),
+                            key=lambda ep: ep.EpisodeNumber))
 
     def __repr__(self):
         return u"<Season {0:03}>".format( self.season_number )
@@ -282,9 +285,8 @@ class Show(object):
         if not self.seasons:
             self._populate_data()
 
-        return iter(sorted(self.seasons.values(),
-            cmp=lambda lhs, rhs: cmp(int(lhs.season_number),
-                                     int(rhs.season_number))))
+        return iter(sorted(list(self.seasons.values()),
+            key=lambda season: season.season_number))
 
     def __len__(self):
         if not len(self.seasons):
@@ -415,17 +417,17 @@ class tvdb(object):
         #Create the loader object to use
         self.loader = Loader(self.config['cache_dir'])
 
+        language_file = resource_filename(__name__, 'data/languages.xml')
+
         #If requested, update the local language file from the server
         if self.config['force_lang']:
             logger.debug("updating Language file from server")
-            with open(os.path.join(self.path, '../data/languages.xml'),
-                                   'wt') as f:
+            with open(language_file, "wt") as f:
                 f.write(self.loader.load(urls['languages'] % self.config))
 
         #Setup the list of supported languages
         self.languages = LanguageList(
-            generate_tree(open(os.path.join(self.path,
-                                    '../data/languages.xml'), 'rt').read()))
+            generate_tree(open(language_file, 'rt').read()))
 
         #Create the list of available mirrors
         self.mirrors = MirrorList(
@@ -496,6 +498,6 @@ if __name__ == '__main__':
         for show in search:
             for season in show:
                 for episode in season:
-                    print episode
+                    print(episode)
 
     sys.exit(main())
