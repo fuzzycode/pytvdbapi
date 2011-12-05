@@ -14,7 +14,7 @@ Dependencies
 ============
 pytvdbapi depends on the following packages to function.
 
-  * httplib2
+  * `httplib2 <http://code.google.com/p/httplib2/>`_
 
 Install
 =======
