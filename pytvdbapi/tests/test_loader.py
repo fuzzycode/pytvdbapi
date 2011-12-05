@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
-#Imports for a more Py3K functionality
 from __future__ import absolute_import, print_function
 
 import shutil
@@ -51,8 +50,6 @@ class TestLoader(basetest.pytvdbapiTest):
 
     def test_load(self):
         """The Loader should successfully load the provided url"""
-        if sys.version_info >= (3,0):
-            return True
 
         mirror_file = resource_filename(__name__, 'data/mirrors.xml')
         data = utils.file_loader(mirror_file)
@@ -65,7 +62,7 @@ class TestLoader(basetest.pytvdbapiTest):
         data = data.replace('\r\n', '\n')
         result = result.replace('\r\n', '\n')
 
-        self.assertEqual( data, result.encode('utf-8') )
+        self.assertEqual( data, result )
 
     def test_failed_conection(self):
         """Loader should raise ConnectionError if it is not able to connect

@@ -55,4 +55,7 @@ class Loader(object):
             raise error.ConnectionError(
                 "Unable to connect to {0}".format(url))
         else:
-            return content
+            if type(content) in (str,):
+                return content
+            else:
+                return content.decode("utf-8")

@@ -33,7 +33,7 @@ Usage::
     >>> show.SeriesName
     'How I Met Your Mother'
 """
-#Imports for a more Py3K functionality
+
 from __future__ import absolute_import, print_function, unicode_literals
 
 import tempfile
