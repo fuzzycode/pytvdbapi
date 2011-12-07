@@ -7,9 +7,6 @@ The API is designed to respect the functionality of thetvdb.com_ as far as
 possible. It uses caching as much as possible to reduce the workload of the
 servers.
 
-If you enjoy the service, you should consider contributing to the database if
-possible.
-
 Dependencies
 ============
 pytvdbapi depends on the following packages to function.
@@ -99,10 +96,20 @@ To list all episodes of a show::
 
 Testing
 ======
+Testing *pytvdbapi* is really easy, just type the following from the package
+root folder::
 
-Documentation
-=============
+    $ python setup.py test
 
+If all turns out all right you should see a nice and happy OK at the end.
+
+
+Known Issues
+============
+  * At the moment, *pytvdbapi* only works with Python 2.6, 2.7 and 3.2,
+  **NOT 3.1 or 3.2**. This is due to an
+  `issue <http://code.google.com/p/httplib2/issues/detail?id=195>`_
+  with httplib2 on Python 3.1, 3.2.
 
 
 Bugs
