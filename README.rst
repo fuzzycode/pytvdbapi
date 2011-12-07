@@ -109,7 +109,7 @@ Known Issues
   * At the moment, *pytvdbapi* only works with Python 2.6, 2.7 and 3.2,
     **NOT 3.0 or 3.1**. This is due to an
     `issue <http://code.google.com/p/httplib2/issues/detail?id=195>`_
-    with httplib2 on Python 3.1, 3.2.
+    with httplib2 on Python 3.0, 3.1.
 
 
 Bugs
