@@ -1,13 +1,17 @@
 CHANGELOG
 =========
 
-2011-11-28, 0.1.0
+2011-12-07, 0.2.0
 -----------------
-  * Initial alpha release of the package.
-
+  * Updated to support Python 2.6, 2.7 and 3.2
+  * Made the interfaces cleaner by using collections.Mapping
 
 2011-11-29, 0.1.1
 -----------------
   * Renamed the package to pytvdbapi to avoid any confusion with the official
    thetvdb.com service.
   * Updated the setup.py to use setuptools if available
+
+2011-11-28, 0.1.0
+-----------------
+  * Initial alpha release of the package.

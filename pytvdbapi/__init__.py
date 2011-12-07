@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
-__VERSION__ = (0,1,1)
+__VERSION__ = (0,2,0)
 __NAME__ = 'pytvdbapi'
 __EMAIL__ = 'develop@bjornlarsson.net'
 
