@@ -42,6 +42,8 @@ import os
 from operator import attrgetter
 from pkg_resources import resource_filename
 
+from collections import Mapping #This will change in 3.3
+
 if sys.version_info < (3,0):
     from  urllib import quote
 else:
@@ -137,7 +139,7 @@ class Episode(object):
         except error.TVDBAttributeError:
             return "<Episode>"
 
-class Season(object):
+class Season(Mapping):
     """
     :raise: TVDBIndexError
 
@@ -205,7 +207,7 @@ class Season(object):
         self.episodes[int(episode.EpisodeNumber)] = episode
 
 
-class Show(object):
+class Show(Mapping):
     """
     :raise: TVDBAttributeError, TVDBIndexError
 

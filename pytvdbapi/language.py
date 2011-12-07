@@ -17,8 +17,10 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections import Mapping
 from pytvdbapi import error, get_logger
 from pytvdbapi.xmlhelpers import parse_xml
+
 
 __all__ = ['Language', 'LanguageList']
 
@@ -35,7 +37,7 @@ class Language(object):
             self.__class__.name, self.name, self.abbreviation, self.id )
 
 
-class LanguageList(object):
+class LanguageList(Mapping):
     """Managing a list of language objects"""
     def __init__(self, etree):
         langs = [Language(l['name'], l['abbreviation'], l['id'])
@@ -46,10 +48,14 @@ class LanguageList(object):
     def __contains__(self, item):
         return item in self.data
 
+    def __len__(self):
+        return len(self.data)
+
     def __iter__(self):
         return iter(list(self.data.items()))
 
     def __getitem__(self, item):
+        """Returns a `language object obtained by the language abbreviation`"""
         try:
             return self.data[item]
         except KeyError:
