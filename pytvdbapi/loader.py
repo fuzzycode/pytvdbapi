@@ -19,14 +19,15 @@
 
 """
 """
+import logging
 
 import os
 import httplib2
-from pytvdbapi import error, get_logger
+from pytvdbapi import error
 
 
 #Module logger object
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 class Loader(object):
     def __init__(self, cache_path):

@@ -21,13 +21,13 @@
 A module containing all the errors raised by pytvdbapi
 """
 
-from pytvdbapi import get_logger
+import logging
 
 __all__ = ['pytvdbapiError', 'BadData', 'ConnectionError', 'TVDBAttributeError',
             'TVDBIndexError']
 
 #Module level logger
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 class pytvdbapiError(Exception):
     """Base exception for all exceptions raised by pytvdbapi"""

@@ -18,14 +18,15 @@
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections import Mapping
-from pytvdbapi import error, get_logger
+import logging
+from pytvdbapi import error
 from pytvdbapi.xmlhelpers import parse_xml
 
 
 __all__ = ['Language', 'LanguageList']
 
 #Module logger object
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 class Language(object):
     """Holds information about a language instance"""

@@ -20,16 +20,17 @@
 """
 
 """
+import logging
 
 import random
 
-from pytvdbapi import error, get_logger
+from pytvdbapi import error
 from pytvdbapi.xmlhelpers import parse_xml
 
 __all__ = ['TypeMask', 'Mirror', 'MirrorList']
 
 #Module logger object
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 class TypeMask(object):
     """An enum like class with the mask flags for the mirrors"""

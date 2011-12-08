@@ -22,15 +22,16 @@ A helper module for parsing a XML data.
 """
 
 import datetime
+import logging
 import re
 import xml.etree.ElementTree as etree
 
-from pytvdbapi import error, get_logger
+from pytvdbapi import error
 
 __all__ = ['generate_tree', 'parse_xml']
 
 #Module level logger object
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 def generate_tree( xml_data, root = None ):
     """Converts the raw xml data into an element tree"""

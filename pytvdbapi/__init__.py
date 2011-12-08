@@ -17,6 +17,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
+try:
+    from logging import NullHandler
+except ImportError:
+    from backport import NullHandler
+
 __VERSION__ = (0,2,0)
 __NAME__ = 'pytvdbapi'
 __EMAIL__ = 'develop@bjornlarsson.net'
@@ -25,13 +31,5 @@ def version():
     """Returns the version as a string"""
     return '.'.join([str(d) for d in __VERSION__])
 
-def get_logger(name=__name__):
-    import logging
-    try:
-        from logging import NullHandler
-    except ImportError:
-        from backport import NullHandler
-
-    logger = logging.getLogger(name)
-    logger.addHandler(NullHandler())
-    return logger
+# Make sure that we have a null handler on the base logger for the package
+logging.getLogger(__name__).addHandler(NullHandler())

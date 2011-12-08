@@ -35,6 +35,7 @@ Usage::
 """
 
 from __future__ import absolute_import, print_function, unicode_literals
+import logging
 
 import tempfile
 import sys
@@ -49,7 +50,7 @@ if sys.version_info < (3,0):
 else:
     from  urllib.parse import quote
 
-from pytvdbapi import error, get_logger
+from pytvdbapi import error
 from pytvdbapi.__init__ import __NAME__ as name
 from pytvdbapi.language import LanguageList
 from pytvdbapi.loader import Loader
@@ -61,7 +62,7 @@ from pytvdbapi.xmlhelpers import parse_xml, generate_tree
 __all__ = ['Episode', 'Season', 'Show', 'Search', 'tvdb']
 
 #Module logger object
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 # List the URLs that we need
 urls = dict(mirrors="http://www.thetvdb.com/api/%(api_key)s/mirrors.xml",
