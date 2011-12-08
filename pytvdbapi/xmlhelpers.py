@@ -84,10 +84,11 @@ def parse_xml(etree, element):
             except ValueError:
                 if '|' in value: #Split piped values into a list
                     value = value.strip("|").split("|")
+                    value = [s.strip() for s in value]
                 else:
-                    if re.match(r"^\d+\.\d+$", value):
+                    if re.match(r"^\d+\.\d+$", value): #Convert float
                         value = float(value)
-                    elif re.match(r"^\d+$", value):
+                    elif re.match(r"^\d+$", value): #Convert integer
                         value = int(value)
 
             data[tag] = value

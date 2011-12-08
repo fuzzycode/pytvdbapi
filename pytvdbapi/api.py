@@ -18,9 +18,9 @@
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-A small, clean and easy to use API for the pytvdbapi.com online DB service. It
+A small, clean and easy to use API for the thetvdb.com online DB service. It
 is designed to be fast, easy to use and to respect the functionality of the
-pytvdbapi.com API.
+thetvdb.com API.
 
 This module is the public interface for the package.
 
@@ -78,15 +78,15 @@ class Episode(object):
     Holds all information about an individual episode. This should be treated
     as a read-only object to obtain the attributes of the episode.
 
-    All episode values returned from pytvdbapi.com_ are
+    All episode values returned from thetvdb.com_ are
     accessible as attributes of the episode object. The attributes will be
-    named exactly as returned from pytvdbapi.com_ and are case sensitive.
+    named exactly as returned from thetvdb.com_ and are case sensitive.
     TVDBAttributeError will be raised if accessing an invalid attribute. Some
     type conversions of the attributes will take place as follows:
 
-    * Strings of the format yyyy-mm-dd will be converted into a\
+    * Strings of the format yyyy-mm-dd will be converted into a
         :class:`datetime.date` object.
-    * Pipe separated strings will be converted into a list. E.g "foo | bar" =>\
+    * Pipe separated strings will be converted into a list. E.g "foo | bar" =>
         ["foo", "bar"]
     * Numbers with a decimal point will be converted to float
     * A number will be converted into an int
@@ -102,18 +102,27 @@ class Episode(object):
         >>> search = db.search("Dexter", "en")
         >>> show = search[0]
         >>> episode = show[1][5]
-        >>> dir(episode)
-        ['Combined_episodenumber', 'Combined_season', 'DVD_chapter', 'DVD_discid', 'DVD_episodenumber', 'DVD_season', 'Director', 'EpImgFlag', 'EpisodeName', 'EpisodeNumber', 'FirstAired', 'GuestStars', 'IMDB_ID', 'Language', 'Overview', 'ProductionCode', 'Rating', 'RatingCount', 'SeasonNumber', 'Writer', 'absolute_number', 'filename', 'id', 'lastupdated', 'season', 'seasonid', 'seriesid']
+        >>> dir(episode) #doctest: +NORMALIZE_WHITESPACE
+        ['Combined_episodenumber', 'Combined_season', 'DVD_chapter',
+        'DVD_discid', 'DVD_episodenumber', 'DVD_season', 'Director',
+        'EpImgFlag', 'EpisodeName', 'EpisodeNumber', 'FirstAired', 'GuestStars',
+        'IMDB_ID', 'Language', 'Overview', 'ProductionCode', 'Rating',
+        'RatingCount', 'SeasonNumber', 'Writer', 'absolute_number',
+        'filename', 'id', 'lastupdated', 'season', 'seasonid', 'seriesid']
         >>> episode.EpisodeName
         'Love American Style'
-        >>> episode.GuestStars
-        ['Terry Woodberry', ' Carmen Olivares', ' Ashley Rose Orr', ' Demetrius Grosse', ' Monique Curnen', ' June Angela', ' Valerie Dillman', ' Brad Henke', ' Jose Zuniga', ' Allysa Tacher', ' Lizette Carrion', ' Norma Fontana', ' Minerva Garcia', ' Josh Daugherty', ' Geoffrey Rivas']
+        >>> episode.GuestStars #doctest: +NORMALIZE_WHITESPACE
+        ['Terry Woodberry', 'Carmen Olivares', 'Ashley Rose Orr',
+        'Demetrius Grosse', 'Monique Curnen', 'June Angela',
+        'Valerie Dillman', 'Brad Henke', 'Jose Zuniga', 'Allysa Tacher',
+        'Lizette Carrion', 'Norma Fontana', 'Minerva Garcia',
+        'Josh Daugherty', 'Geoffrey Rivas']
         >>> episode.FirstAired
         datetime.date(2006, 10, 29)
         >>> episode.season
         <Season 001>
 
-    .. _pytvdbapi.com: http://pytvdbapi.com
+    .. _thetvdb.com: http://thetvdb.com
     """
     def __init__(self, data, season):
         self.data, self.season = data, season
@@ -212,7 +221,7 @@ class Show(Mapping):
     :raise: TVDBAttributeError, TVDBIndexError
 
     Holds attributes about a single show and contains all seasons associated
-    with a show. The attributes are named exactly as returned from pytvdbapi.com_.
+    with a show. The attributes are named exactly as returned from thetvdb.com_.
     This object should be considered a read only container of data
     provided from the server. Some type conversion of of the attributes will
     take place as follows:
@@ -233,8 +242,8 @@ class Show(Mapping):
     The Show supports iteration to iterate over the Seasons contained in the
     Show. You can also index individual seasons with the [ ] syntax.
 
-    .. note:: When searching, pytvdbapi.com_ provides a basic set of attributes
-        for the show. When the full data set is loaded pytvdbapi.com_ provides a
+    .. note:: When searching, thetvdb.com_ provides a basic set of attributes
+        for the show. When the full data set is loaded thetvdb.com_ provides a
         complete set of attributes for the show. The full data set is loaded when
         accessing the season data of the show. If you need access to the full set
         of attributes you can force the loading of the full data set by calling
@@ -247,11 +256,16 @@ class Show(Mapping):
         >>> db = api.tvdb("B43FF87DE395DF56")
         >>> search = db.search("Dexter", "en")
         >>> show = search[0]
-        >>> dir(show)
-        ['FirstAired', 'IMDB_ID', 'Overview', 'SeriesName', 'api', 'banner', 'id', 'lang', 'language', 'seasons', 'seriesid', 'zap2it_id']
+        >>> dir(show) #doctest: +NORMALIZE_WHITESPACE
+        ['FirstAired', 'IMDB_ID', 'Overview', 'SeriesName', 'api', 'banner',
+        'id', 'lang', 'language', 'seasons', 'seriesid', 'zap2it_id']
         >>> show.update()
-        >>> dir(show)
-        ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'ContentRating', 'FirstAired', 'Genre', 'IMDB_ID', 'Language', 'Network', 'NetworkID', 'Overview', 'Rating', 'RatingCount', 'Runtime', 'SeriesID', 'SeriesName', 'Status', 'added', 'addedBy', 'api', 'banner', 'fanart', 'id', 'lang', 'language', 'lastupdated', 'poster', 'seasons', 'seriesid', 'zap2it_id']
+        >>> dir(show) #doctest: +NORMALIZE_WHITESPACE
+        ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'ContentRating', 'FirstAired',
+        'Genre', 'IMDB_ID', 'Language', 'Network', 'NetworkID', 'Overview',
+        'Rating', 'RatingCount', 'Runtime', 'SeriesID', 'SeriesName', 'Status',
+        'added', 'addedBy', 'api', 'banner', 'fanart', 'id', 'lang', 'language',
+        'lastupdated', 'poster', 'seasons', 'seriesid', 'zap2it_id']
         >>> len(show)
         7
         >>> show[5]
@@ -268,7 +282,7 @@ class Show(Mapping):
         <Season 006>
 
 
-    .. _pytvdbapi.com: http://pytvdbapi.com
+    .. _thetvdb.com: http://thetvdb.com
     """
     def __init__(self, data, api, language):
         self.api, self.data, self.lang = api, data, language
@@ -353,7 +367,7 @@ class Search(object):
     search.
 
     The shows will be stored in the same order as they are returned from
-    `pytvdbapi.com <http://pytvdbapi.com>`_. They state that if there is a
+    `thetvdb.com <http://thetvdb.com>`_. They state that if there is a
     perfect match to the search, it will be the first element returned.
 
     Example::
@@ -394,17 +408,15 @@ class tvdb(object):
     controlled by configuring the key word arguments. The supported key word
     arguments are:
 
-    * *force_lang* default=False. If set to True, the API will reload the\
-        language list from the server. If False, the local preloaded file\
-        will be used. The language list is relative stable but if there are\
-        changes it could be useful to set this to True to obtain a new version\
-        from the server. It is only necessary to do this once since the API\
+    * *force_lang* default=False. If set to True, the API will reload the
+        language list from the server. If False, the local preloaded file
+        will be used. The language list is relative stable but if there are
+        changes it could be useful to set this to True to obtain a new version
+        from the server. It is only necessary to do this once since the API
         stores the reloaded data for further use.
-    * *cache_dir* default=/tmp/pytvdbapi/. Specifies the directory to use\
-        for caching the server requests. It will default to a directory\
-        within the platform specific temp folder.\
-
-        
+    * *cache_dir* default=/tmp/pytvdbapi/. Specifies the directory to use
+        for caching the server requests. It will default to a directory
+        within the platform specific temp folder.
     """
 
     def __init__(self, api_key, **kwargs):
