@@ -36,7 +36,7 @@ Note that no guaranties are made as to the stability of the source tree::
 Usage
 =====
 To use the API you should apply for an API Key for your particular application
-. An API Key can be obtained from pytvdbapi.com_. Note that the key used in the
+. An API Key can be obtained from thetvdb.com_. Note that the key used in the
 examples is only intended for testing purposes and should not be used for
 other purposes.
 
@@ -74,7 +74,7 @@ To list all episodes of a show::
     >>> show = search[0]
     >>> for season in show:
     ...     for episode in season:
-    ...         print episode
+    ...         print(episode)
     ...
     <Episode S000E001 - Robin Sparkles Music Video - Let's Go to the Mall>
     <Episode S000E002 - Robin Sparkles Music Video - Sandcastles In the Sand>
@@ -110,6 +110,7 @@ Known Issues
     **NOT 3.0 or 3.1**. This is due to an
     `issue <http://code.google.com/p/httplib2/issues/detail?id=195>`_
     with httplib2 on Python 3.0, 3.1.
+  * *pytvdbapi* does currently **NOT** support the use of Proxy Servers.
 
 
 Bugs
@@ -132,6 +133,6 @@ develop@bjornlarsson.net or you can follow me on twitter
 
 
 
-.. _pytvdbapi.com: http://pytvdbapi.com
+.. _thetvdb.com: http://thetvdb.com
 .. _PyPI: http://pypi.python.org/pypi
 .. _pip: http://www.pip-installer.org/en/latest/index.html
