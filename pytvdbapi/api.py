@@ -143,9 +143,8 @@ class Episode(object):
     def __repr__(self):
         try:
             return "<Episode S{0:03d}E{1:03d} - {2}>".format(
-                                                int(self.SeasonNumber),
-                                                int(self.EpisodeNumber),
-                                                self.EpisodeName)
+                int(self.SeasonNumber), int(self.EpisodeNumber),
+                self.EpisodeName)
         except error.TVDBAttributeError:
             return "<Episode>"
 
@@ -227,9 +226,9 @@ class Show(Mapping):
     provided from the server. Some type conversion of of the attributes will
     take place as follows:
 
-    * Strings of the format yyyy-mm-dd will be converted into a\
+    * Strings of the format yyyy-mm-dd will be converted into a
         :class:`datetime.date` object.
-    * Pipe separated strings will be converted into a list. E.g "foo | bar" =>\
+    * Pipe separated strings will be converted into a list. E.g "foo | bar" =>
         ["foo", "bar"]
     * Numbers with a decimal point will be converted to float
     * A number will be converted into an int
@@ -245,10 +244,10 @@ class Show(Mapping):
 
     .. note:: When searching, thetvdb.com_ provides a basic set of attributes
         for the show. When the full data set is loaded thetvdb.com_ provides a
-        complete set of attributes for the show. The full data set is loaded when
-        accessing the season data of the show. If you need access to the full set
-        of attributes you can force the loading of the full data set by calling
-        the :func:`update()` function.
+        complete set of attributes for the show. The full data set is loaded
+        when accessing the season data of the show. If you need access to the
+        full set of attributes you can force the loading of the full data set
+        by calling the :func:`update()` function.
 
 
     Example::
@@ -301,8 +300,9 @@ class Show(Mapping):
         return "<Show - {0}>".format(self.SeriesName)
 
     def __dir__(self):
-        return list(self.data.keys()) + \
-               [d for d in list(self.__dict__.keys()) if d != "data"]
+        attributess = [d for d in list(self.__dict__.keys()) if d != "data"]
+        return list(self.data.keys()) + attributess
+
 
     def __iter__(self):
         if not self.seasons:
@@ -344,8 +344,7 @@ class Show(Mapping):
         episodes = [d for d in parse_xml( data, "Episode")]
 
         show_data = parse_xml(data, "Series")
-        assert len(show_data) == 1, "there should only be 1 Series element in\
-        the xml data"
+        assert len(show_data) == 1
 
         self.data = merge( self.data, show_data[0] )
 
@@ -447,8 +446,8 @@ class tvdb(object):
                 f.write(self.loader.load(urls['languages'] % self.config))
 
         #Setup the list of supported languages
-        self.languages = LanguageList(
-            generate_tree(open(language_file, 'rt').read()))
+        with open(language_file, "rt") as f:
+            self.languages = LanguageList(generate_tree(f.read()))
 
         #Create the list of available mirrors
         self.mirrors = MirrorList(
@@ -499,8 +498,8 @@ class tvdb(object):
                 show = str(show.encode('utf-8'))
             
             context = {'series': quote(show), "language":language}
-            data = generate_tree(self.loader.load( urls['search'] % context,
-                                                   cache ))
+            data = generate_tree(self.loader.load(urls['search'] % context,
+                                                   cache))
             shows = [Show(d, self, language)
                      for d in parse_xml(data, "Series")]
 
