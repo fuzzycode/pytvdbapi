@@ -65,10 +65,18 @@ class TestMirror(basetest.pytvdbapiTest):
             pass
 
     def test_invalid_mirror_type(self):
-        """function should raise pytvdbapiError if no mirror is found or an
-        invalid type is used"""
-
+        """
+        function should raise pytvdbapiError if no mirror is found or an
+        invalid type is used
+        """
         self.assertRaises(error.PytvdbapiError, self.mirrors.get_mirror, 100)
+
+    def test_mirror_representation(self):
+        """The __repr__ for a mirror should be correctly formatted"""
+        m = self.mirrors.get_mirror(mirror.TypeMask.XML)
+        repr = "<Mirror (http://thetvdb.com:7)>"
+
+        self.assertEqual(m.__repr__(), repr)
 
 
 if __name__ == "__main__":

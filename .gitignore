@@ -38,6 +38,10 @@ MANIFEST
 .Spotlight-V100
 .Trashes
 
+# Coverage
+################################################
+htmlcov
+
 #PyCharm stuff
 ################################################
 .idea/

@@ -26,6 +26,7 @@ import datetime
 from pytvdbapi import error
 import pytvdbapi
 from pytvdbapi.api import TVDB
+from pytvdbapi.xmlhelpers import generate_tree
 from pytvdbapi.tests import basetest
 
 
@@ -281,6 +282,14 @@ class TestApi(basetest.pytvdbapiTest):
         self.assertEqual(type(ep.Rating), float)
         self.assertEqual(type(ep.GuestStars), list)
         self.assertEqual(type(ep.FirstAired), datetime.date)
+
+    def test_xml_error(self):
+        """
+        The tree generator should raise BadData error when passed bad xml data
+        """
+        data = '<?xml version="1.0" encoding="UTF-8" ?>\n<data>'
+
+        self.assertRaises(error.BadData, generate_tree, data)
 
 if __name__ == "__main__":
     sys.exit(unittest.main())

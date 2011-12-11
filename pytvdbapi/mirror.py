@@ -51,7 +51,7 @@ class Mirror(object):
         self.type_mask = int(type_mask)
 
     def __repr__(self):
-        return "<{0} ({1}:{{2}})>".format(
+        return "<{0} ({1}:{2})>".format(
             "Mirror", self.url, self.type_mask)
 
 

@@ -26,6 +26,12 @@ import logging
 import re
 import xml.etree.ElementTree as ET
 
+try:
+    from xml.etree.ElementTree import ParseError
+except ImportError:
+    # For Python 2.6
+    from xml.parsers.expat import ExpatError as ParseError
+
 from pytvdbapi import error
 
 __all__ = ['generate_tree', 'parse_xml']
@@ -34,18 +40,15 @@ __all__ = ['generate_tree', 'parse_xml']
 logger = logging.getLogger(__name__)  # pylint: disable=C0103
 
 
-def generate_tree(xml_data, root=None):
+def generate_tree(xml_data):
     """Converts the raw xml data into an element tree"""
 
     try:
         tree = ET.fromstring(xml_data)
-    except ET.ParseError:
+    except ParseError:
         raise error.BadData("Invalid XML data passed")
 
-    if root:
-        return tree.find(root)
-    else:
-        return tree
+    return tree
 
 
 def parse_xml(etree, element):

@@ -36,6 +36,10 @@ class TestLanguage(basetest.pytvdbapiTest):
         data = utils.file_loader(os.path.join(self.path, "languages.xml"))
         self.languages = language.LanguageList(xmlhelpers.generate_tree(data))
 
+        self.langs = ('da', 'fi', 'nl', 'de', 'it', 'es', 'fr', 'pl', 'hu',
+                      'el', 'tr', 'ru', 'he', 'ja', 'pt', 'zh', 'cs', 'sl',
+                      'hr', 'ko', 'en', 'sv', 'no')
+
     def tearDown(self):
         super(TestLanguage, self).tearDown()
 
@@ -43,13 +47,19 @@ class TestLanguage(basetest.pytvdbapiTest):
         """
         It should be able to test if a language exists in the language list
         """
-        langs = ('da', 'fi', 'nl', 'de', 'it', 'es', 'fr', 'pl', 'hu', 'el',
-                  'tr', 'ru', 'he', 'ja', 'pt', 'zh', 'cs', 'sl', 'hr', 'ko',
-                  'en', 'sv', 'no')
 
-        for l in langs:
+        for l in self.langs:
             self.assertEqual(l in self.languages, True)
             self.assertEqual(self.languages[l].abbreviation, l)
+
+    def test_length_language_list(self):
+        """len() should work correctly for a language list"""
+        self.assertEqual(len(self.languages), len(self.langs))
+
+    def test_language_representation(self):
+        """The __repr__ of a language should function"""
+        self.assertEqual(self.languages['sv'].__repr__(),
+                          "<Language (Svenska:sv:8)>")
 
     def test_invalid_languages(self):
         """Function should raise TVDBIndexError when trying to access an

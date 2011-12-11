@@ -85,9 +85,9 @@ class Episode(object):
     TVDBAttributeError will be raised if accessing an invalid attribute. Some
     type conversions of the attributes will take place as follows:
 
-    * Strings of the format yyyy-mm-dd will be converted into a
+    * Strings of the format yyyy-mm-dd will be converted into a\
         :class:`datetime.date` object.
-    * Pipe separated strings will be converted into a list. E.g "foo | bar" =>
+    * Pipe separated strings will be converted into a list. E.g "foo | bar" =>\
         ["foo", "bar"]
     * Numbers with a decimal point will be converted to float
     * A number will be converted into an int
@@ -211,15 +211,14 @@ class Season(Mapping):
 
     def append(self, episode):
         """
-        :param episode:
-        :type episode: `:class:Episode`
+        :param episode: The episode to append
+        :type episode: :class:`Episode`
 
-        Adds a new `:class:Episode` to the season. If a episode with the same
+        Adds a new :class:`Episode` to the season. If a episode with the same
         EpisodeNumber already exists, it will be overwritten.
         """
         assert type(episode) in (Episode,)
-        logger.debug("{0} adding episode {1}".
-                    format(self, episode))
+        logger.debug("{0} adding episode {1}".format(self, episode))
 
         self.episodes[int(episode.EpisodeNumber)] = episode
 
@@ -234,9 +233,9 @@ class Show(Mapping):
     data provided from the server. Some type conversion of of the attributes
     will take place as follows:
 
-    * Strings of the format yyyy-mm-dd will be converted into a
+    * Strings of the format yyyy-mm-dd will be converted into a\
         :class:`datetime.date` object.
-    * Pipe separated strings will be converted into a list. E.g "foo | bar" =>
+    * Pipe separated strings will be converted into a list. E.g "foo | bar" =>\
         ["foo", "bar"]
     * Numbers with a decimal point will be converted to float
     * A number will be converted into an int
