@@ -22,7 +22,12 @@ __all__ = ['file_loader']
 
 def file_loader(file):
     try:
-        return open(file).read()
+        handle = open(file)
+        data = handle.read()
     except IOError:
-        print("Unable to load {0}".format(file))
-        return ""
+        print("Unable to open {0}".format(file))
+        data = ""
+    finally:
+        handle.close()
+
+    return data

@@ -277,10 +277,10 @@ class TestApi(basetest.pytvdbapiTest):
         friends = _load_show("friends")
         ep = friends[1][2]
 
-        self.assertEquals(type(ep.RatingCount), int)
-        self.assertEquals(type(ep.Rating), float)
-        self.assertEquals(type(ep.GuestStars), list)
-        self.assertEquals(type(ep.FirstAired), datetime.date)
+        self.assertEqual(type(ep.RatingCount), int)
+        self.assertEqual(type(ep.Rating), float)
+        self.assertEqual(type(ep.GuestStars), list)
+        self.assertEqual(type(ep.FirstAired), datetime.date)
 
 if __name__ == "__main__":
     sys.exit(unittest.main())

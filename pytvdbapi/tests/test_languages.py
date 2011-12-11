@@ -48,7 +48,7 @@ class TestLanguage(basetest.pytvdbapiTest):
                   'en', 'sv', 'no')
 
         for l in langs:
-            self.assertEquals(l in self.languages, True)
+            self.assertEqual(l in self.languages, True)
             self.assertEqual(self.languages[l].abbreviation, l)
 
     def test_invalid_languages(self):
