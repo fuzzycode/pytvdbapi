@@ -40,8 +40,10 @@ class TestLanguage(basetest.pytvdbapiTest):
         super(TestLanguage, self).tearDown()
 
     def test_language_list(self):
-        """It should be able to test if a language exists in the language list"""
-        langs = ( 'da', 'fi', 'nl', 'de', 'it', 'es', 'fr', 'pl', 'hu', 'el',
+        """
+        It should be able to test if a language exists in the language list
+        """
+        langs = ('da', 'fi', 'nl', 'de', 'it', 'es', 'fr', 'pl', 'hu', 'el',
                   'tr', 'ru', 'he', 'ja', 'pt', 'zh', 'cs', 'sl', 'hr', 'ko',
                   'en', 'sv', 'no')
 
@@ -66,4 +68,4 @@ class TestLanguage(basetest.pytvdbapiTest):
             pass
 
 if __name__ == "__main__":
-    sys.exit( unittest.main() )
+    sys.exit(unittest.main())

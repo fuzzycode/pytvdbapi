@@ -43,7 +43,7 @@ other purposes.
 To search for a specific show::
 
     >>> from pytvdbapi import api
-    >>> db = api.tvdb("B43FF87DE395DF56")
+    >>> db = api.TVDB("B43FF87DE395DF56")
     >>> search = db.search("How I met your mother", "en")
     >>> len(search)
     1
@@ -56,7 +56,7 @@ You can index individual seasons and individual episodes using convenient
 indexing::
 
     >>> from pytvdbapi import api
-    >>> db = api.tvdb("B43FF87DE395DF56")
+    >>> db = api.TVDB("B43FF87DE395DF56")
     >>> search = db.search("How I met your mother", "en")
     >>> show = search[0]
     >>> show[1]
@@ -69,7 +69,7 @@ indexing::
 To list all episodes of a show::
 
     >>> from pytvdbapi import api
-    >>> db = api.tvdb("B43FF87DE395DF56")
+    >>> db = api.TVDB("B43FF87DE395DF56")
     >>> search = db.search("How I met your mother", "en")
     >>> show = search[0]
     >>> for season in show:

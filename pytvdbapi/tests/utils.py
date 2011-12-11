@@ -19,7 +19,8 @@
 
 __all__ = ['file_loader']
 
-def file_loader( file ):
+
+def file_loader(file):
     try:
         return open(file).read()
     except IOError:

@@ -18,20 +18,28 @@
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 """
+A module providing the default loader to use to load urls.
 """
-import logging
 
+import logging
 import os
+
 import httplib2
+
 from pytvdbapi import error
 
 
 #Module logger object
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)  # pylint: disable=C0103
+
 
 class Loader(object):
+    """
+    A object for loading data from a provided url.
+    Uses httplib2 to do the heavy lifting.
+    """
     def __init__(self, cache_path):
-        self.http = httplib2.Http( cache = os.path.abspath( cache_path ) )
+        self.http = httplib2.Http(cache=os.path.abspath(cache_path))
 
     def load(self, url, cache=True):
         """
@@ -40,21 +48,27 @@ class Loader(object):
         :return: The content of the url as bytes
         :raise: ConnectionError if the url could not be loaded
 
-        
         """
 
         logger.debug("Loading data from {0}".format(url))
-        
+
         header = dict()
         if not cache:
             logger.debug("Ignoring cached data.")
             header['cache-control'] = 'no-cache'
 
         try:
-            response, content = self.http.request( url, headers= header )
-        except ( httplib2.RelativeURIError, httplib2.ServerNotFoundError ):
+            response, content = self.http.request(url, headers=header)
+        except (httplib2.RelativeURIError, httplib2.ServerNotFoundError):
+            logger.warning("Unable to connect to {0}".format(url))
             raise error.ConnectionError(
                 "Unable to connect to {0}".format(url))
+
+        if response.status != 200:
+            logger.warning("Bad status returned from server. {0}".format
+                (response.status))
+            raise  error.ConnectionError(
+                "Bad status returned from server. {0}".format(response.status))
         else:
             if type(content) in (str,):
                 return content

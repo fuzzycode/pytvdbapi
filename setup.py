@@ -29,7 +29,7 @@ import sys
 from pytvdbapi.__init__ import __NAME__, version
 
 #Make sure the user has an acceptable Python version
-if sys.version_info < (2,6):
+if sys.version_info < (2, 6):
     raise SystemExit("Your Python is too old. Only Python >= 2.6 is supported.")
 
 def get_description():
@@ -50,11 +50,11 @@ setup(
     long_description = get_description(),
     author=author,
     author_email='develop@bjornlarsson.net',
-    keywords="tvdb, thetvdb.com API tv episodes",
+    keywords="TVDB, thetvdb.com API tv episodes",
     license = "LGPLv3",
     packages = find_packages(),
     test_suite = 'pytvdbapi.tests',
-    package_data = {'' : ['data/*.xml'] },
+    package_data = {'' : ['data/*.xml', 'data/*.cfg'] },
     exclude_package_data = { '': ['./README.rst', './MANIFEST.in',
                                   './CHANGES.txt'] },
     install_requires = ['httplib2'],

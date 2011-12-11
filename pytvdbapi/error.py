@@ -18,33 +18,59 @@
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-A module containing all the errors raised by pytvdbapi
+A module containing all the errors raised by pytvdbapi.
+
+pytvdbapi will only raise exceptions that are of type :class:`PytvdbapiError`.
 """
 
 import logging
 
-__all__ = ['pytvdbapiError', 'BadData', 'ConnectionError', 'TVDBAttributeError',
-            'TVDBIndexError']
+__all__ = ['PytvdbapiError', 'BadData', 'ConnectionError',
+           'TVDBAttributeError', 'TVDBIndexError']
 
 #Module level logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)  # pylint: disable=C0103
 
-class pytvdbapiError(Exception):
+
+class PytvdbapiError(Exception):
     """Base exception for all exceptions raised by pytvdbapi"""
     pass
 
 
-class BadData(pytvdbapiError):
+class BadData(PytvdbapiError):
+    """
+    Raised if there are issues parsing the XML data provided by
+    `thetvdb.com <http://thetvdb.com>`_
+    """
     pass
 
-class ConnectionError(pytvdbapiError):
+
+class ConnectionError(PytvdbapiError):
+    """
+    Raised by the :class:`Loader` when unable to connect to the provided URL.
+    """
     pass
 
-class TVDBAttributeError(pytvdbapiError):
+
+class TVDBAttributeError(PytvdbapiError):
+    """
+    A replacement for the standard AttributeError. Will be raised when
+    accessing invalid attributes of :class:`Show` and :class:`Episode`
+    instances
+    """
     pass
 
-class TVDBIndexError(pytvdbapiError):
+
+class TVDBIndexError(PytvdbapiError):
+    """
+    A replacement for the standard IndexError. Will be raised when accessing
+    invalid indexes of :class:`Show` and :class:`Season` instances.
+    """
     pass
 
-class TVDBValueError(pytvdbapiError):
+
+class TVDBValueError(PytvdbapiError):
+    """
+    A replacement for the standard ValueError exception.
+    """
     pass

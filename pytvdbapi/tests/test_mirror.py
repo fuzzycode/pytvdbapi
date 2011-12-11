@@ -27,6 +27,7 @@ import os
 from pytvdbapi import xmlhelpers, mirror, error
 from pytvdbapi.tests import utils, basetest
 
+
 class TestMirror(basetest.pytvdbapiTest):
     def setUp(self):
         super(TestMirror, self).setUp()
@@ -40,10 +41,12 @@ class TestMirror(basetest.pytvdbapiTest):
     def test_mirror_list_length(self):
         """It should be possible to use len() on the mirror list"""
 
-        self.assertEqual( len(self.mirrors), 1 )
+        self.assertEqual(len(self.mirrors), 1)
 
     def test_get_mirror_type(self):
-        """It should be possible to get a mirror with the correct mirror type"""
+        """
+        It should be possible to get a mirror with the correct mirror type
+        """
         m = self.mirrors.get_mirror(mirror.TypeMask.BANNER)
         self.assertEqual(m.type_mask & mirror.TypeMask.BANNER,
                          mirror.TypeMask.BANNER)
@@ -65,8 +68,8 @@ class TestMirror(basetest.pytvdbapiTest):
         """function should raise pytvdbapiError if no mirror is found or an
         invalid type is used"""
 
-        self.assertRaises( error.pytvdbapiError, self.mirrors.get_mirror, 100)
+        self.assertRaises(error.PytvdbapiError, self.mirrors.get_mirror, 100)
 
 
 if __name__ == "__main__":
-    sys.exit( unittest.main() )
+    sys.exit(unittest.main())

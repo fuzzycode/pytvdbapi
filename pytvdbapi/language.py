@@ -17,8 +17,14 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
-from collections import Mapping
+"""
+A module for managing the languages supported by
+`thetvdb.com <http://thetvdb.com>`_
+"""
+
 import logging
+from collections import Mapping
+
 from pytvdbapi import error
 from pytvdbapi.xmlhelpers import parse_xml
 
@@ -26,25 +32,28 @@ from pytvdbapi.xmlhelpers import parse_xml
 __all__ = ['Language', 'LanguageList']
 
 #Module logger object
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)  # pylint: disable=C0103
+
 
 class Language(object):
     """Holds information about a language instance"""
-    def __init__(self, name, abbreviation, id):
-        self.name, self.abbreviation, self.id = name, abbreviation, id
+    def __init__(self, name, abbreviation, language_id):
+        self.name = name
+        self.abbreviation = abbreviation
+        self.language_id = language_id
 
     def __repr__(self):
-        return "<{0} ({1}:{2}:{3})>".format(
-            self.__class__.name, self.name, self.abbreviation, self.id )
+        return "<{0} ({1}:{2}:{3})>".format("Language", self.name,
+                                            self.abbreviation,
+                                            self.language_id)
 
 
 class LanguageList(Mapping):
     """Managing a list of language objects"""
     def __init__(self, etree):
-        langs = [Language(l['name'], l['abbreviation'], l['id'])
+        languages = [Language(l['name'], l['abbreviation'], l['id'])
                  for l in parse_xml(etree, "Language")]
-        self.data = dict((l.abbreviation, l) for l in langs)
-        
+        self.data = dict((l.abbreviation, l) for l in languages)
 
     def __contains__(self, item):
         return item in self.data
@@ -56,7 +65,11 @@ class LanguageList(Mapping):
         return iter(list(self.data.items()))
 
     def __getitem__(self, item):
-        """Returns a `language object obtained by the language abbreviation`"""
+        """
+        :param item: The language abbreviation to fetch
+        :return: A :class:`language` object
+        :raise: :class:`TVDBIndexError`
+        """
         try:
             return self.data[item]
         except KeyError:

@@ -27,7 +27,7 @@ This module is the public interface for the package.
 Usage::
 
     >>> from pytvdbapi import api
-    >>> db = api.tvdb("B43FF87DE395DF56")
+    >>> db = api.TVDB("B43FF87DE395DF56")
     >>> search = db.search("How I met your mother", "en")
     >>> show = search[0]
     >>> show.SeriesName
@@ -35,20 +35,23 @@ Usage::
 """
 
 from __future__ import absolute_import, print_function, unicode_literals
-import logging
 
+import logging
 import tempfile
 import sys
 import os
-from operator import attrgetter
+from collections import Mapping  # This will change in 3.3
+
+# pylint: disable=E0611, F0401
 from pkg_resources import resource_filename
-
-from collections import Mapping #This will change in 3.3
-
-if sys.version_info < (3,0):
+if sys.version_info < (3, 0):
     from  urllib import quote
+    import ConfigParser as configparser
 else:
     from  urllib.parse import quote
+    import configparser
+# pylint: enable=E0611, F0401
+
 
 from pytvdbapi import error
 from pytvdbapi.__init__ import __NAME__ as name
@@ -59,17 +62,14 @@ from pytvdbapi.utils import merge
 from pytvdbapi.xmlhelpers import parse_xml, generate_tree
 
 
-__all__ = ['Episode', 'Season', 'Show', 'Search', 'tvdb']
+__all__ = ['Episode', 'Season', 'Show', 'Search', 'TVDB']
 
 #Module logger object
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)  # pylint: disable=C0103
 
-# List the URLs that we need
-urls = dict(mirrors="http://www.thetvdb.com/api/%(api_key)s/mirrors.xml",
-    time="http://www.thetvdb.com/api/Updates.php?type=none",
-    languages="http://www.thetvdb.com/api/%(api_key)s/languages.xml",
-    search=("http://www.thetvdb.com/api/GetSeries.php?seriesname=%(series)s&language=%(language)s"),
-    series=("%(mirror)s/api/%(api_key)s/series/%(seriesid)s/all/%(language)s.xml"))
+#Read the URL configs from file
+config = configparser.ConfigParser()  # pylint: disable=C0103
+config.read(resource_filename(__name__, 'data/pytvdbapi.cfg'))
 
 
 class Episode(object):
@@ -91,7 +91,7 @@ class Episode(object):
         ["foo", "bar"]
     * Numbers with a decimal point will be converted to float
     * A number will be converted into an int
-    
+
 
     It is possible to obtain the containing season through the Episode.season
     attribute.
@@ -99,16 +99,16 @@ class Episode(object):
     Example::
 
         >>> from pytvdbapi import api
-        >>> db = api.tvdb("B43FF87DE395DF56")
+        >>> db = api.TVDB("B43FF87DE395DF56")
         >>> search = db.search("Dexter", "en")
         >>> show = search[0]
         >>> episode = show[1][5]
         >>> dir(episode) #doctest: +NORMALIZE_WHITESPACE
         ['Combined_episodenumber', 'Combined_season', 'DVD_chapter',
         'DVD_discid', 'DVD_episodenumber', 'DVD_season', 'Director',
-        'EpImgFlag', 'EpisodeName', 'EpisodeNumber', 'FirstAired', 'GuestStars',
-        'IMDB_ID', 'Language', 'Overview', 'ProductionCode', 'Rating',
-        'RatingCount', 'SeasonNumber', 'Writer', 'absolute_number',
+        'EpImgFlag', 'EpisodeName', 'EpisodeNumber', 'FirstAired',
+        'GuestStars', 'IMDB_ID', 'Language', 'Overview', 'ProductionCode',
+        'Rating', 'RatingCount', 'SeasonNumber', 'Writer', 'absolute_number',
         'filename', 'id', 'lastupdated', 'season', 'seasonid', 'seriesid']
         >>> episode.EpisodeName
         'Love American Style'
@@ -139,7 +139,7 @@ class Episode(object):
     def __dir__(self):
         return list(self.data.keys()) + \
                [d for d in list(self.__dict__.keys()) if d != "data"]
-    
+
     def __repr__(self):
         try:
             return "<Episode S{0:03d}E{1:03d} - {2}>".format(
@@ -147,6 +147,7 @@ class Episode(object):
                 self.EpisodeName)
         except error.TVDBAttributeError:
             return "<Episode>"
+
 
 class Season(Mapping):
     """
@@ -161,7 +162,7 @@ class Season(Mapping):
     Example::
 
         >>> from pytvdbapi import api
-        >>> db = api.tvdb("B43FF87DE395DF56")
+        >>> db = api.TVDB("B43FF87DE395DF56")
         >>> search = db.search("Dexter", "en")
         >>> show = search[0]
         >>> seson = show[1]
@@ -186,7 +187,7 @@ class Season(Mapping):
         <Episode S001E011 - Truth Be Told>
         <Episode S001E012 - Born Free>
     """
-    
+
     def __init__(self, season_number, show):
         self.show, self.season_number = show, season_number
         self.episodes = dict()
@@ -200,15 +201,22 @@ class Season(Mapping):
 
     def __len__(self):
         return len(self.episodes)
-    
+
     def __iter__(self):
-        return iter( sorted(list(self.episodes.values()),
+        return iter(sorted(list(self.episodes.values()),
                             key=lambda ep: ep.EpisodeNumber))
 
     def __repr__(self):
-        return "<Season {0:03}>".format( self.season_number )
+        return "<Season {0:03}>".format(self.season_number)
 
     def append(self, episode):
+        """
+        :param episode:
+        :type episode: `:class:Episode`
+
+        Adds a new `:class:Episode` to the season. If a episode with the same
+        EpisodeNumber already exists, it will be overwritten.
+        """
         assert type(episode) in (Episode,)
         logger.debug("{0} adding episode {1}".
                     format(self, episode))
@@ -221,10 +229,10 @@ class Show(Mapping):
     :raise: TVDBAttributeError, TVDBIndexError
 
     Holds attributes about a single show and contains all seasons associated
-    with a show. The attributes are named exactly as returned from thetvdb.com_.
-    This object should be considered a read only container of data
-    provided from the server. Some type conversion of of the attributes will
-    take place as follows:
+    with a show. The attributes are named exactly as returned from
+    thetvdb.com_. This object should be considered a read only container of
+    data provided from the server. Some type conversion of of the attributes
+    will take place as follows:
 
     * Strings of the format yyyy-mm-dd will be converted into a
         :class:`datetime.date` object.
@@ -233,7 +241,7 @@ class Show(Mapping):
     * Numbers with a decimal point will be converted to float
     * A number will be converted into an int
 
-    
+
     The Show uses lazy evaluation and will only load the full data set from
     the server when this data is needed. This is to speed up the searches and
     to reduce the workload of the servers. This way,
@@ -253,7 +261,7 @@ class Show(Mapping):
     Example::
 
         >>> from pytvdbapi import api
-        >>> db = api.tvdb("B43FF87DE395DF56")
+        >>> db = api.TVDB("B43FF87DE395DF56")
         >>> search = db.search("Dexter", "en")
         >>> show = search[0]
         >>> dir(show) #doctest: +NORMALIZE_WHITESPACE
@@ -261,11 +269,12 @@ class Show(Mapping):
         'id', 'lang', 'language', 'seasons', 'seriesid', 'zap2it_id']
         >>> show.update()
         >>> dir(show) #doctest: +NORMALIZE_WHITESPACE
-        ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'ContentRating', 'FirstAired',
-        'Genre', 'IMDB_ID', 'Language', 'Network', 'NetworkID', 'Overview',
-        'Rating', 'RatingCount', 'Runtime', 'SeriesID', 'SeriesName', 'Status',
-        'added', 'addedBy', 'api', 'banner', 'fanart', 'id', 'lang', 'language',
-        'lastupdated', 'poster', 'seasons', 'seriesid', 'zap2it_id']
+        ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'ContentRating',
+        'FirstAired', 'Genre', 'IMDB_ID', 'Language', 'Network', 'NetworkID',
+        'Overview', 'Rating', 'RatingCount', 'Runtime', 'SeriesID',
+        'SeriesName', 'Status', 'added', 'addedBy', 'api', 'banner',
+        'fanart', 'id', 'lang',  'language', 'lastupdated', 'poster',
+        'seasons', 'seriesid', 'zap2it_id']
         >>> len(show)
         7
         >>> show[5]
@@ -292,7 +301,7 @@ class Show(Mapping):
         try:
             return self.data[item]
         except KeyError:
-            logger.debug( "Attribute not found" )
+            logger.debug("Attribute not found")
             raise error.TVDBAttributeError("Show has no attribute names %s" %
                                            item)
 
@@ -302,7 +311,6 @@ class Show(Mapping):
     def __dir__(self):
         attributess = [d for d in list(self.__dict__.keys()) if d != "data"]
         return list(self.data.keys()) + attributess
-
 
     def __iter__(self):
         if not self.seasons:
@@ -319,7 +327,7 @@ class Show(Mapping):
     def __getitem__(self, item):
         if not item in self.seasons:
             self._populate_data()
-        
+
         try:
             return self.seasons[item]
         except KeyError:
@@ -333,33 +341,44 @@ class Show(Mapping):
         self._populate_data()
 
     def _populate_data(self):
-        logger.debug("Populating season data from URL.")
-        
-        context = {'mirror':self.api.mirrors.get_mirror(TypeMask.XML).url,
-                       'api_key':self.api.config['api_key'],
-                       'seriesid':self.id,
-                       'language':self.lang}
+        """
+        Populates the Show object with data. This will hit the network to
+        downlaod the XML data from `thetvdb.com <http://thetvdb.com>`_.
+        :class:`Season` and `:class:Episode` objects will be created and
+        added as needed.
 
-        data = generate_tree(self.api.loader.load(urls['series'] % context))
-        episodes = [d for d in parse_xml( data, "Episode")]
+        .. Note: This function is not intended to be used by clients of the
+        API and should only be used inernaly by the Show class to manage its
+        structure.
+        """
+        logger.debug("Populating season data from URL.")
+
+        context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
+                       'api_key': self.api.config['api_key'],
+                       'seriesid': self.id,
+                       'language': self.lang}
+
+        url = config.get("urls", "series", raw=True)
+        data = generate_tree(self.api.loader.load(url % context))
+        episodes = [d for d in parse_xml(data, "Episode")]
 
         show_data = parse_xml(data, "Series")
-        assert len(show_data) == 1
+        assert len(show_data) == 1, "Should only have 1 Show section"
 
-        self.data = merge( self.data, show_data[0] )
+        self.data = merge(self.data, show_data[0])
 
-        for episode in episodes:
-            season_nr = int(episode['SeasonNumber'])
+        for episode_data in episodes:
+            season_nr = int(episode_data['SeasonNumber'])
             if not season_nr in self.seasons:
-                self.seasons[ season_nr ] = Season(season_nr, self)
+                self.seasons[season_nr] = Season(season_nr, self)
 
-            ep = Episode( episode, self.seasons[season_nr] )
-            self.seasons[season_nr].append(ep)
+            episode = Episode(episode_data, self.seasons[season_nr])
+            self.seasons[season_nr].append(episode)
 
-    
+
 class Search(object):
     """
-    A search result returned from calling :func:`tvdb.search()`. It supports
+    A search result returned from calling :func:`TVDB.search()`. It supports
     iterating and the individual shows matching the search can be accessed
     using the [ ] syntax.
 
@@ -373,7 +392,7 @@ class Search(object):
     Example::
 
         >>> from pytvdbapi import api
-        >>> db = api.tvdb("B43FF87DE395DF56")
+        >>> db = api.TVDB("B43FF87DE395DF56")
         >>> search = db.search("Dexter", "en")
         >>> for s in search:
         ...     print(s)
@@ -381,7 +400,7 @@ class Search(object):
         <Show - Dexter>
         <Show - Cliff Dexter>
     """
-    
+
     def __init__(self, result, search, language):
         self.result, self.search, self.language = result, search, language
 
@@ -399,7 +418,7 @@ class Search(object):
         return iter(self.result)
 
 
-class tvdb(object):
+class TVDB(object):
     """
     :param api_key: The API key to use to communicate with the server
     :param kwargs:
@@ -442,16 +461,19 @@ class tvdb(object):
         #If requested, update the local language file from the server
         if self.config['force_lang']:
             logger.debug("updating Language file from server")
-            with open(language_file, "wt") as f:
-                f.write(self.loader.load(urls['languages'] % self.config))
+            with open(language_file, "wt") as languages:
+                url = config.get("urls", "languages", raw=True)
+                language_data = self.loader.load(url % self.config)
+                languages.write(language_data)
 
         #Setup the list of supported languages
-        with open(language_file, "rt") as f:
-            self.languages = LanguageList(generate_tree(f.read()))
+        with open(language_file, "rt") as languages:
+            self.languages = LanguageList(generate_tree(languages.read()))
 
         #Create the list of available mirrors
-        self.mirrors = MirrorList(
-            generate_tree(self.loader.load(urls['mirrors'] % self.config)))
+        url = config.get("urls", "mirrors", raw=True)
+        tree = generate_tree(self.loader.load(url % self.config))
+        self.mirrors = MirrorList(tree)
 
     def search(self, show, language, cache=True):
         """
@@ -475,9 +497,9 @@ class tvdb(object):
         the servers.
 
         Example::
-        
+
             >>> from pytvdbapi import api
-            >>> db = api.tvdb("B43FF87DE395DF56")
+            >>> db = api.TVDB("B43FF87DE395DF56")
             >>> search = db.search("Dexter", "en")
             >>> for s in search:
             ...     print(s)
@@ -486,7 +508,7 @@ class tvdb(object):
             <Show - Cliff Dexter>
 
         """
-        
+
         logger.debug("Searching for {0} using language {1}"
             .format(show, language))
 
@@ -494,12 +516,12 @@ class tvdb(object):
             raise error.TVDBValueError("{0} is not a valid language")
 
         if (show, language) not in self.search_buffer:
-            if sys.version_info < (3,0):
+            if sys.version_info < (3, 0):
                 show = str(show.encode('utf-8'))
-            
-            context = {'series': quote(show), "language":language}
-            data = generate_tree(self.loader.load(urls['search'] % context,
-                                                   cache))
+
+            context = {'series': quote(show), "language": language}
+            url = config.get("urls", "search", raw=True)
+            data = generate_tree(self.loader.load(url % context, cache))
             shows = [Show(d, self, language)
                      for d in parse_xml(data, "Series")]
 
@@ -511,12 +533,15 @@ class tvdb(object):
 #A small sample usage
 if __name__ == '__main__':
     def main():
-        import logging
+        """
+        An example printing all Episodes for all Seasons for all Shows
+        found when serching for the search term Dexter
+        """
         logger.addHandler(logging.StreamHandler(stream=sys.stdout))
         logger.setLevel(logging.DEBUG)
 
-        api = tvdb("B43FF87DE395DF56")
-        search = api.search( "Dexter", "en" )
+        api = TVDB("B43FF87DE395DF56")
+        search = api.search("Dexter", "en")
 
         for show in search:
             for season in show:

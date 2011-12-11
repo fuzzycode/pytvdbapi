@@ -42,7 +42,7 @@ class TestLoader(basetest.pytvdbapiTest):
         super(TestLoader, self).setUp()
         self.tmp = tempfile.mkdtemp()
         self.loader = Loader(self.tmp)
-        self.context = {"api_key":"B43FF87DE395DF56"}
+        self.context = {"api_key": "B43FF87DE395DF56"}
 
     def tearDown(self):
         super(TestLoader, self).tearDown()
@@ -54,24 +54,23 @@ class TestLoader(basetest.pytvdbapiTest):
         mirror_file = resource_filename(__name__, 'data/mirrors.xml')
         data = utils.file_loader(mirror_file)
 
-        result = self.loader.load(
-            "http://www.thetvdb.com/api/%(api_key)s/mirrors.xml" % self.context)
-
+        url = ("http://www.thetvdb.com/api/%(api_key)s/mirrors.xml" %
+              self.context)
+        result = self.loader.load(url)
 
         #Fix any new line issues to assure it does not affect the test
         data = data.replace('\r\n', '\n')
         result = result.replace('\r\n', '\n')
 
-        self.assertEqual( data, result )
+        self.assertEqual(data, result)
 
     def test_failed_conection(self):
         """Loader should raise ConnectionError if it is not able to connect
         to the provided url
         """
 
-        self.assertRaises( error.ConnectionError, self.loader.load,
+        self.assertRaises(error.ConnectionError, self.loader.load,
                            "http://laba.laba")
-
 
 
 if __name__ == "__main__":

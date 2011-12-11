@@ -24,21 +24,22 @@ A helper module for parsing a XML data.
 import datetime
 import logging
 import re
-import xml.etree.ElementTree as etree
+import xml.etree.ElementTree as ET
 
 from pytvdbapi import error
 
 __all__ = ['generate_tree', 'parse_xml']
 
 #Module level logger object
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)  # pylint: disable=C0103
 
-def generate_tree( xml_data, root = None ):
+
+def generate_tree(xml_data, root=None):
     """Converts the raw xml data into an element tree"""
 
     try:
-        tree = etree.fromstring( xml_data )
-    except etree.ParseError:
+        tree = ET.fromstring(xml_data)
+    except ET.ParseError:
         raise error.BadData("Invalid XML data passed")
 
     if root:
@@ -70,7 +71,7 @@ def parse_xml(etree, element):
     logger.debug("Parsing element tree for {0}".format(element))
 
     _list = list()
-    for item in etree.findall( element ):
+    for item in etree.findall(element):
         data = dict()
         for child in list(item):
             tag, value = child.tag, child.text
@@ -80,16 +81,16 @@ def parse_xml(etree, element):
             else:
                 value = ""
 
-            try: #Try to format as a datetime object
+            try:  # Try to format as a datetime object
                 value = datetime.datetime.strptime(value, "%Y-%m-%d").date()
             except ValueError:
-                if '|' in value: #Split piped values into a list
+                if '|' in value:  # Split piped values into a list
                     value = value.strip("|").split("|")
                     value = [s.strip() for s in value]
                 else:
-                    if re.match(r"^\d+\.\d+$", value): #Convert float
+                    if re.match(r"^\d+\.\d+$", value):  # Convert float
                         value = float(value)
-                    elif re.match(r"^\d+$", value): #Convert integer
+                    elif re.match(r"^\d+$", value):  # Convert integer
                         value = int(value)
 
             data[tag] = value

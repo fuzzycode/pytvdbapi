@@ -2,6 +2,7 @@
 include  distribute_setup.py
 include COPYING.txt
 include LICENSE.txt
+
 #include the documentation
 recursive-include docs/build/html/ *.*
 

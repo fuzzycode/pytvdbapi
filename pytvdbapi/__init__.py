@@ -17,15 +17,22 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+A clean, resource friendly and easy to use API for thetvdb.com_.
+
+.. _thetvdb.com: http://thetvdb.com
+"""
+
 import logging
 try:
     from logging import NullHandler
 except ImportError:
-    from backport import NullHandler
+    from pytvdbapi.backport import NullHandler
 
-__VERSION__ = (0,2,0)
+__VERSION__ = (0, 2, 0)
 __NAME__ = 'pytvdbapi'
 __EMAIL__ = 'develop@bjornlarsson.net'
+
 
 def version():
     """Returns the version as a string"""

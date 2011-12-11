@@ -20,6 +20,7 @@
 from unittest import TestCase
 import os
 
+
 class pytvdbapiTest(TestCase):
     def setUp(self):
         super(pytvdbapiTest, self).setUp()

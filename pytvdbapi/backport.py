@@ -23,6 +23,7 @@ with python 2.5 and 2.6.
 
 import logging
 
+
 class NullHandler(logging.Handler):
     """A replacement NullHandler for the one found in the standard library as
      of version 2.7"""
