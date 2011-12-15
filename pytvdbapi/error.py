@@ -34,7 +34,9 @@ logger = logging.getLogger(__name__)  # pylint: disable=C0103
 
 class PytvdbapiError(Exception):
     """Base exception for all exceptions raised by pytvdbapi"""
-    pass
+    def __init__(self, msg, *args, **kwargs):
+        super(PytvdbapiError, self).__init__(msg, args, kwargs)
+        logger.error(msg)
 
 
 class BadData(PytvdbapiError):

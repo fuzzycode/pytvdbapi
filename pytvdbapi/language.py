@@ -73,5 +73,4 @@ class LanguageList(Mapping):
         try:
             return self.data[item]
         except KeyError:
-            logger.warning("Language {0} not found.".format(item))
             raise error.TVDBIndexError("Item {0} not found".format(item))

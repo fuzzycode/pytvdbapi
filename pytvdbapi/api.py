@@ -300,7 +300,6 @@ class Show(Mapping):
         try:
             return self.data[item]
         except KeyError:
-            logger.debug("Attribute not found")
             raise error.TVDBAttributeError("Show has no attribute names %s" %
                                            item)
 
@@ -330,8 +329,7 @@ class Show(Mapping):
         try:
             return self.seasons[item]
         except KeyError:
-            logger.error("Season {0} not found".format(item))
-            raise error.TVDBIndexError()
+            raise error.TVDBIndexError("Season {0} not found".format(item))
 
     def update(self):
         """
@@ -410,8 +408,7 @@ class Search(object):
         try:
             return self.result[item]
         except (IndexError, TypeError):
-            logger.warning("Index out of range")
-            raise error.TVDBIndexError("Index out of range")
+            raise error.TVDBIndexError("Index out of range ({0})".format(item))
 
     def __iter__(self):
         return iter(self.result)
