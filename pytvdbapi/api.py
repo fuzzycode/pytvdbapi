@@ -137,8 +137,9 @@ class Episode(object):
             .format(item))
 
     def __dir__(self):
-        return list(self.data.keys()) + \
-               [d for d in list(self.__dict__.keys()) if d != "data"]
+        attributes = [d for d in list(self.__dict__.keys()) if d != "data"]
+        return list(self.data.keys()) + attributes
+
 
     def __repr__(self):
         try:
@@ -447,11 +448,11 @@ class TVDB(object):
         self.path = os.path.abspath(os.path.dirname(__file__))
 
         #extract all argument and store for later use
-        self.config['force_lang'] = getattr(kwargs, 'force_lang', False)
+        self.config['force_lang'] = kwargs.get("force_lang", False)
         self.config['api_key'] = api_key
-        self.config['cache_dir'] = getattr(kwargs, 'cache_dir',
-                os.path.join(tempfile.gettempdir(), name))
-
+        self.config['cache_dir'] = kwargs.get("cache_dir",
+            os.path.join(tempfile.gettempdir(), name))
+        
         #Create the loader object to use
         self.loader = Loader(self.config['cache_dir'])
 
@@ -527,24 +528,3 @@ class TVDB(object):
             self.search_buffer[(show, language)] = shows
 
         return Search(self.search_buffer[(show, language)], show, language)
-
-
-#A small sample usage
-if __name__ == '__main__':
-    def main():
-        """
-        An example printing all Episodes for all Seasons for all Shows
-        found when serching for the search term Dexter
-        """
-        logger.addHandler(logging.StreamHandler(stream=sys.stdout))
-        logger.setLevel(logging.DEBUG)
-
-        api = TVDB("B43FF87DE395DF56")
-        search = api.search("Dexter", "en")
-
-        for show in search:
-            for season in show:
-                for episode in season:
-                    print(episode)
-
-    sys.exit(main())

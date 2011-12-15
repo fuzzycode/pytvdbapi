@@ -291,5 +291,50 @@ class TestApi(basetest.pytvdbapiTest):
 
         self.assertRaises(error.BadData, generate_tree, data)
 
+    def test_force_language(self):
+        """
+        It should be possible to use the "force_lang" keyword when
+        creating the TVDB instance
+        """
+
+        api = TVDB("B43FF87DE395DF56", force_lang=True)
+        search = api.search("dexter", "it")
+
+        self.assertEqual(len(search), 3)
+
+    def test_cache_dir(self):
+        """It should be possible to specify a custom cache directory"""
+        #TODO: Implement this
+
+    def test_version_format(self):
+        """The package version string should be properly formatted"""
+        import re
+        format = r'^\d{1,2}\.\d{1,2}(?:\.\d{1,2})?$'
+
+        m = re.match(format, pytvdbapi.version())
+        self.assertNotEqual(m, None)
+
+    def test_show_dir(self):
+        """
+        It should be possible to call dir() on a show object.
+        Before updating it should contain a sub set of attributes and after
+        updating it should contain the full set of attributes.
+        """
+
+        friends = _load_show("friends")
+
+        self.assertEqual(len(dir(friends)), 12)
+
+        friends.update()
+
+        self.assertEqual(len(dir(friends)), 30)
+
+    def test_episode_dir(self):
+        """It should be possible to call dir() on a episode instance"""
+        friends = _load_show("friends")
+        ep = friends[3][7]
+
+        self.assertEqual(len(dir(ep)), 27)
+
 if __name__ == "__main__":
     sys.exit(unittest.main())

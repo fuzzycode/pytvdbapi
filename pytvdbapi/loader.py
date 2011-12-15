@@ -60,13 +60,10 @@ class Loader(object):
         try:
             response, content = self.http.request(url, headers=header)
         except (httplib2.RelativeURIError, httplib2.ServerNotFoundError):
-            logger.warning("Unable to connect to {0}".format(url))
             raise error.ConnectionError(
                 "Unable to connect to {0}".format(url))
 
         if response.status != 200:
-            logger.warning("Bad status returned from server. {0}".format
-                (response.status))
             raise  error.ConnectionError(
                 "Bad status returned from server. {0}".format(response.status))
         else:
