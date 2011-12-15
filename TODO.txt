@@ -1,0 +1,11 @@
+TODO
+====
+
+Release 0.3.0
+-------------
+
+    * Add support for Actors and actor info
+    * Add support for banners
+    * Add support for downloading the zip formatted data
+    * Add support for providing custom loaders
+    * Implement offline loader to be able to test more classes in offline mode

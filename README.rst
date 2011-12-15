@@ -7,6 +7,16 @@ The API is designed to respect the functionality of thetvdb.com_ as far as
 possible. It uses caching as much as possible to reduce the workload of the
 servers.
 
+Key Features
+------------
+  * A clean and easy to use interface
+  * A well documented API
+  * Support for Python 3.2
+  * Thoroughly tested against all supported platforms. Tests covering ~97% of
+    the code base.
+  * Continuously tested against PEP8 and pylint.
+
+
 Dependencies
 ============
 pytvdbapi depends on the following packages to function.
@@ -95,7 +105,7 @@ To list all episodes of a show::
     <Episode S007E012 - Symphony of Illumination>
 
 Testing
-======
+=======
 Testing *pytvdbapi* is really easy, just type the following from the package
 root folder::
 

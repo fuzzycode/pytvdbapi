@@ -1,0 +1,11 @@
+Thanks
+======
+
+This API had not been possible without the work done by the people providing
+the database and API over at `thetvdb.com <http://thetvdb.com>`_ so a big
+thanks goes out to them.
+
+The service is only as good as the data provided in the database so a big
+thanks to the community providing the data.
+
+To help keeping the service going please consider contributing to the database.
