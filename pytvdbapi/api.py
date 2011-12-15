@@ -140,7 +140,6 @@ class Episode(object):
         attributes = [d for d in list(self.__dict__.keys()) if d != "data"]
         return list(self.data.keys()) + attributes
 
-
     def __repr__(self):
         try:
             return "<Episode S{0:03d}E{1:03d} - {2}>".format(
@@ -452,7 +451,7 @@ class TVDB(object):
         self.config['api_key'] = api_key
         self.config['cache_dir'] = kwargs.get("cache_dir",
             os.path.join(tempfile.gettempdir(), name))
-        
+
         #Create the loader object to use
         self.loader = Loader(self.config['cache_dir'])
 
