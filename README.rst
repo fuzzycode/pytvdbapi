@@ -1,7 +1,7 @@
 About
 =====
-pytvdbapi is a python API for thetvdb.com_ online database for tv-shows. The
-API is designed to be as easy and intuitive as possible to use.
+**pytvdbapi** is a python API for thetvdb.com_ online database for tv-shows.
+The API is designed to be as easy and intuitive as possible to use.
 
 The API is designed to respect the functionality of thetvdb.com_ as far as
 possible. It uses caching as much as possible to reduce the workload of the
@@ -19,17 +19,15 @@ Key Features
 
 Dependencies
 ============
-pytvdbapi depends on the following packages to function.
+**pytvdbapi** depends on the following packages to function.
 
   * `httplib2 <http://code.google.com/p/httplib2/>`_
 
 Install
 =======
-The package has not yet been added to PyPI so you have two options to install
-pytvdbapi. The easiest and recommended way is to use pip_ and,
-replacing X, Y, Z for the version you want, executing::
+The easiest and recommended way to install **pytvdbapi** is to use pip_::
 
-    $pip install https://github.com/fuzzycode/pytvdbapi/downloads/pytvdbapi-X.Y.Z.tar.gz
+    $pip install pytvdbapi
 
 Or you can download the desired version from https://github.com/fuzzycode/pytvdbapi/downloads/
 and unpack it and execute::
@@ -45,8 +43,8 @@ Note that no guaranties are made as to the stability of the source tree::
 
 Usage
 =====
-To use the API you should apply for an API Key for your particular application
-. An API Key can be obtained from thetvdb.com_. Note that the key used in the
+To use the API you should apply for an API key for your particular application
+. An API key can be obtained from thetvdb.com_. Note that the key used in the
 examples is only intended for testing purposes and should not be used for
 other purposes.
 
@@ -106,21 +104,25 @@ To list all episodes of a show::
 
 Testing
 =======
-Testing *pytvdbapi* is really easy, just type the following from the package
+Testing **pytvdbapi** is really easy, just type the following from the package
 root folder::
 
     $ python setup.py test
 
 If all turns out all right you should see a nice and happy OK at the end.
 
+Documentation
+=============
+**pytvdbapi** comes with a copy of the documentation contained in
+*docs/build/html/*
 
 Known Issues
 ============
-  * At the moment, *pytvdbapi* only works with Python 2.6, 2.7 and 3.2,
+  * At the moment, **pytvdbapi** only works with Python 2.6, 2.7 and 3.2,
     **NOT 3.0 or 3.1**. This is due to an
     `issue <http://code.google.com/p/httplib2/issues/detail?id=195>`_
     with httplib2 on Python 3.0, 3.1.
-  * *pytvdbapi* does currently **NOT** support the use of Proxy Servers.
+  * **pytvdbapi** does currently **NOT** support the use of Proxy Servers.
 
 
 Bugs
