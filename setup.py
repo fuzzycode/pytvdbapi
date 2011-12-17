@@ -50,19 +50,21 @@ setup(
     long_description = get_description(),
     author=author,
     author_email='develop@bjornlarsson.net',
+    url="https://github.com/fuzzycode/pytvdbapi",
     keywords="TVDB, thetvdb.com API tv episodes",
     license = "LGPLv3",
     packages = find_packages(),
+    platforms=["any"],
     test_suite = 'pytvdbapi.tests',
     package_data = {'' : ['data/*.xml', 'data/*.cfg'] },
     exclude_package_data = { '': ['./README.rst', './MANIFEST.in',
                                   './CHANGES.txt'] },
     install_requires = ['httplib2'],
     classifiers = [f.strip() for f in """
-    Development Status :: 5 - Production/Stable
+    Development Status :: 2 - Pre-Alpha
     Intended Audience :: Developers
-
     Operating System :: OS Independent
+    License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
     Programming Language :: Python
     Programming Language :: Python :: 2.6
     Programming Language :: Python :: 2.7
