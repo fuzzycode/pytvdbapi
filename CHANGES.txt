@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+2011-12-17, 0.2.1
+-----------------
+  * Updated test coverage
+  * Made the source code PEP8 and Pylint compatible
+  * Updated documentation and prepared for PyPI release
+
 2011-12-07, 0.2.0
 -----------------
   * Updated to support Python 2.6, 2.7 and 3.2
@@ -9,7 +15,7 @@ CHANGELOG
 2011-11-29, 0.1.1
 -----------------
   * Renamed the package to pytvdbapi to avoid any confusion with the official
-   thetvdb.com service.
+    thetvdb.com service.
   * Updated the setup.py to use setuptools if available
 
 2011-11-28, 0.1.0

@@ -4,11 +4,11 @@ include COPYING.txt
 include LICENSE.txt
 include THANKS.txt
 include TODO.txt
+include README.rst
+include CHANGES.txt
 
 #include the documentation
 recursive-include docs/build/html/ *.*
 
 #The exclude section
-exclude README.rst
-exclude CHANGES.txt
 exclude MANIFEST*
