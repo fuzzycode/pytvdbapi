@@ -214,7 +214,7 @@ class Season(Mapping):
         :param episode: The episode to append
         :type episode: :class:`Episode`
 
-        Adds a new :class:`Episode` to the season. If a episode with the same
+        Adds a new :class:`Episode` to the season. If an episode with the same
         EpisodeNumber already exists, it will be overwritten.
         """
         assert type(episode) in (Episode,)
@@ -376,8 +376,8 @@ class Show(Mapping):
 class Search(object):
     """
     A search result returned from calling :func:`TVDB.search()`. It supports
-    iterating and the individual shows matching the search can be accessed
-    using the [ ] syntax.
+    iterating over the results, and the individual shows matching the search
+    can be accessed using the [ ] syntax.
 
     The search will contain 0 or more :class:`Show()` instances matching the
     search.
@@ -423,15 +423,14 @@ class TVDB(object):
     controlled by configuring the key word arguments. The supported key word
     arguments are:
 
-    * *force_lang* default=False. If set to True, the API will reload the
+    * *force_lang* (default=False). If set to True, the API will reload the
         language list from the server. If False, the local preloaded file
         will be used. The language list is relative stable but if there are
         changes it could be useful to set this to True to obtain a new version
         from the server. It is only necessary to do this once since the API
         stores the reloaded data for further use.
-    * *cache_dir* default=/tmp/pytvdbapi/. Specifies the directory to use
-        for caching the server requests. It will default to a directory
-        within the platform specific temp folder.
+    * *cache_dir* (default=/<system tmp dir>/pytvdbapi/). Specifies the
+      directory to use for caching the server requests.
     """
 
     def __init__(self, api_key, **kwargs):
