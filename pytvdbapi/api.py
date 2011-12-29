@@ -523,3 +523,29 @@ class TVDB(object):
             self.search_buffer[(show, language)] = shows
 
         return Search(self.search_buffer[(show, language)], show, language)
+
+    def get(self, id, language):
+        """
+        :param id: The show id to get
+        :param language: Language abriviation to get
+        :return: A new :class:`Show` object
+        :raise: :class:`TVDBValueError`
+
+        .. versionadded:: 0.3
+
+        If you already know the thetvdb.com_ id of the show,
+        you can use that to directly access the :class:`Show` object without
+        having to performe a search. The object will be fully updated before
+        returning so it is ready to be used.
+
+        .. _thetvdb.com: http://thetvdb.com
+        """
+
+        #Validate language selection
+        if language not in self.languages:
+            raise error.TVDBValueError("{0} is not a valid language")
+
+        show = Show({"id": id}, self, language)
+        show.update()
+
+        return show

@@ -23,8 +23,8 @@ import sys
 import unittest
 import datetime
 
-from pytvdbapi import error
 import pytvdbapi
+from pytvdbapi import error
 from pytvdbapi.api import TVDB
 from pytvdbapi.xmlhelpers import generate_tree
 from pytvdbapi.tests import basetest
@@ -335,6 +335,14 @@ class TestApi(basetest.pytvdbapiTest):
         ep = friends[3][7]
 
         self.assertEqual(len(dir(ep)), 27)
+
+    def test_get(self):
+        """Provided the show id, you should be able to get the show object"""
+        api = TVDB("B43FF87DE395DF56")
+        show = api.get(79349, "en")
+
+        self.assertEqual(show.SeriesName, "Dexter")
+        self.assertEqual(show.id, 79349)
 
 if __name__ == "__main__":
     sys.exit(unittest.main())
