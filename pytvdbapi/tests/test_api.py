@@ -47,231 +47,6 @@ class TestApi(basetest.pytvdbapiTest):
      An effort should be made to change this in order for the tests to
      function reliably also when not connected.
     """
-    def setUp(self):
-        super(TestApi, self).setUp()
-
-    def test_search(self):
-        """It should be possible to search for shows"""
-        api = TVDB("B43FF87DE395DF56")
-        search = api.search("dexter", "en")
-
-        self.assertEqual(len(search), 2)
-
-        search = api.search("scrubs", "en")
-        self.assertEqual(len(search), 2)
-
-    def test_case_insensitive(self):
-        """The test should be case insensitive"""
-        api = TVDB("B43FF87DE395DF56")
-        search = api.search("DeXtEr", "en")
-
-        self.assertEqual(len(search), 2)
-
-    def test_seasons(self):
-        """The seasons should function properly"""
-        friends = _load_show("friends")
-
-        self.assertEqual(len(friends), 11)
-
-    def test_iterate_show(self):
-        """It should be possible to iterate over the show to get all seasons"""
-        friends = _load_show("friends")
-
-        count = 0
-        for s in friends:
-            count += 1
-            self.assertEqual(type(s), pytvdbapi.api.Season)
-
-        self.assertEqual(count, 11)
-
-    def test_show_sort_order(self):
-        """The seasons should be sorted on season number when iterating over
-        a show
-        """
-        friends = _load_show("friends")
-
-        counter = 0
-        for season in friends:
-            self.assertEqual(counter, season.season_number)
-            counter += 1
-
-    def test_invalid_season_index(self):
-        """Show should raise TVDBIndexError if trying to access invalid
-        season indexes"""
-        friends = _load_show("friends")
-
-        self.assertRaises(error.TVDBIndexError, friends.__getitem__, -1)
-        self.assertRaises(error.TVDBIndexError, friends.__getitem__, 12)
-        self.assertRaises(error.TVDBIndexError, friends.__getitem__, 100000)
-        self.assertRaises(error.TVDBIndexError, friends.__getitem__, "hello")
-
-    def test_show_attributes(self):
-        """The show instance should have correct attributes"""
-        friends = _load_show("friends")
-
-        self.assertEqual(friends.SeriesName, "Friends")
-        self.assertEqual(friends.id, 79168)
-
-        #This should not yet be loaded so should raise an error
-        self.assertRaises(
-            error.TVDBAttributeError, friends.__getattr__, "Genre")
-
-        #Load in the rest of the attributes
-        friends.update()
-
-        #Now this data should be available
-        self.assertEqual(friends.Genre, ['Comedy'])
-
-    def test_invalid_show_attribute(self):
-        """The Show object should raise TVDBAttributeError when you try to
-        access an invalid attribute"""
-        friends = _load_show("friends")
-
-        self.assertRaises(error.TVDBAttributeError, friends.__getattr__, "foo")
-        self.assertRaises(
-            error.TVDBAttributeError, friends.__getattr__, "baar")
-        self.assertRaises(
-            error.TVDBAttributeError, friends.__getattr__, "laba_laba")
-
-    def test_numeric_names(self):
-        """It should be possible to search for shows with all numeric names.
-        E.g. 24
-        """
-        show = _load_show('24')
-
-        self.assertEqual(show.FirstAired, datetime.date(2001, 11, 6))
-
-    def test_unicode_search(self):
-        """
-        It should be possible to search for shows containing non ascii chars
-        """
-
-        api = TVDB("B43FF87DE395DF56")
-
-        search = api.search("100 höjdare", "sv")
-
-        show = search[0]
-        self.assertEqual(show[1][4].EpisodeName, "Ögonblick 66-56")
-
-        search = api.search("Alarm für cobra 11", "de")
-        show = search[0]
-        self.assertEqual(show[1][2].EpisodeName, "Tödliche Träume")
-
-        search = api.search('3年B組金八先生', "zh")
-        show = search[0]
-        self.assertEqual(show[1][1].EpisodeName, "3年B組金八先生")
-
-    def test_names_with_spaces(self):
-        """It should be possible to search for shows with spaces in the name"""
-        api = TVDB("B43FF87DE395DF56")
-        search = api.search("How I Met Your Mother", "en")
-
-        self.assertEqual(len(search), 1)
-
-    def test_invalid_language(self):
-        """Search function should raise TVDBValueError when trying to search
-        with an invalid language
-        """
-        api = TVDB("B43FF87DE395DF56")
-
-        self.assertRaises(error.TVDBValueError, api.search, "dexter", "lu")
-
-    def test_episodes(self):
-        """The episodes should function properly"""
-        friends = _load_show("friends")
-        season1 = friends[1]
-
-        self.assertEqual(len(season1), 24)
-
-    def test_iterate_season(self):
-        """
-        It should be possible to iterate over a season to get all episodes
-        """
-        friends = _load_show("friends")
-        season1 = friends[1]
-
-        for ep in season1:
-            self.assertEqual(type(ep), pytvdbapi.api.Episode)
-
-    def test_season_sort_order(self):
-        """The Episodes should be sorted on the episode number when iterating
-         over a season
-         """
-        friends = _load_show("friends")
-        season1 = friends[1]
-
-        counter = 0
-        for ep in season1:
-            self.assertEqual(counter + 1, ep.EpisodeNumber)
-            counter += 1
-
-    def test_invalid_episode_index(self):
-        """
-        The Season should raise TVDBIndexError when trying to access invalid
-        indexes
-         """
-        friends = _load_show("friends")
-        episode = friends[2]
-
-        self.assertRaises(error.TVDBIndexError, episode.__getitem__, -1)
-        self.assertRaises(error.TVDBIndexError, episode.__getitem__, 100)
-        self.assertRaises(error.TVDBIndexError, episode.__getitem__, 1000)
-        self.assertRaises(error.TVDBIndexError, episode.__getitem__, "foo")
-
-    def test_episode_attributes(self):
-        """Episode should have correct attributes with correct values"""
-        friends = _load_show("friends")
-        ep = friends[1][1]
-
-        self.assertEqual(
-            ep.EpisodeName, "The One Where Monica Gets A Roommate")
-        self.assertEqual(ep.Writer, ["David Crane", "Marta Kauffman"])
-        self.assertEqual(
-            ep.FirstAired, datetime.date(year=1994, month=9, day=22))
-
-    def test_invalid_episode_attribute(self):
-        """Episode should raise TVDBAttributeError when accessing an invalid
-        attribute
-        """
-        friends = _load_show("friends")
-        ep = friends[1][1]
-
-        self.assertRaises(
-            error.TVDBAttributeError, ep.__getattr__, "laba_laba")
-        self.assertRaises(error.TVDBAttributeError, ep.__getattr__, "foo")
-        self.assertRaises(error.TVDBAttributeError, ep.__getattr__, "baar")
-
-    def test_search(self):
-        """The search object should contain valid objects when searching for
-        a valid show.
-        """
-        api = TVDB("B43FF87DE395DF56")
-        search = api.search("dexter", "en")
-
-        self.assertEqual(len(search), 2)
-        self.assertEqual(search.search, "dexter")
-
-        _ = search[0]
-
-    def test_iterate_search(self):
-        """It should be possible to iterate over a search result"""
-        api = TVDB("B43FF87DE395DF56")
-        search = api.search("house", "en")
-
-        for s in search:
-            self.assertEqual(type(s), pytvdbapi.api.Show)
-
-    def test_invalid_search_index(self):
-        """Search should raise TVDBIndexError when trying to access an
-        invalid index
-        """
-        api = TVDB("B43FF87DE395DF56")
-        search = api.search("dexter", "en")
-
-        self.assertRaises(error.TVDBIndexError, search.__getitem__, 2)
-        self.assertRaises(error.TVDBIndexError, search.__getitem__, 5)
-        self.assertRaises(error.TVDBIndexError, search.__getitem__, 100)
-        self.assertRaises(error.TVDBIndexError, search.__getitem__, "foo")
 
     def test_type_convertion(self):
         """Data types should be properly converted"""
@@ -314,6 +89,47 @@ class TestApi(basetest.pytvdbapiTest):
         m = re.match(format, pytvdbapi.version())
         self.assertNotEqual(m, None)
 
+
+class TestSeason(unittest.TestCase):
+    def test_seasons(self):
+        """The seasons should function properly"""
+        friends = _load_show("friends")
+
+        self.assertEqual(len(friends), 11)
+
+    def test_invalid_season_index(self):
+        """Show should raise TVDBIndexError if trying to access invalid
+        season indexes"""
+        friends = _load_show("friends")
+
+        self.assertRaises(error.TVDBIndexError, friends.__getitem__, -1)
+        self.assertRaises(error.TVDBIndexError, friends.__getitem__, 12)
+        self.assertRaises(error.TVDBIndexError, friends.__getitem__, 100000)
+        self.assertRaises(error.TVDBIndexError, friends.__getitem__, "hello")
+
+    def test_iterate_season(self):
+        """
+        It should be possible to iterate over a season to get all episodes
+        """
+        friends = _load_show("friends")
+        season1 = friends[1]
+
+        for ep in season1:
+            self.assertEqual(type(ep), pytvdbapi.api.Episode)
+
+    def test_season_sort_order(self):
+        """The Episodes should be sorted on the episode number when iterating
+         over a season
+         """
+        friends = _load_show("friends")
+        season1 = friends[1]
+
+        counter = 0
+        for ep in season1:
+            self.assertEqual(counter + 1, ep.EpisodeNumber)
+            counter += 1
+
+class TestShow(unittest.TestCase):
     def test_show_dir(self):
         """
         It should be possible to call dir() on a show object.
@@ -329,6 +145,60 @@ class TestApi(basetest.pytvdbapiTest):
 
         self.assertEqual(len(dir(friends)), 30)
 
+    def test_iterate_show(self):
+        """It should be possible to iterate over the show to get all seasons"""
+        friends = _load_show("friends")
+
+        count = 0
+        for s in friends:
+            count += 1
+            self.assertEqual(type(s), pytvdbapi.api.Season)
+
+        self.assertEqual(count, 11)
+
+    def test_show_sort_order(self):
+        """The seasons should be sorted on season number when iterating over
+        a show
+        """
+        friends = _load_show("friends")
+
+        counter = 0
+        for season in friends:
+            self.assertEqual(counter, season.season_number)
+            counter += 1
+
+    def test_show_attributes(self):
+        """The show instance should have correct attributes"""
+        friends = _load_show("friends")
+
+        self.assertEqual(friends.SeriesName, "Friends")
+        self.assertEqual(friends.id, 79168)
+
+        #This should not yet be loaded so should raise an error
+        self.assertRaises(
+            error.TVDBAttributeError, friends.__getattr__, "Genre")
+
+        #Load in the rest of the attributes
+        friends.update()
+
+        #Now this data should be available
+        self.assertEqual(friends.Genre, ['Comedy'])
+
+    def test_invalid_show_attribute(self):
+        """
+        The Show object should raise TVDBAttributeError when you try to
+        access an invalid attribute
+        """
+        friends = _load_show("friends")
+
+        self.assertRaises(error.TVDBAttributeError, friends.__getattr__, "foo")
+        self.assertRaises(
+            error.TVDBAttributeError, friends.__getattr__, "baar")
+        self.assertRaises(
+            error.TVDBAttributeError, friends.__getattr__, "laba_laba")
+
+
+class TestEpisode(unittest.TestCase):
     def test_episode_dir(self):
         """It should be possible to call dir() on a episode instance"""
         friends = _load_show("friends")
@@ -336,6 +206,140 @@ class TestApi(basetest.pytvdbapiTest):
 
         self.assertEqual(len(dir(ep)), 27)
 
+    def test_invalid_episode_index(self):
+        """
+        The Season should raise TVDBIndexError when trying to access invalid
+        indexes
+         """
+        friends = _load_show("friends")
+        episode = friends[2]
+
+        self.assertRaises(error.TVDBIndexError, episode.__getitem__, -1)
+        self.assertRaises(error.TVDBIndexError, episode.__getitem__, 100)
+        self.assertRaises(error.TVDBIndexError, episode.__getitem__, 1000)
+        self.assertRaises(error.TVDBIndexError, episode.__getitem__, "foo")
+
+    def test_episode_attributes(self):
+        """Episode should have correct attributes with correct values"""
+        friends = _load_show("friends")
+        ep = friends[1][1]
+
+        self.assertEqual(
+            ep.EpisodeName, "The One Where Monica Gets A Roommate")
+        self.assertEqual(ep.Writer, ["David Crane", "Marta Kauffman"])
+        self.assertEqual(
+            ep.FirstAired, datetime.date(year=1994, month=9, day=22))
+
+    def test_invalid_episode_attribute(self):
+        """Episode should raise TVDBAttributeError when accessing an invalid
+        attribute
+        """
+        friends = _load_show("friends")
+        ep = friends[1][1]
+
+        self.assertRaises(
+            error.TVDBAttributeError, ep.__getattr__, "laba_laba")
+        self.assertRaises(error.TVDBAttributeError, ep.__getattr__, "foo")
+        self.assertRaises(error.TVDBAttributeError, ep.__getattr__, "baar")
+
+    def test_episodes(self):
+        """The episodes should function properly"""
+        friends = _load_show("friends")
+        season1 = friends[1]
+
+        self.assertEqual(len(season1), 24)
+
+
+class TestSearch(unittest.TestCase):
+    def test_invalid_search_index(self):
+        """Search should raise TVDBIndexError when trying to access an
+        invalid index
+        """
+        api = TVDB("B43FF87DE395DF56")
+        search = api.search("dexter", "en")
+
+        self.assertRaises(error.TVDBIndexError, search.__getitem__, 2)
+        self.assertRaises(error.TVDBIndexError, search.__getitem__, 5)
+        self.assertRaises(error.TVDBIndexError, search.__getitem__, 100)
+        self.assertRaises(error.TVDBIndexError, search.__getitem__, "foo")
+
+
+    def test_iterate_search(self):
+        """It should be possible to iterate over a search result"""
+        api = TVDB("B43FF87DE395DF56")
+        search = api.search("house", "en")
+
+        for s in search:
+            self.assertEqual(type(s), pytvdbapi.api.Show)
+
+    def test_search(self):
+        """It should be possible to search for shows"""
+        api = TVDB("B43FF87DE395DF56")
+        search = api.search("dexter", "en")
+
+        self.assertEqual(len(search), 2)
+
+        search = api.search("scrubs", "en")
+        self.assertEqual(len(search), 2)
+
+        search = api.search("dexter", "en")
+
+        self.assertEqual(len(search), 2)
+        self.assertEqual(search.search, "dexter")
+
+        _ = search[0]
+
+    def test_case_insensitive(self):
+        """The test should be case insensitive"""
+        api = TVDB("B43FF87DE395DF56")
+        search = api.search("DeXtEr", "en")
+
+        self.assertEqual(len(search), 2)
+
+    def test_numeric_names(self):
+            """It should be possible to search for shows with all numeric names.
+            E.g. 24
+            """
+            show = _load_show('24')
+
+            self.assertEqual(show.FirstAired, datetime.date(2001, 11, 6))
+
+    def test_unicode_search(self):
+        """
+        It should be possible to search for shows containing non ascii chars
+        """
+
+        api = TVDB("B43FF87DE395DF56")
+
+        search = api.search("100 höjdare", "sv")
+
+        show = search[0]
+        self.assertEqual(show[1][4].EpisodeName, "Ögonblick 66-56")
+
+        search = api.search("Alarm für cobra 11", "de")
+        show = search[0]
+        self.assertEqual(show[1][2].EpisodeName, "Tödliche Träume")
+
+        search = api.search('3年B組金八先生', "zh")
+        show = search[0]
+        self.assertEqual(show[1][1].EpisodeName, "3年B組金八先生")
+
+    def test_names_with_spaces(self):
+        """It should be possible to search for shows with spaces in the name"""
+        api = TVDB("B43FF87DE395DF56")
+        search = api.search("How I Met Your Mother", "en")
+
+        self.assertEqual(len(search), 1)
+
+    def test_invalid_language(self):
+        """Search function should raise TVDBValueError when trying to search
+        with an invalid language
+        """
+        api = TVDB("B43FF87DE395DF56")
+
+        self.assertRaises(error.TVDBValueError, api.search, "dexter", "lu")
+
+class TestGet(unittest.TestCase):
     def test_get(self):
         """Provided the show id, you should be able to get the show object"""
         api = TVDB("B43FF87DE395DF56")
@@ -343,6 +347,25 @@ class TestApi(basetest.pytvdbapiTest):
 
         self.assertEqual(show.SeriesName, "Dexter")
         self.assertEqual(show.id, 79349)
+
+    def test_invalid_Language(self):
+        """
+        function should raise TVDBValueError if an invalid language is
+        passed
+        """
+
+        api = TVDB("B43FF87DE395DF56")
+        self.assertRaises(error.TVDBValueError, api.get, 79349, "all")
+        self.assertRaises(error.TVDBValueError, api.get, 79349, "foo")
+        self.assertRaises(error.TVDBValueError, api.get, 79349, "")
+
+    def test_invalid_id(self):
+        """If the show can not be found, a TVDBValueError should be raised"""
+        api = TVDB("B43FF87DE395DF56")
+
+        self.assertRaises(error.TVDBValueError, api.get, "foo", "en")
+        self.assertRaises(error.TVDBValueError, api.get, "", "en")
+        self.assertRaises(error.TVDBValueError, api.get, 99999999999999, "en")
 
 if __name__ == "__main__":
     sys.exit(unittest.main())

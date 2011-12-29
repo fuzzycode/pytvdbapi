@@ -545,7 +545,13 @@ class TVDB(object):
         if language not in self.languages:
             raise error.TVDBValueError("{0} is not a valid language")
 
+        logger.debug("Getting show {0}({1})".format(id, language))
+
         show = Show({"id": id}, self, language)
-        show.update()
+
+        try:
+            show.update()
+        except (error.ConnectionError, error.BadData):
+            raise error.TVDBValueError("Show with id {0} not found".format(id))
 
         return show
