@@ -526,12 +526,12 @@ class TVDB(object):
 
     def get(self, id, language):
         """
+        .. versionadded:: 0.3
+
         :param id: The show id to get
         :param language: Language abriviation to get
         :return: A new :class:`Show` object
         :raise: :class:`TVDBValueError`
-
-        .. versionadded:: 0.3
 
         If you already know the thetvdb.com_ id of the show,
         you can use that to directly access the :class:`Show` object without
