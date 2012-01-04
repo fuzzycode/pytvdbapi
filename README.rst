@@ -113,8 +113,10 @@ If all turns out all right you should see a nice and happy OK at the end.
 
 Documentation
 =============
-**pytvdbapi** comes with a copy of the documentation contained in
-*docs/build/html/*
+The documentation for **pytvdbapi** is hosted at
+http://packages.python.org/pytvdbapi/.
+It also comes with a version of the documentation included in
+*docs/build/html/*.
 
 Known Issues
 ============
@@ -128,7 +130,8 @@ Known Issues
 Bugs
 ====
 If you find any bug or want to request a new feature to the API please use
-the issue tracker associated with the project.
+the `issue tracker <https://github.com/fuzzycode/pytvdbapi/issues>`_
+associated with the project.
 
 Try to be as detailed as possible when filing a bug, preferably providing a
 patch or a test case illustrating the issue.
