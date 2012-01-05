@@ -38,27 +38,21 @@ def get_description():
     except Exception:
         return "No description"
 
-if sys.version_info >= (3,):
-    author = "Björn Larsson"
-else:
-    author = unicode("Björn Larsson", "utf-8")
-
 setup(
     name=__NAME__,
     version = version(),
     description='A clean, resource friendly and easy to use API for thetvdb.com',
     long_description = get_description(),
-    author=author,
+    author="Bjoern Larsson",
     author_email='develop@bjornlarsson.net',
     url="https://github.com/fuzzycode/pytvdbapi",
-    keywords="TVDB, thetvdb.com API tv episodes",
+    keywords="TVDB thetvdb.com API tv episodes",
     license = "LGPLv3",
     packages = find_packages(),
     platforms=["any"],
     test_suite = 'pytvdbapi.tests',
     package_data = {'' : ['data/*.xml', 'data/*.cfg'] },
-    exclude_package_data = { '': ['./README.rst', './MANIFEST.in',
-                                  './CHANGES.txt'] },
+    exclude_package_data = { '': ['./MANIFEST.in'] },
     install_requires = ['httplib2'],
     classifiers = [f.strip() for f in """
     Development Status :: 2 - Pre-Alpha
