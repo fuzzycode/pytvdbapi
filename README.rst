@@ -35,6 +35,9 @@ and unpack it and execute::
     $cd pytvdbapi/
     $python setup.py install
 
+Depending on your platform, you may need root permission to execute the above
+commands.
+
 To get the latest development version you can install directly from source.
 Note that no guaranties are made as to the stability of the source tree::
 
@@ -43,10 +46,10 @@ Note that no guaranties are made as to the stability of the source tree::
 
 Usage
 =====
-To use the API you should apply for an API key for your particular application
-. An API key can be obtained from thetvdb.com_. Note that the key used in the
-examples is only intended for testing purposes and should not be used for
-other purposes.
+To use the API you should apply for an API key for your particular application.
+An API key can be obtained for free from thetvdb.com_. Note that the key
+used in the examples is only intended for testing purposes and should not be
+used for other purposes.
 
 To search for a specific show::
 
@@ -82,7 +85,7 @@ To list all episodes of a show::
     >>> show = search[0]
     >>> for season in show:
     ...     for episode in season:
-    ...         print(episode)
+    ...         print(episode) #doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
     ...
     <Episode S000E001 - Robin Sparkles Music Video - Let's Go to the Mall>
     <Episode S000E002 - Robin Sparkles Music Video - Sandcastles In the Sand>
@@ -101,6 +104,7 @@ To list all episodes of a show::
     <Episode S007E010 - Tick Tick Tick...>
     <Episode S007E011 - The Rebound Girl>
     <Episode S007E012 - Symphony of Illumination>
+    ...
 
 Testing
 =======
