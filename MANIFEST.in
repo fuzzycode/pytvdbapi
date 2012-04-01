@@ -10,5 +10,8 @@ include CHANGES.txt
 #include the documentation
 recursive-include docs/build/html/ *.*
 
+#Add the data folder
+recursive-include pytvdbapi/data/ *.*
+
 #The exclude section
 exclude MANIFEST*
