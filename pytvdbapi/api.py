@@ -275,7 +275,7 @@ class Show(Mapping):
         'fanart', 'id', 'lang',  'language', 'lastupdated', 'poster',
         'seasons', 'seriesid', 'zap2it_id']
         >>> len(show)
-        7
+        8
         >>> show[5]
         <Season 005>
         >>> for season in show:
@@ -288,6 +288,7 @@ class Show(Mapping):
         <Season 004>
         <Season 005>
         <Season 006>
+        <Season 007>
 
 
     .. _thetvdb.com: http://thetvdb.com
