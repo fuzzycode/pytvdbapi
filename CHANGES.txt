@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+2012-04-16, 0.2.3
+-----------------
+  * Fixed an issue with missing data folder in package
+
 2012-01-05, 0.2.2
 -----------------
   * Updated author name to avoid unicode issues
