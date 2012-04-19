@@ -275,7 +275,7 @@ class Show(Mapping):
         'fanart', 'id', 'lang',  'language', 'lastupdated', 'poster',
         'seasons', 'seriesid', 'zap2it_id']
         >>> len(show)
-        7
+        8
         >>> show[5]
         <Season 005>
         >>> for season in show:
@@ -288,6 +288,7 @@ class Show(Mapping):
         <Season 004>
         <Season 005>
         <Season 006>
+        <Season 007>
 
 
     .. _thetvdb.com: http://thetvdb.com
@@ -523,35 +524,3 @@ class TVDB(object):
             self.search_buffer[(show, language)] = shows
 
         return Search(self.search_buffer[(show, language)], show, language)
-
-    def get(self, id, language):
-        """
-        .. versionadded:: 0.3
-
-        :param id: The show id to get
-        :param language: Language abriviation to get
-        :return: A new :class:`Show` object
-        :raise: :class:`TVDBValueError`
-
-        If you already know the thetvdb.com_ id of the show,
-        you can use that to directly access the :class:`Show` object without
-        having to performe a search. The object will be fully updated before
-        returning so it is ready to be used.
-
-        .. _thetvdb.com: http://thetvdb.com
-        """
-
-        #Validate language selection
-        if language not in self.languages:
-            raise error.TVDBValueError("{0} is not a valid language")
-
-        logger.debug("Getting show {0}({1})".format(id, language))
-
-        show = Show({"id": id}, self, language)
-
-        try:
-            show.update()
-        except (error.ConnectionError, error.BadData):
-            raise error.TVDBValueError("Show with id {0} not found".format(id))
-
-        return show
