@@ -6,6 +6,7 @@ include THANKS.txt
 include TODO.txt
 include README.rst
 include CHANGES.txt
+include requirements.txt
 
 #include the documentation
 recursive-include docs/build/html/ *.*
