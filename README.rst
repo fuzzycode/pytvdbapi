@@ -44,6 +44,11 @@ Note that no guaranties are made as to the stability of the source tree::
     $pip install git+git://github.com/fuzzycode/pytvdbapi.git
 
 
+ArchLinux
+----------
+Tobias Röttger is kindly maintaining an ArchLinux package of **pytvdbapi** that
+can be found at https://aur.archlinux.org/packages.php?ID=58697.
+
 Usage
 =====
 To use the API you should apply for an API key for your particular application.
