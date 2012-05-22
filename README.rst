@@ -120,6 +120,14 @@ root folder::
 
 If all turns out all right you should see a nice and happy OK at the end.
 
+*pytvdbapi* is constantly tested using the `Travis CI <http://travis-ci.org/>`_
+service. The current build status is:
+
+.. image:: https://secure.travis-ci.org/fuzzycode/tvdbapi.png?branch=master
+  :alt: Build Status
+  :target: http://travis-ci.org/fuzzycode/tvdbapi/
+
+
 Documentation
 =============
 The documentation for **pytvdbapi** is hosted at
