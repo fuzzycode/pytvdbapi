@@ -129,6 +129,7 @@ class TestSeason(unittest.TestCase):
             self.assertEqual(counter + 1, ep.EpisodeNumber)
             counter += 1
 
+
 class TestShow(unittest.TestCase):
     def test_show_dir(self):
         """
@@ -263,7 +264,6 @@ class TestSearch(unittest.TestCase):
         self.assertRaises(error.TVDBIndexError, search.__getitem__, 100)
         self.assertRaises(error.TVDBIndexError, search.__getitem__, "foo")
 
-
     def test_iterate_search(self):
         """It should be possible to iterate over a search result"""
         api = TVDB("B43FF87DE395DF56")
@@ -297,8 +297,8 @@ class TestSearch(unittest.TestCase):
         self.assertEqual(len(search), 2)
 
     def test_numeric_names(self):
-            """It should be possible to search for shows with all numeric names.
-            E.g. 24
+            """It should be possible to search for shows with all
+            numeric names. E.g. 24
             """
             show = _load_show('24')
 
@@ -338,6 +338,7 @@ class TestSearch(unittest.TestCase):
         api = TVDB("B43FF87DE395DF56")
 
         self.assertRaises(error.TVDBValueError, api.search, "dexter", "lu")
+
 
 class TestGet(unittest.TestCase):
     def test_get(self):
