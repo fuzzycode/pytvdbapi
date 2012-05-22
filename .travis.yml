@@ -1,0 +1,16 @@
+language: python
+
+#List the versions of python to test against
+python:
+  - 2.6
+  - 2.7
+  - 3.2
+
+
+install:
+  - pip install -r requirements.txt --use-mirrors
+  - pip install pep8 --use-mirrors
+  - pip install pylint --use-mirrors
+
+script:
+  - pep8 -r  --statistics  --count pytvdbapi/
