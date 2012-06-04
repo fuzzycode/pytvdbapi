@@ -308,8 +308,8 @@ class Show(Mapping):
         return "<Show - {0}>".format(self.SeriesName)
 
     def __dir__(self):
-        attributess = [d for d in list(self.__dict__.keys()) if d != "data"]
-        return list(self.data.keys()) + attributess
+        attributes = [d for d in list(self.__dict__.keys()) if d != "data"]
+        return list(self.data.keys()) + attributes
 
     def __iter__(self):
         if not self.seasons:
@@ -429,7 +429,7 @@ class TVDB(object):
         will be used. The language list is relative stable but if there are
         changes it could be useful to set this to True to obtain a new version
         from the server. It is only necessary to do this once since the API
-        stores the reloaded data for further use.
+        stores the reloaded data for future use.
     * *cache_dir* (default=/<system tmp dir>/pytvdbapi/). Specifies the
       directory to use for caching the server requests.
     """
