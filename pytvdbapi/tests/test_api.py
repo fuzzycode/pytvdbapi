@@ -311,11 +311,6 @@ class TestSearch(unittest.TestCase):
 
         api = TVDB("B43FF87DE395DF56")
 
-        search = api.search("100 höjdare", "sv")
-
-        show = search[0]
-        self.assertEqual(show[1][4].EpisodeName, "Ögonblick 66-56")
-
         search = api.search("Alarm für cobra 11", "de")
         show = search[0]
         self.assertEqual(show[1][2].EpisodeName, "Tödliche Träume")
@@ -356,7 +351,6 @@ class TestGet(unittest.TestCase):
         """
 
         api = TVDB("B43FF87DE395DF56")
-        self.assertRaises(error.TVDBValueError, api.get, 79349, "all")
         self.assertRaises(error.TVDBValueError, api.get, 79349, "foo")
         self.assertRaises(error.TVDBValueError, api.get, 79349, "")
 
@@ -364,9 +358,9 @@ class TestGet(unittest.TestCase):
         """If the show can not be found, a TVDBValueError should be raised"""
         api = TVDB("B43FF87DE395DF56")
 
-        self.assertRaises(error.TVDBValueError, api.get, "foo", "en")
-        self.assertRaises(error.TVDBValueError, api.get, "", "en")
-        self.assertRaises(error.TVDBValueError, api.get, 99999999999999, "en")
+        self.assertRaises(error.TVDBIdError, api.get, 99999999999999, "en")
+        self.assertRaises(error.TVDBIdError, api.get, "foo", "en")
+        self.assertRaises(error.TVDBIdError, api.get, "", "en")
 
 if __name__ == "__main__":
     sys.exit(unittest.main())

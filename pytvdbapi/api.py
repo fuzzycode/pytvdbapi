@@ -44,6 +44,8 @@ from collections import Mapping  # This will change in 3.3
 
 # pylint: disable=E0611, F0401
 from pkg_resources import resource_filename
+
+
 if sys.version_info < (3, 0):
     from  urllib import quote
     import ConfigParser as configparser
@@ -525,3 +527,50 @@ class TVDB(object):
             self.search_buffer[(show, language)] = shows
 
         return Search(self.search_buffer[(show, language)], show, language)
+
+    def get(self, id, language, cache=True):
+        """
+        :param id: The Show Id to fetch
+        :param language: The language abbreviation to search for. E.g. "en"
+        :param cache: If False, the local cache will not be used and the
+                    resources will be reloaded from server.
+
+        :return: A :class:`Show()` instance
+        :raise: TVDBValueError
+
+        Provided a valid Show ID, the data for the show is fetched and a
+        corresponding :class:`Show()` object is returned.
+        """
+        logger.debug("Getting show with id {0} with language {1}".format(id,
+            language))
+
+        if language != 'all' and language not in self.languages:
+                    raise error.TVDBValueError(
+                        "{0} is not a valid language".format(language))
+
+        context = {'seriesid': id, "language": language,
+                   'mirror' : self.mirrors.get_mirror( TypeMask.XML ).url,
+                   'api_key' : self.config['api_key']}
+
+        url = config.get("urls", "series", raw=True) % context
+
+        try:
+            data = self.loader.load(url, cache)
+        except error.ConnectionError as e:
+            logger.debug("Unable to connect to URL: {0}".format(url))
+            raise error.TVDBIdError("No Show with id {0} found".format(id))
+
+        if data.strip():
+            data = generate_tree(data)
+        else:
+            logger.debug("Empty data received for id {0}".format(id))
+            raise error.TVDBIdError("No Show with id {0} found".format(id))
+
+        series = parse_xml(data, "Series")
+        assert len(series) <= 1, "Should not find more than one series"
+
+        if len(series) >= 1:
+            return Show( series[0], self, language )
+        else:
+            raise error.TVDBIdError("No Show with id {0} found".format(id))
+
