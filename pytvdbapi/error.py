@@ -76,3 +76,8 @@ class TVDBValueError(PytvdbapiError):
     A replacement for the standard ValueError exception.
     """
     pass
+
+
+class TVDBIdError(PytvdbapiError):
+    """Raised when trying to get a show using an invalid Show ID"""
+    pass
