@@ -536,10 +536,20 @@ class TVDB(object):
                     resources will be reloaded from server.
 
         :return: A :class:`Show()` instance
-        :raise: TVDBValueError
+        :raise: TVDBValueError, TVDBIdError
 
         Provided a valid Show ID, the data for the show is fetched and a
         corresponding :class:`Show()` object is returned.
+
+        Example::
+
+            >>> from pytvdbapi import api
+            >>> db = api.TVDB("B43FF87DE395DF56")
+            >>> show = db.get( 79349, "en" )
+            >>> show.id
+            79349
+            >>> show.SeriesName
+            'Dexter'
         """
         logger.debug("Getting show with id {0} with language {1}".format(id,
             language))
