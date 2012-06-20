@@ -44,6 +44,7 @@ from collections import Mapping  # This will change in 3.3
 
 # pylint: disable=E0611, F0401
 from pkg_resources import resource_filename
+from pytvdbapi.actor import Actor
 
 
 if sys.version_info < (3, 0):
@@ -299,6 +300,8 @@ class Show(Mapping):
         self.api, self.data, self.lang = api, data, language
         self.seasons = dict()
 
+        self.actor_objects = list()
+
     def __getattr__(self, item):
         try:
             return self.data[item]
@@ -348,7 +351,7 @@ class Show(Mapping):
         added as needed.
 
         .. Note: This function is not intended to be used by clients of the
-        API and should only be used inernaly by the Show class to manage its
+        API and should only be used internally by the Show class to manage its
         structure.
         """
         logger.debug("Populating season data from URL.")
@@ -358,8 +361,8 @@ class Show(Mapping):
                        'seriesid': self.id,
                        'language': self.lang}
 
-        url = config.get("urls", "series", raw=True)
-        data = generate_tree(self.api.loader.load(url % context))
+        url = config.get("urls", "series", raw=True) % context
+        data = generate_tree(self.api.loader.load(url))
         episodes = [d for d in parse_xml(data, "Episode")]
 
         show_data = parse_xml(data, "Series")
@@ -374,6 +377,34 @@ class Show(Mapping):
 
             episode = Episode(episode_data, self.seasons[season_nr])
             self.seasons[season_nr].append(episode)
+
+        #If requested, load the extra actors data
+        if self.api.config['actors']:
+            self._load_actors()
+
+    def _load_actors(self):
+        """
+        Loads the extended Actor data from `thetvdb.com <http://thetvdb.com>`_
+        and adds this to the actor_objects attribute.
+
+        .. Note: This function is not intended to be used by clients of the
+            API and should only be used internally by the Show class to
+            manage its
+            structure.
+        """
+        context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
+                   'api_key': self.api.config['api_key'],
+                   'seriesid': self.id}
+        url = config.get("urls", "actors", raw=True) % context
+        logger.debug('Loading Actors data from {0}'.format(url))
+
+        data = generate_tree(self.api.loader.load(url))
+
+        mirror = self.api.mirrors.get_mirror(TypeMask.BANNER).url
+
+        #generate all the Actor objects
+        self.actor_objects = [Actor(mirror, d, self)
+                               for d in parse_xml(data, 'Actor')]
 
 
 class Search(object):
@@ -427,13 +458,26 @@ class TVDB(object):
     arguments are:
 
     * *force_lang* (default=False). If set to True, the API will reload the
-        language list from the server. If False, the local preloaded file
-        will be used. The language list is relative stable but if there are
-        changes it could be useful to set this to True to obtain a new version
-        from the server. It is only necessary to do this once since the API
-        stores the reloaded data for future use.
+      language list from the server. If False, the local preloaded file
+      will be used. The language list is relative stable but if there are
+      changes it could be useful to set this to True to obtain a new version
+      from the server. It is only necessary to do this once since the API
+      stores the reloaded data for future use.
+
     * *cache_dir* (default=/<system tmp dir>/pytvdbapi/). Specifies the
       directory to use for caching the server requests.
+
+    .. versionadded:: 0.3
+
+    * *actors* (default=False) The extended actor information is stored in a
+      separate XML file and would require an additional request to the server
+      to obtain. To limit the resource usage, the actor information will only
+      be loaded when explicitly requested.
+
+      .. note:: The :class:`Show()` object always contain a list of actor
+        names.
+
+
     """
 
     def __init__(self, api_key, **kwargs):
@@ -450,6 +494,7 @@ class TVDB(object):
         self.config['api_key'] = api_key
         self.config['cache_dir'] = kwargs.get("cache_dir",
             os.path.join(tempfile.gettempdir(), name))
+        self.config['actors'] = kwargs.get('actors', False)
 
         #Create the loader object to use
         self.loader = Loader(self.config['cache_dir'])
@@ -528,9 +573,11 @@ class TVDB(object):
 
         return Search(self.search_buffer[(show, language)], show, language)
 
-    def get(self, id, language, cache=True):
+    def get(self, series_id, language, cache=True):
         """
-        :param id: The Show Id to fetch
+        .. versionadded:: 0.3
+
+        :param series_id: The Show Id to fetch
         :param language: The language abbreviation to search for. E.g. "en"
         :param cache: If False, the local cache will not be used and the
                     resources will be reloaded from server.
@@ -551,36 +598,39 @@ class TVDB(object):
             >>> show.SeriesName
             'Dexter'
         """
-        logger.debug("Getting show with id {0} with language {1}".format(id,
-            language))
+        logger.debug("Getting show with id {0} with language {1}".format(
+            series_id, language))
 
         if language != 'all' and language not in self.languages:
-                    raise error.TVDBValueError(
-                        "{0} is not a valid language".format(language))
+            raise error.TVDBValueError("{0} is not a valid language".format(
+                language))
 
-        context = {'seriesid': id, "language": language,
-                   'mirror' : self.mirrors.get_mirror( TypeMask.XML ).url,
-                   'api_key' : self.config['api_key']}
+        context = {'seriesid': series_id, "language": language,
+                   'mirror': self.mirrors.get_mirror(TypeMask.XML).url,
+                   'api_key': self.config['api_key']}
 
         url = config.get("urls", "series", raw=True) % context
 
         try:
             data = self.loader.load(url, cache)
-        except error.ConnectionError as e:
-            logger.debug("Unable to connect to URL: {0}".format(url))
-            raise error.TVDBIdError("No Show with id {0} found".format(id))
+        except error.ConnectionError as _error:
+            logger.debug("Unable to connect to URL: {0}. {1}".format(url,
+                _error))
+            raise error.TVDBIdError("No Show with id {0} found".format(
+                series_id))
 
         if data.strip():
             data = generate_tree(data)
         else:
-            logger.debug("Empty data received for id {0}".format(id))
-            raise error.TVDBIdError("No Show with id {0} found".format(id))
+            logger.debug("Empty data received for id {0}".format(series_id))
+            raise error.TVDBIdError("No Show with id {0} found".format(
+                series_id))
 
         series = parse_xml(data, "Series")
         assert len(series) <= 1, "Should not find more than one series"
 
         if len(series) >= 1:
-            return Show( series[0], self, language )
+            return Show(series[0], self, language)
         else:
-            raise error.TVDBIdError("No Show with id {0} found".format(id))
-
+            raise error.TVDBIdError("No Show with id {0} found".format(
+                series_id))

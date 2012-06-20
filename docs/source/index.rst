@@ -13,6 +13,7 @@ Contents:
 
    license
    api
+   actor
    exceptions
    contact
 
