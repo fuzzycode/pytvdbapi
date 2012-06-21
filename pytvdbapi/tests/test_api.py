@@ -28,6 +28,7 @@ import pytvdbapi
 from pytvdbapi import error
 from pytvdbapi.actor import Actor
 from pytvdbapi.api import TVDB
+from pytvdbapi.banner import Banner
 from pytvdbapi.xmlhelpers import generate_tree
 from pytvdbapi.tests import basetest
 
@@ -142,11 +143,11 @@ class TestShow(unittest.TestCase):
 
         friends = _load_show("friends")
 
-        self.assertEqual(len(dir(friends)), 13)
+        self.assertEqual(len(dir(friends)), 14)
 
         friends.update()
 
-        self.assertEqual(len(dir(friends)), 31)
+        self.assertEqual(len(dir(friends)), 32)
 
     def test_iterate_show(self):
         """It should be possible to iterate over the show to get all seasons"""
@@ -440,6 +441,71 @@ class TestActor(unittest.TestCase):
 
         actor = show.actor_objects[0]
         self.assertRaises(error.TVDBAttributeError, actor.__getattr__, 'foo')
+
+
+class TestBanners(unittest.TestCase):
+    def _getShow(self, _banners=True):
+        api = TVDB("B43FF87DE395DF56", banners=_banners)
+        show = api.get(79349, "en")  # Load the series Dexter
+        show.update()
+
+        return show
+
+    def test_banners(self):
+        """
+        The banner_objects list should contain banner objects when the banner
+        option is selected.
+        """
+        show = self._getShow()
+
+        self.assertEquals(hasattr(show, "banner_objects"), True)
+
+    def test_no_banners(self):
+        """
+        The banner_objects should be empty if the banner option is not selected.
+        """
+        show = self._getShow(False)
+        self.assertEquals(len(show.banner_objects), 0)
+
+    def test_banner_attributes(self):
+        """
+        The banner object should have the proper attributes.
+        """
+        show = self._getShow()
+
+        banner = show.banner_objects[0]
+
+        self.assertEquals(hasattr(banner, "BannerPath"), True)
+        self.assertEquals(hasattr(banner, "BannerType"), True)
+        self.assertEquals(hasattr(banner, "BannerType2"), True)
+        self.assertEquals(hasattr(banner, "Language"), True)
+        self.assertEquals(hasattr(banner, "banner_url"), True)
+
+    def test_iterable_banners(self):
+        """
+        It should be possible to iterate over the banner_objects attribute
+        """
+        show = self._getShow()
+
+        for banner in show.banner_objects:
+            self.assertEquals(type(banner), Banner)
+
+    def test_banner_representation(self):
+        """
+        The banner representation should be properly formatted.
+        """
+        show = self._getShow()
+        banner = show.banner_objects[0]
+
+        self.assertEqual(banner.__repr__(), "<Banner>")
+
+    def test_invalid_banner_attributes(self):
+        """
+        The banner object should raise an exception when accessing an invalid
+        attribute.
+        """
+        show = self._getShow()
+        self.assertRaises(error.TVDBAttributeError, show.__getattr__, "foo")
 
 if __name__ == "__main__":
     sys.exit(unittest.main())

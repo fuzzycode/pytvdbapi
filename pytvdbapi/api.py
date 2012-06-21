@@ -45,6 +45,7 @@ from collections import Mapping  # This will change in 3.3
 # pylint: disable=E0611, F0401
 from pkg_resources import resource_filename
 from pytvdbapi.actor import Actor
+from pytvdbapi.banner import Banner
 
 
 if sys.version_info < (3, 0):
@@ -301,6 +302,7 @@ class Show(Mapping):
         self.seasons = dict()
 
         self.actor_objects = list()
+        self.banner_objects = list()
 
     def __getattr__(self, item):
         try:
@@ -382,6 +384,10 @@ class Show(Mapping):
         if self.api.config['actors']:
             self._load_actors()
 
+        #if requested, load the extra banners data
+        if self.api.config['banners']:
+            self._load_banners()
+
     def _load_actors(self):
         """
         Loads the extended Actor data from `thetvdb.com <http://thetvdb.com>`_
@@ -406,6 +412,21 @@ class Show(Mapping):
         self.actor_objects = [Actor(mirror, d, self)
                                for d in parse_xml(data, 'Actor')]
 
+    def _load_banners(self):
+        """"""
+        context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
+                           'api_key': self.api.config['api_key'],
+                           'seriesid': self.id}
+
+        url = config.get("urls", "banners", raw=True) % context
+        logger.debug('Loading Actors data from {0}'.format(url))
+
+        data = generate_tree(self.api.loader.load(url))
+
+        mirror = self.api.mirrors.get_mirror(TypeMask.BANNER).url
+
+        self.banner_objects = [Banner(mirror, d, self)
+                                for d in parse_xml(data, "Banner")]
 
 class Search(object):
     """
@@ -477,6 +498,7 @@ class TVDB(object):
       .. note:: The :class:`Show()` object always contain a list of actor
         names.
 
+    * *banners* (default=False)
 
     """
 
@@ -495,6 +517,7 @@ class TVDB(object):
         self.config['cache_dir'] = kwargs.get("cache_dir",
             os.path.join(tempfile.gettempdir(), name))
         self.config['actors'] = kwargs.get('actors', False)
+        self.config['banners'] = kwargs.get('banners', False)
 
         #Create the loader object to use
         self.loader = Loader(self.config['cache_dir'])
