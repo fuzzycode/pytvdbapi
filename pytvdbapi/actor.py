@@ -26,9 +26,9 @@ from pytvdbapi.error import TVDBAttributeError
 
 class Actor(object):
     """
-    Representing an Actor as provided by `thetvdb.com <http://thetvdb.com>`_
-    Will contain all attributes as delivered from
-    `thetvdb.com <http://thetvdb.com>`_ the attributes are described in
+    Representing an Actor as provided by `thetvdb.com <http://thetvdb.com>`_.
+    It Will contain all attributes as delivered from
+    `thetvdb.com <http://thetvdb.com>`_, the attributes are described in
     more detail `here <http://www.thetvdb.com/wiki/index.php/API:actors.xml>`_.
     It will also contain the attribute *image_url* that will be the full URL
     to the image of the actor.
@@ -36,7 +36,7 @@ class Actor(object):
     Example::
         >>> from pytvdbapi import api
         >>> db = api.TVDB("B43FF87DE395DF56", actors=True)
-        >>> show = db.get( 79349, "en" )
+        >>> show = db.get( 79349, "en" )  # Dexter
         >>> show.update()
         >>> show.actor_objects
         [<Actor - Michael C. Hall>, <Actor - Jennifer Carpenter> ... ]
@@ -65,4 +65,4 @@ class Actor(object):
                     item))
 
     def __dir__(self):
-        return self.data.keys() + ['image_url']
+        return list(self.data.keys()) + ['image_url']

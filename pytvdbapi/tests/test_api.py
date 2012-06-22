@@ -406,6 +406,8 @@ class TestActor(unittest.TestCase):
         self.assertEqual(hasattr(actor, "SortOrder"), True)
         self.assertEqual(hasattr(actor, "image_url"), True)
 
+        self.assertEquals(len(dir(actor)), 6)
+
     def test_iterable_actors(self):
         """
         It should be possible to iterate over the actor objects
@@ -462,7 +464,8 @@ class TestBanners(unittest.TestCase):
 
     def test_no_banners(self):
         """
-        The banner_objects should be empty if the banner option is not selected.
+        The banner_objects should be empty if the banner option
+        is not selected.
         """
         show = self._getShow(False)
         self.assertEquals(len(show.banner_objects), 0)
@@ -479,7 +482,10 @@ class TestBanners(unittest.TestCase):
         self.assertEquals(hasattr(banner, "BannerType"), True)
         self.assertEquals(hasattr(banner, "BannerType2"), True)
         self.assertEquals(hasattr(banner, "Language"), True)
+        self.assertEquals(hasattr(banner, "Season"), True)
         self.assertEquals(hasattr(banner, "banner_url"), True)
+
+        self.assertEquals(len(dir(banner)), 13)
 
     def test_iterable_banners(self):
         """

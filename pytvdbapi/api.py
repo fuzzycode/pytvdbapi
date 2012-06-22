@@ -395,8 +395,7 @@ class Show(Mapping):
 
         .. Note: This function is not intended to be used by clients of the
             API and should only be used internally by the Show class to
-            manage its
-            structure.
+            manage its structure.
         """
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.api.config['api_key'],
@@ -413,7 +412,14 @@ class Show(Mapping):
                                for d in parse_xml(data, 'Actor')]
 
     def _load_banners(self):
-        """"""
+        """
+        Loads the extended Banner data from `thetvdb.com <http://thetvdb.com>`_
+        and adds this to the banner_objects attribute.
+
+        .. Note: This function is not intended to be used by clients of the
+            API and should only be used internally by the Show class to
+            manage its structure.
+        """
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
                            'api_key': self.api.config['api_key'],
                            'seriesid': self.id}
@@ -427,6 +433,7 @@ class Show(Mapping):
 
         self.banner_objects = [Banner(mirror, d, self)
                                 for d in parse_xml(data, "Banner")]
+
 
 class Search(object):
     """
@@ -498,8 +505,10 @@ class TVDB(object):
       .. note:: The :class:`Show()` object always contain a list of actor
         names.
 
-    * *banners* (default=False)
-
+    * *banners* (default=False) The extended banner information is stored in a
+      separate XML file and would require an additional request to the server
+      to obtain. To limit the resource usage, the banner information will only
+      be loaded when explicitly requested.
     """
 
     def __init__(self, api_key, **kwargs):
