@@ -376,7 +376,7 @@ class TestActor(unittest.TestCase):
         show = api.get(79349, "en")  # Load the series Dexter
         show.update()
 
-        self.assertEquals(hasattr(show, "actor_objects"), True)
+        self.assertEqual(hasattr(show, "actor_objects"), True)
 
     def test_no_actors(self):
         """
@@ -387,7 +387,7 @@ class TestActor(unittest.TestCase):
         show = api.get(79349, "en")  # Load the series Dexter
         show.update()
 
-        self.assertEquals(len(show.actor_objects), 0)
+        self.assertEqual(len(show.actor_objects), 0)
 
     def test_actor_attributes(self):
         """
@@ -406,7 +406,7 @@ class TestActor(unittest.TestCase):
         self.assertEqual(hasattr(actor, "SortOrder"), True)
         self.assertEqual(hasattr(actor, "image_url"), True)
 
-        self.assertEquals(len(dir(actor)), 6)
+        self.assertEqual(len(dir(actor)), 6)
 
     def test_iterable_actors(self):
         """
@@ -417,7 +417,7 @@ class TestActor(unittest.TestCase):
         show.update()
 
         for actor in show.actor_objects:
-            self.assertEquals(type(actor), Actor)
+            self.assertEqual(type(actor), Actor)
 
     def test_actor_representation(self):
         """
@@ -460,7 +460,7 @@ class TestBanners(unittest.TestCase):
         """
         show = self._getShow()
 
-        self.assertEquals(hasattr(show, "banner_objects"), True)
+        self.assertEqual(hasattr(show, "banner_objects"), True)
 
     def test_no_banners(self):
         """
@@ -468,7 +468,7 @@ class TestBanners(unittest.TestCase):
         is not selected.
         """
         show = self._getShow(False)
-        self.assertEquals(len(show.banner_objects), 0)
+        self.assertEqual(len(show.banner_objects), 0)
 
     def test_banner_attributes(self):
         """
@@ -476,16 +476,30 @@ class TestBanners(unittest.TestCase):
         """
         show = self._getShow()
 
-        banner = show.banner_objects[0]
+        for banner in show.banner_objects:
+            self.assertEqual(hasattr(banner, "BannerPath"), True)
+            self.assertEqual(hasattr(banner, "BannerType"), True)
+            self.assertEqual(hasattr(banner, "BannerType2"), True)
+            self.assertEqual(hasattr(banner, "Language"), True)
+            self.assertEqual(hasattr(banner, "Rating"), True)
+            self.assertEqual(hasattr(banner, "RatingCount"), True)
+            self.assertEqual(hasattr(banner, "id"), True)
+            self.assertEqual(hasattr(banner, "banner_url"), True)
 
-        self.assertEquals(hasattr(banner, "BannerPath"), True)
-        self.assertEquals(hasattr(banner, "BannerType"), True)
-        self.assertEquals(hasattr(banner, "BannerType2"), True)
-        self.assertEquals(hasattr(banner, "Language"), True)
-        self.assertEquals(hasattr(banner, "Season"), True)
-        self.assertEquals(hasattr(banner, "banner_url"), True)
+            if banner.BannerType == "fanart":
+                self.assertEqual(hasattr(banner, "Colors"), True)
+                self.assertEqual(hasattr(banner, "SeriesName"), True)
+                self.assertEqual(hasattr(banner, "ThumbnailPath"), True)
+                self.assertEqual(hasattr(banner, "VignettePath"), True)
 
-        self.assertEquals(len(dir(banner)), 13)
+                self.assertEqual(len(dir(banner)), 12)
+
+            elif banner.BannerType == "season":
+                self.assertEqual(hasattr(banner, "Season"), True)
+
+                self.assertEqual(len(dir(banner)), 9)
+            else:  # poster type
+                self.assertEqual(len(dir(banner)), 8)
 
     def test_iterable_banners(self):
         """
@@ -494,7 +508,7 @@ class TestBanners(unittest.TestCase):
         show = self._getShow()
 
         for banner in show.banner_objects:
-            self.assertEquals(type(banner), Banner)
+            self.assertEqual(type(banner), Banner)
 
     def test_banner_representation(self):
         """
@@ -511,7 +525,9 @@ class TestBanners(unittest.TestCase):
         attribute.
         """
         show = self._getShow()
-        self.assertRaises(error.TVDBAttributeError, show.__getattr__, "foo")
+        banner = show.banner_objects[0]
+
+        self.assertRaises(error.TVDBAttributeError, banner.__getattr__, "foo")
 
 if __name__ == "__main__":
     sys.exit(unittest.main())

@@ -34,15 +34,14 @@ class Actor(object):
     to the image of the actor.
 
     Example::
+
         >>> from pytvdbapi import api
         >>> db = api.TVDB("B43FF87DE395DF56", actors=True)
         >>> show = db.get( 79349, "en" )  # Dexter
         >>> show.update()
-        >>> show.actor_objects
-        [<Actor - Michael C. Hall>, <Actor - Jennifer Carpenter> ... ]
         >>> actor = show.actor_objects[0]
         >>> actor
-        <Actor - Michael C. Hall>
+        '<Actor - Michael C. Hall\>'
         >>> actor.Role
         'Dexter Morgan'
         >>> actor.image_url
