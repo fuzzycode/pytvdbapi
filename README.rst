@@ -71,10 +71,6 @@ To search for a specific show::
 You can index individual seasons and individual episodes using convenient
 indexing::
 
-    >>> from pytvdbapi import api
-    >>> db = api.TVDB("B43FF87DE395DF56")
-    >>> search = db.search("How I met your mother", "en")
-    >>> show = search[0]
     >>> show[1]
     <Season 001>
 
@@ -84,10 +80,6 @@ indexing::
 
 To list all episodes of a show::
 
-    >>> from pytvdbapi import api
-    >>> db = api.TVDB("B43FF87DE395DF56")
-    >>> search = db.search("How I met your mother", "en")
-    >>> show = search[0]
     >>> for season in show:
     ...     for episode in season:
     ...         print(episode) #doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
