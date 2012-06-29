@@ -41,7 +41,7 @@ class Actor(object):
         >>> show.update()
         >>> actor = show.actor_objects[0]
         >>> actor
-        '<Actor - Michael C. Hall\>'
+        <Actor - Michael C. Hall>
         >>> actor.Role
         'Dexter Morgan'
         >>> actor.image_url

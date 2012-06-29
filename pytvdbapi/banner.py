@@ -97,7 +97,7 @@ class Banner(object):
 
         >>> fanart = [b for b in show.banner_objects \
 if b.BannerType == "fanart"]
-        >>> dir(fanart[0])
+        >>> dir(fanart[0]) #doctest: +NORMALIZE_WHITESPACE
         ['BannerPath', 'BannerType', 'BannerType2', 'Colors', 'Language',
         'Rating', 'RatingCount', 'SeriesName', 'ThumbnailPath', 'VignettePath',
         'banner_url', 'id']
@@ -106,7 +106,7 @@ if b.BannerType == "fanart"]
 
         >>> posters = [b for b in show.banner_objects \
 if b.BannerType == "poster"]
-        >>> dir(posters[0])
+        >>> dir(posters[0]) #doctest: +NORMALIZE_WHITESPACE
         ['BannerPath', 'BannerType', 'BannerType2', 'Language', 'Rating',
         'RatingCount', 'banner_url', 'id']
         >>> posters[0].BannerType2
@@ -114,7 +114,7 @@ if b.BannerType == "poster"]
 
         >>> seasons = [b for b in show.banner_objects \
 if b.BannerType == "season"]
-        >>> dir(seasons[0])
+        >>> dir(seasons[0]) #doctest: +NORMALIZE_WHITESPACE
         ['BannerPath', 'BannerType', 'BannerType2', 'Language', 'Rating',
         'RatingCount', 'Season', 'banner_url', 'id']
         >>> seasons[0].BannerType2

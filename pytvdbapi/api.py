@@ -268,16 +268,17 @@ class Show(Mapping):
         >>> search = db.search("Dexter", "en")
         >>> show = search[0]
         >>> dir(show) #doctest: +NORMALIZE_WHITESPACE
-        ['FirstAired', 'IMDB_ID', 'Overview', 'SeriesName', 'api', 'banner',
-        'id', 'lang', 'language', 'seasons', 'seriesid', 'zap2it_id']
+        ['FirstAired', 'IMDB_ID', 'Overview', 'SeriesName', 'actor_objects',
+        'api', 'banner', 'banner_objects', 'id', 'lang', 'language', 'seasons',
+        'seriesid', 'zap2it_id']
         >>> show.update()
         >>> dir(show) #doctest: +NORMALIZE_WHITESPACE
         ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'ContentRating',
         'FirstAired', 'Genre', 'IMDB_ID', 'Language', 'Network', 'NetworkID',
         'Overview', 'Rating', 'RatingCount', 'Runtime', 'SeriesID',
-        'SeriesName', 'Status', 'added', 'addedBy', 'api', 'banner',
-        'fanart', 'id', 'lang',  'language', 'lastupdated', 'poster',
-        'seasons', 'seriesid', 'zap2it_id']
+        'SeriesName', 'Status', 'actor_objects', 'added', 'addedBy', 'api',
+        'banner', 'banner_objects', 'fanart', 'id', 'lang',  'language',
+        'lastupdated', 'poster', 'seasons', 'seriesid', 'zap2it_id']
         >>> len(show)
         8
         >>> show[5]
