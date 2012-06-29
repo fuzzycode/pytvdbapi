@@ -14,6 +14,7 @@ Contents:
    license
    api
    actor
+   banner
    exceptions
    contact
 
