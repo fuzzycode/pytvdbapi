@@ -27,6 +27,27 @@ import pytvdbapi
 import doctest
 import unittest
 
+
+def getFiles(root, extensions, recurse = False):
+    """
+    Returns all files under root that end in an extension listed in extensions
+    """
+
+    result = list()
+
+    if recurse:
+        for root, dir, files in os.walk(root):
+            for file in files:
+                extension = os.path.splitext(file)[1]
+                if extension in extensions:
+                    result.append(os.path.join(root, file))
+    else:
+        for ext in extensions:
+            p = os.path.join(root, "*{0}".format(ext))
+            result += (glob.glob(p))
+
+    return result
+
 def getDocTests():
     """Collects the doc tests for the pytvdbapi package"""
     tests = unittest.TestSuite()
@@ -44,11 +65,31 @@ def getDocTests():
 
     return tests
 
+def getDocumentationTests():
+    """
+    This aggregates tests located inside documentation files like README and
+    similar.
+    """
+    tests = unittest.TestSuite()
+
+    base_dir = os.path.abspath(os.path.dirname(pytvdbapi.__file__))
+    exts = ['.rst', '.txt']
+
+    files = getFiles(os.path.abspath(os.path.join(base_dir, "../")), exts) + \
+      getFiles(os.path.abspath(os.path.join(base_dir, "../docs/")), exts, True)
+
+
+    tests.addTest(doctest.DocFileSuite(*files, module_relative=False))
+
+    return tests
+
+
 def additional_tests():
     """Aggregate all tests for the module"""
     tests = unittest.TestSuite()
 
     tests.addTest(getDocTests())
+    tests.addTest(getDocumentationTests())
 
     return tests
 
