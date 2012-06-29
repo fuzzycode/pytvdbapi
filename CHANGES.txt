@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+2012-06-29, 0.3.0
+-----------------
+  * Added Actor objects to contain extended actor data
+  * Added Banner objects to contain extended banner data
+  * Added a get() function to access a show directly using the show id.
+  * Updated the status to Alpha
+
 2012-04-16, 0.2.3
 -----------------
   * Fixed an issue with missing data folder in package
