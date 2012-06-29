@@ -55,7 +55,7 @@ setup(
     exclude_package_data = { '': ['./MANIFEST.in'] },
     install_requires = ['httplib2'],
     classifiers = [f.strip() for f in """
-    Development Status :: 2 - Pre-Alpha
+    Development Status :: 3 - Alpha
     Intended Audience :: Developers
     Operating System :: OS Independent
     License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
