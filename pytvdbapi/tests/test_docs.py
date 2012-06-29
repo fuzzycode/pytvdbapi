@@ -21,11 +21,9 @@
 A module for managing the doc tests for the package
 """
 
-import pytvdbapi.api
-import pytvdbapi.actor
-import pytvdbapi.banner
-import pytvdbapi.mirror
-
+import glob
+import os
+import pytvdbapi
 import doctest
 import unittest
 
@@ -33,10 +31,16 @@ def getDocTests():
     """Collects the doc tests for the pytvdbapi package"""
     tests = unittest.TestSuite()
 
-    tests.addTest(doctest.DocTestSuite(pytvdbapi.api))
-    tests.addTest(doctest.DocTestSuite(pytvdbapi.actor))
-    tests.addTest(doctest.DocTestSuite(pytvdbapi.banner))
-    tests.addTest(doctest.DocTestSuite(pytvdbapi.mirror))
+    # Find the base dir
+    base_path = os.path.dirname(pytvdbapi.__file__)
+
+    # Grab all python modules in that package
+    files = glob.glob(base_path + "/*.py")
+
+    #Add all modules in the package
+    for file in files:
+        module = os.path.splitext(os.path.basename(file))[0]
+        tests.addTest(doctest.DocTestSuite("pytvdbapi." + module))
 
     return tests
 
@@ -51,4 +55,7 @@ def additional_tests():
 if __name__ == "__main__":
     import sys
     suite = additional_tests()
-    suite.run(unittest.TestResult(sys.stdout))
+    result = unittest.TestResult(sys.stdout)
+    suite.run(result)
+
+    sys.exit(len(result.errors))
