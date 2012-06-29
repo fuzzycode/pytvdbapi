@@ -25,6 +25,7 @@ from pytvdbapi.api import TVDB
 from pytvdbapi import error
 from pytvdbapi.banner import Banner
 
+
 class TestBanners(unittest.TestCase):
     def _getShow(self, _banners=True):
         api = TVDB("B43FF87DE395DF56", banners=_banners)

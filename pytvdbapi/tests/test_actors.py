@@ -26,6 +26,7 @@ from pytvdbapi.api import TVDB
 from pytvdbapi import error
 from pytvdbapi.actor import Actor
 
+
 class TestActor(unittest.TestCase):
     def test_get_actors(self):
         """
