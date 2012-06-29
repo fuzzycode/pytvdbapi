@@ -12,10 +12,7 @@ Contents:
    :maxdepth: 2
 
    license
-   api
-   actor
-   banner
-   exceptions
+   api_index
    contact
 
 Indices and tables
