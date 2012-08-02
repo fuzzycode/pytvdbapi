@@ -169,7 +169,6 @@ class Season(Mapping):
         >>> db = api.TVDB("B43FF87DE395DF56")
         >>> search = db.search("Dexter", "en")
         >>> show = search[0]
-        >>> seson = show[1]
         >>> season = show[1]
         >>> len(season)
         12
