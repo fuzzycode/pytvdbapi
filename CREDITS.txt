@@ -1,0 +1,6 @@
+Contributors
+============
+Björn Larsson(fuzzycode) - Designer, Lead Developer
+
+Alexander van Ratingen(AJHMvR) - Code contributor
+Tobias Röttger - Arch Linux package maintainer
