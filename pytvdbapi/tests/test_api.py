@@ -363,5 +363,32 @@ class TestGet(unittest.TestCase):
         self.assertRaises(error.TVDBIdError, api.get, "", "en")
 
 
+class TestGetEpisode(unittest.TestCase):
+    def test_get_episode(self):
+        """Provided the episode id, you should be able to get episode instance"""
+        api = TVDB("B43FF87DE395DF56")
+        ep = api.get_episode(308834, "en")
+
+        self.assertEqual(ep.id, 308834)
+        self.assertEqual(ep.EpisodeName, 'Crocodile')
+
+    def test_invalid_Language(self):
+        """
+        Function should raise TVDBValueError if an invalid language is
+        passed
+        """
+
+        api = TVDB("B43FF87DE395DF56")
+        self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "foo")
+        self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "")
+
+    def test_invalid_id(self):
+        """If the show can not be found, a TVDBValueError should be raised"""
+        api = TVDB("B43FF87DE395DF56")
+
+        self.assertRaises(error.TVDBIdError, api.get_episode, -1, "en")
+        self.assertRaises(error.TVDBIdError, api.get_episode, "foo", "en")
+        self.assertRaises(error.TVDBIdError, api.get_episode, "", "en")
+
 if __name__ == "__main__":
     sys.exit(unittest.main())

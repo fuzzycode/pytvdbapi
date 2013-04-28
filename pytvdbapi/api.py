@@ -663,8 +663,31 @@ class TVDB(object):
                 series_id))
 
     def get_episode(self, episode_id, language, cache=True):
-        logger.debug("Getting episode with id {0} with language {1}".format(
-            episode_id, language))
+        """
+        .. versionadded:: 0.4
+
+        :param episode_id: The Episode Id to fetch
+        :param language: The language abbreviation to search for. E.g. "en"
+        :param cache: If False, the local cache will not be used and the
+                    resources will be reloaded from server.
+
+        :return: A :class:`Episode()` instance
+        :raise: TVDBIdError if no episode is found with the given Id
+
+        Given a valid episode Id the corresponding episode data is fetched and the :class:`Episode()`
+        instance is returned.
+
+        Example::
+
+            >>> from pytvdbapi import api
+            >>> db = api.TVDB("B43FF87DE395DF56")
+            >>> episode = db.get_episode(308834, "en")
+            >>> episode.id
+            308834
+            >>> episode.EpisodeName
+            'Crocodile'
+        """
+        logger.debug("Getting episode with id {0} with language {1}".format(episode_id, language))
 
         if language != 'all' and language not in self.languages:
             raise error.TVDBValueError("{0} is not a valid language".format(
@@ -679,17 +702,14 @@ class TVDB(object):
         try:
             data = self.loader.load(url, cache)
         except error.ConnectionError as _error:
-            logger.debug("Unable to connect to URL: {0}. {1}".format(url,
-                _error))
-            raise error.TVDBIdError("No Episode with id {0} found".format(
-                episode_id))
+            logger.debug("Unable to connect to URL: {0}. {1}".format(url,_error))
+            raise error.TVDBIdError("No Episode with id {0} found".format(episode_id))
 
         if data.strip():
             data = generate_tree(data)
         else:
             logger.debug("Empty data received for id {0}".format(episode_id))
-            raise error.TVDBIdError("No Episode with id {0} found".format(
-                episode_id))
+            raise error.TVDBIdError("No Episode with id {0} found".format(episode_id))
 
         episodes = parse_xml(data, "Episode")
         assert len(episodes) <= 1, "Should not find more than one episodes"
@@ -697,5 +717,4 @@ class TVDB(object):
         if len(episodes) >= 1:
             return Episode(episodes[0], None)
         else:
-            raise error.TVDBIdError("No Episode with id {0} found".format(
-                episode_id))
+            raise error.TVDBIdError("No Episode with id {0} found".format(episode_id))
