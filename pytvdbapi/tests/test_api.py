@@ -383,7 +383,7 @@ class TestGetEpisode(unittest.TestCase):
         self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "")
 
     def test_invalid_id(self):
-        """If the show can not be found, a TVDBValueError should be raised"""
+        """If the episode can not be found, a TVDBValueError should be raised"""
         api = TVDB("B43FF87DE395DF56")
 
         self.assertRaises(error.TVDBIdError, api.get_episode, -1, "en")
