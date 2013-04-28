@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+2013-04-28, 0.4.0
+-----------------
+  * Added the get_episode() function to access an episode directly using the episode id
+  * Fixed broken unit tests
+
+
 2012-06-29, 0.3.0
 -----------------
   * Added Actor objects to contain extended actor data
