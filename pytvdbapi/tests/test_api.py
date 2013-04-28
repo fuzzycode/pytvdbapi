@@ -75,7 +75,7 @@ class TestApi(basetest.pytvdbapiTest):
         api = TVDB("B43FF87DE395DF56", force_lang=True)
         search = api.search("dexter", "it")
 
-        self.assertEqual(len(search), 3)
+        self.assertEqual(len(search), 2)
 
     def test_cache_dir(self):
         """It should be possible to specify a custom cache directory"""
@@ -140,7 +140,7 @@ class TestShow(unittest.TestCase):
 
         friends = _load_show("friends")
 
-        self.assertEqual(len(dir(friends)), 14)
+        self.assertEqual(len(dir(friends)), 15)
 
         friends.update()
 
@@ -277,14 +277,14 @@ class TestSearch(unittest.TestCase):
         api = TVDB("B43FF87DE395DF56")
         search = api.search("dexter", "en")
 
-        self.assertEqual(len(search), 2)
+        self.assertEqual(len(search), 1)
 
         search = api.search("scrubs", "en")
         self.assertEqual(len(search), 2)
 
         search = api.search("dexter", "en")
 
-        self.assertEqual(len(search), 2)
+        self.assertEqual(len(search), 1)
         self.assertEqual(search.search, "dexter")
 
         _ = search[0]
@@ -294,7 +294,7 @@ class TestSearch(unittest.TestCase):
         api = TVDB("B43FF87DE395DF56")
         search = api.search("DeXtEr", "en")
 
-        self.assertEqual(len(search), 2)
+        self.assertEqual(len(search), 1)
 
     def test_numeric_names(self):
             """It should be possible to search for shows with all
@@ -313,7 +313,7 @@ class TestSearch(unittest.TestCase):
 
         search = api.search("Alarm für cobra 11", "de")
         show = search[0]
-        self.assertEqual(show[1][2].EpisodeName, "Tödliche Träume")
+        self.assertEqual(show[1][2].EpisodeName, "Rote Rosen, schwarzer Tod")
 
         search = api.search('3年B組金八先生', "zh")
         show = search[0]

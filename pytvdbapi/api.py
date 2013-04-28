@@ -267,19 +267,16 @@ class Show(Mapping):
         >>> search = db.search("Dexter", "en")
         >>> show = search[0]
         >>> dir(show) #doctest: +NORMALIZE_WHITESPACE
-        ['FirstAired', 'IMDB_ID', 'Overview', 'SeriesName', 'actor_objects',
-        'api', 'banner', 'banner_objects', 'id', 'lang', 'language', 'seasons',
-        'seriesid', 'zap2it_id']
+        ['AliasNames', 'FirstAired', 'IMDB_ID', 'Network', 'Overview', 'SeriesName', 'actor_objects', 'api', 'banner',
+        'banner_objects', 'id', 'lang', 'language', 'seasons', 'seriesid', 'zap2it_id']
         >>> show.update()
         >>> dir(show) #doctest: +NORMALIZE_WHITESPACE
-        ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'ContentRating',
-        'FirstAired', 'Genre', 'IMDB_ID', 'Language', 'Network', 'NetworkID',
-        'Overview', 'Rating', 'RatingCount', 'Runtime', 'SeriesID',
-        'SeriesName', 'Status', 'actor_objects', 'added', 'addedBy', 'api',
-        'banner', 'banner_objects', 'fanart', 'id', 'lang',  'language',
-        'lastupdated', 'poster', 'seasons', 'seriesid', 'zap2it_id']
+        ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'AliasNames', 'ContentRating', 'FirstAired', 'Genre', 'IMDB_ID',
+        'Language', 'Network', 'NetworkID', 'Overview', 'Rating', 'RatingCount', 'Runtime', 'SeriesID', 'SeriesName',
+        'Status', 'actor_objects', 'added', 'addedBy', 'api', 'banner', 'banner_objects', 'fanart', 'id', 'lang',
+        'language', 'lastupdated', 'poster', 'seasons', 'seriesid', 'zap2it_id']
         >>> len(show)
-        8
+        9
         >>> show[5]
         <Season 005>
         >>> for season in show:
@@ -293,6 +290,7 @@ class Show(Mapping):
         <Season 005>
         <Season 006>
         <Season 007>
+        <Season 008>
 
 
     .. _thetvdb.com: http://thetvdb.com
@@ -457,7 +455,6 @@ class Search(object):
         ...     print(s)
         ...
         <Show - Dexter>
-        <Show - Cliff Dexter>
     """
 
     def __init__(self, result, search, language):
@@ -580,8 +577,6 @@ class TVDB(object):
             ...     print(s)
             ...
             <Show - Dexter>
-            <Show - Cliff Dexter>
-
         """
 
         logger.debug("Searching for {0} using language {1}"
