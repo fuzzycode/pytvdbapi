@@ -51,7 +51,10 @@ class Actor(object):
         self.mirror, self.data, self.show = mirror, data, show
 
     def __repr__(self):
-        return '<Actor - {0}>'.format(self.Name)
+        return self.__unicode__()
+
+    def __unicode__(self):
+        return unicode('<Actor - {0}>').format(self.Name)
 
     def __getattr__(self, item):
         if item == 'image_url':
