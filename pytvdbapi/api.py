@@ -661,3 +661,41 @@ class TVDB(object):
         else:
             raise error.TVDBIdError("No Show with id {0} found".format(
                 series_id))
+
+    def get_episode(self, episode_id, language, cache=True):
+        logger.debug("Getting episode with id {0} with language {1}".format(
+            episode_id, language))
+
+        if language != 'all' and language not in self.languages:
+            raise error.TVDBValueError("{0} is not a valid language".format(
+                language))
+
+        context = {'episodeid': episode_id, "language": language,
+                   'mirror': self.mirrors.get_mirror(TypeMask.XML).url,
+                   'api_key': self.config['api_key']}
+
+        url = config.get("urls", "episode", raw=True) % context
+
+        try:
+            data = self.loader.load(url, cache)
+        except error.ConnectionError as _error:
+            logger.debug("Unable to connect to URL: {0}. {1}".format(url,
+                _error))
+            raise error.TVDBIdError("No Episode with id {0} found".format(
+                episode_id))
+
+        if data.strip():
+            data = generate_tree(data)
+        else:
+            logger.debug("Empty data received for id {0}".format(episode_id))
+            raise error.TVDBIdError("No Episode with id {0} found".format(
+                episode_id))
+
+        episodes = parse_xml(data, "Episode")
+        assert len(episodes) <= 1, "Should not find more than one episodes"
+
+        if len(episodes) >= 1:
+            return Episode(episodes[0], None)
+        else:
+            raise error.TVDBIdError("No Episode with id {0} found".format(
+                episode_id))
