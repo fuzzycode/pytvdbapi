@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2011 Björn Larsson
+# Copyright 2011 - 2013 Björn Larsson
 
 # This file is part of pytvdbapi.
 #

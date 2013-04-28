@@ -1,6 +1,6 @@
 License
 =======
-Copyright 201, Björn Larsson
+Copyright 2011 - 2013, Björn Larsson
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
