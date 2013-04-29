@@ -54,7 +54,10 @@ class Actor(object):
         return self.__unicode__()
 
     def __unicode__(self):
-        return unicode('<Actor - {0}>').format(self.Name)
+        try:
+            return unicode('<Actor - {0}>').format(self.Name)
+        except NameError:
+            return '<Actor - {0}>'.format(self.Name)
 
     def __getattr__(self, item):
         if item == 'image_url':
