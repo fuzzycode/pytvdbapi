@@ -47,7 +47,7 @@ class Language(object):
                                             self.abbreviation,
                                             self.language_id)
 
-
+# pylint: disable=R0924
 class LanguageList(Mapping):
     """Managing a list of language objects"""
     def __init__(self, etree):
@@ -74,3 +74,4 @@ class LanguageList(Mapping):
             return self.data[item]
         except KeyError:
             raise error.TVDBIndexError("Item {0} not found".format(item))
+# pylint: enable=R0924

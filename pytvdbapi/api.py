@@ -153,6 +153,7 @@ class Episode(object):
             return "<Episode>"
 
 
+# pylint: disable=R0924
 class Season(Mapping):
     """
     :raise: TVDBIndexError
@@ -224,8 +225,9 @@ class Season(Mapping):
         logger.debug("{0} adding episode {1}".format(self, episode))
 
         self.episodes[int(episode.EpisodeNumber)] = episode
+# pylint: enable=R0924
 
-
+# pylint: disable=R0924
 class Show(Mapping):
     """
     :raise: TVDBAttributeError, TVDBIndexError
@@ -436,8 +438,9 @@ class Show(Mapping):
 
         self.banner_objects = [Banner(mirror, d, self)
                                for d in parse_xml(data, "Banner")]
+# pylint: enable=R0924
 
-
+# pylint: disable=R0924
 class Search(object):
     """
     A search result returned from calling :func:`TVDB.search()`. It supports
@@ -476,7 +479,7 @@ class Search(object):
 
     def __iter__(self):
         return iter(self.result)
-
+# pylint: enable=R0924
 
 class TVDB(object):
     """

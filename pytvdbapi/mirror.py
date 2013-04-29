@@ -55,6 +55,7 @@ class Mirror(object):
             "Mirror", self.url, self.type_mask)
 
 
+# pylint: disable=R0924
 class MirrorList(object):
     """Managing a list of available mirrors"""
     def __init__(self, etree):
@@ -85,3 +86,4 @@ class MirrorList(object):
         except IndexError:
             raise error.PytvdbapiError("No Mirror matching {0} found"
                                        .format(type_mask))
+# pylint: enable=R0924
