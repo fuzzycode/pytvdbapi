@@ -270,8 +270,8 @@ class Show(Mapping):
         >>> show = search[0]
         >>> dir(show) #doctest: +NORMALIZE_WHITESPACE
         ['AliasNames', 'FirstAired', 'IMDB_ID', 'Network', 'Overview',
-         'SeriesName','actor_objects', 'api', 'banner', 'banner_objects',
-          'id', 'lang','language', 'seasons', 'seriesid', 'zap2it_id']
+          'SeriesName', 'actor_objects', 'api', 'banner', 'banner_objects',
+           'id', 'lang', 'language', 'seasons', 'seriesid', 'zap2it_id']
         >>> show.update()
         >>> dir(show) #doctest: +NORMALIZE_WHITESPACE
         ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'AliasNames',
