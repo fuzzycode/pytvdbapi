@@ -59,7 +59,7 @@ class TestLanguage(basetest.pytvdbapiTest):
     def test_language_representation(self):
         """The __repr__ of a language should function"""
         self.assertEqual(self.languages['sv'].__repr__(),
-                          "<Language (Svenska:sv:8)>")
+                         "<Language (Svenska:sv:8)>")
 
     def test_invalid_languages(self):
         """Function should raise TVDBIndexError when trying to access an

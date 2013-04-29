@@ -77,8 +77,10 @@ def getDocumentationTests():
     base_dir = os.path.abspath(os.path.dirname(pytvdbapi.__file__))
     exts = ['.rst', '.txt']
 
-    files = getFiles(os.path.abspath(os.path.join(base_dir, "../")), exts) + \
-      getFiles(os.path.abspath(os.path.join(base_dir, "../docs/")), exts, True)
+    base_path = os.path.abspath(os.path.join(base_dir, "../"))
+    docs_path = os.path.abspath(os.path.join(base_dir, "../docs/"))
+
+    files = getFiles(base_path, exts) + getFiles(docs_path, exts, True)
 
     tests.addTest(doctest.DocFileSuite(*files, module_relative=False))
 

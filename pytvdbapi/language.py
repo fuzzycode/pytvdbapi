@@ -52,7 +52,7 @@ class LanguageList(Mapping):
     """Managing a list of language objects"""
     def __init__(self, etree):
         languages = [Language(l['name'], l['abbreviation'], l['id'])
-                 for l in parse_xml(etree, "Language")]
+                     for l in parse_xml(etree, "Language")]
         self.data = dict((l.abbreviation, l) for l in languages)
 
     def __contains__(self, item):

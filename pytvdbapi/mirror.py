@@ -83,5 +83,5 @@ class MirrorList(object):
                 [m for m in self.data if
                  int(m.type_mask) & int(type_mask) == int(type_mask)])
         except IndexError:
-            raise error.PytvdbapiError("No Mirror matching {0} found".
-                format(type_mask))
+            raise error.PytvdbapiError("No Mirror matching {0} found"
+                                       .format(type_mask))

@@ -365,7 +365,10 @@ class TestGet(unittest.TestCase):
 
 class TestGetEpisode(unittest.TestCase):
     def test_get_episode(self):
-        """Provided the episode id, you should be able to get episode instance"""
+        """
+        Provided the episode id, you should be able to
+        get episode instance.
+        """
         api = TVDB("B43FF87DE395DF56")
         ep = api.get_episode(308834, "en")
 
@@ -383,7 +386,9 @@ class TestGetEpisode(unittest.TestCase):
         self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "")
 
     def test_invalid_id(self):
-        """If the episode can not be found, a TVDBValueError should be raised"""
+        """
+        If the episode can not be found, a TVDBValueError should be raised.
+        """
         api = TVDB("B43FF87DE395DF56")
 
         self.assertRaises(error.TVDBIdError, api.get_episode, -1, "en")

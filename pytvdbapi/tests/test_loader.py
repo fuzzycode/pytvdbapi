@@ -55,7 +55,7 @@ class TestLoader(basetest.pytvdbapiTest):
         data = utils.file_loader(mirror_file)
 
         url = ("http://www.thetvdb.com/api/%(api_key)s/mirrors.xml" %
-              self.context)
+               self.context)
         result = self.loader.load(url)
 
         #Fix any new line issues to assure it does not affect the test
@@ -70,13 +70,13 @@ class TestLoader(basetest.pytvdbapiTest):
         """
 
         self.assertRaises(error.ConnectionError, self.loader.load,
-                           "http://laba.laba")
+                          "http://laba.laba")
 
     def test_no_cache(self):
         """It should be possible to disable the use of cache"""
 
         url = ("http://www.thetvdb.com/api/%(api_key)s/mirrors.xml" %
-              self.context)
+               self.context)
 
         self.loader.load(url, cache=False)
 

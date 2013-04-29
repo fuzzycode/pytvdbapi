@@ -64,7 +64,7 @@ class Loader(object):
                 "Unable to connect to {0}".format(url))
 
         if response.status != 200:
-            raise  error.ConnectionError(
+            raise error.ConnectionError(
                 "Bad status returned from server. {0}".format(response.status))
         else:
             if type(content) in (str,):

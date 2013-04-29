@@ -49,10 +49,10 @@ from pytvdbapi.banner import Banner
 
 
 if sys.version_info < (3, 0):
-    from  urllib import quote
+    from urllib import quote
     import ConfigParser as configparser
 else:
-    from  urllib.parse import quote
+    from urllib.parse import quote
     import configparser
 # pylint: enable=E0611, F0401
 
@@ -137,8 +137,8 @@ class Episode(object):
             return self.data[item]
         except KeyError:
             logger.error("Episode has no attribute {0}".format(item))
-            raise error.TVDBAttributeError("Episode has no attribute {0}"
-            .format(item))
+            raise error.TVDBAttributeError(
+                "Episode has no attribute {0}".format(item))
 
     def __dir__(self):
         attributes = [d for d in list(self.__dict__.keys()) if d != "data"]
@@ -206,8 +206,8 @@ class Season(Mapping):
         return len(self.episodes)
 
     def __iter__(self):
-        return iter(sorted(list(self.episodes.values()),
-                            key=lambda ep: ep.EpisodeNumber))
+        return iter(sorted(list(
+            self.episodes.values()), key=lambda ep: ep.EpisodeNumber))
 
     def __repr__(self):
         return "<Season {0:03}>".format(self.season_number)
@@ -267,14 +267,19 @@ class Show(Mapping):
         >>> search = db.search("Dexter", "en")
         >>> show = search[0]
         >>> dir(show) #doctest: +NORMALIZE_WHITESPACE
-        ['AliasNames', 'FirstAired', 'IMDB_ID', 'Network', 'Overview', 'SeriesName', 'actor_objects', 'api', 'banner',
-        'banner_objects', 'id', 'lang', 'language', 'seasons', 'seriesid', 'zap2it_id']
+        ['AliasNames', 'FirstAired', 'IMDB_ID', 'Network', 'Overview',
+         'SeriesName','actor_objects', 'api', 'banner', 'banner_objects',
+          'id', 'lang','language', 'seasons', 'seriesid', 'zap2it_id']
         >>> show.update()
         >>> dir(show) #doctest: +NORMALIZE_WHITESPACE
-        ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'AliasNames', 'ContentRating', 'FirstAired', 'Genre', 'IMDB_ID',
-        'Language', 'Network', 'NetworkID', 'Overview', 'Rating', 'RatingCount', 'Runtime', 'SeriesID', 'SeriesName',
-        'Status', 'actor_objects', 'added', 'addedBy', 'api', 'banner', 'banner_objects', 'fanart', 'id', 'lang',
-        'language', 'lastupdated', 'poster', 'seasons', 'seriesid', 'zap2it_id']
+        ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'AliasNames',
+         'ContentRating', 'FirstAired', 'Genre', 'IMDB_ID',
+        'Language', 'Network', 'NetworkID', 'Overview', 'Rating',
+         'RatingCount', 'Runtime', 'SeriesID', 'SeriesName',
+        'Status', 'actor_objects', 'added', 'addedBy', 'api',
+         'banner', 'banner_objects', 'fanart', 'id', 'lang',
+        'language', 'lastupdated', 'poster', 'seasons', 'seriesid',
+         'zap2it_id']
         >>> len(show)
         9
         >>> show[5]
@@ -320,8 +325,8 @@ class Show(Mapping):
         if not self.seasons:
             self._populate_data()
 
-        return iter(sorted(list(self.seasons.values()),
-            key=lambda season: season.season_number))
+        return iter(sorted(list(
+            self.seasons.values()), key=lambda season: season.season_number))
 
     def __len__(self):
         if not len(self.seasons):
@@ -357,9 +362,9 @@ class Show(Mapping):
         logger.debug("Populating season data from URL.")
 
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
-                       'api_key': self.api.config['api_key'],
-                       'seriesid': self.id,
-                       'language': self.lang}
+                   'api_key': self.api.config['api_key'],
+                   'seriesid': self.id,
+                   'language': self.lang}
 
         url = config.get("urls", "series", raw=True) % context
         data = generate_tree(self.api.loader.load(url))
@@ -407,7 +412,7 @@ class Show(Mapping):
 
         #generate all the Actor objects
         self.actor_objects = [Actor(mirror, d, self)
-                               for d in parse_xml(data, 'Actor')]
+                              for d in parse_xml(data, 'Actor')]
 
     def _load_banners(self):
         """
@@ -419,8 +424,8 @@ class Show(Mapping):
             manage its structure.
         """
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
-                           'api_key': self.api.config['api_key'],
-                           'seriesid': self.id}
+                   'api_key': self.api.config['api_key'],
+                   'seriesid': self.id}
 
         url = config.get("urls", "banners", raw=True) % context
         logger.debug('Loading Actors data from {0}'.format(url))
@@ -430,7 +435,7 @@ class Show(Mapping):
         mirror = self.api.mirrors.get_mirror(TypeMask.BANNER).url
 
         self.banner_objects = [Banner(mirror, d, self)
-                                for d in parse_xml(data, "Banner")]
+                               for d in parse_xml(data, "Banner")]
 
 
 class Search(object):
@@ -520,8 +525,8 @@ class TVDB(object):
         #extract all argument and store for later use
         self.config['force_lang'] = kwargs.get("force_lang", False)
         self.config['api_key'] = api_key
-        self.config['cache_dir'] = kwargs.get("cache_dir",
-            os.path.join(tempfile.gettempdir(), name))
+        self.config['cache_dir'] = kwargs.get(
+            "cache_dir", os.path.join(tempfile.gettempdir(), name))
         self.config['actors'] = kwargs.get('actors', False)
         self.config['banners'] = kwargs.get('banners', False)
 
@@ -580,7 +585,7 @@ class TVDB(object):
         """
 
         logger.debug("Searching for {0} using language {1}"
-            .format(show, language))
+                     .format(show, language))
 
         if language != 'all' and language not in self.languages:
             raise error.TVDBValueError(
@@ -641,10 +646,10 @@ class TVDB(object):
         try:
             data = self.loader.load(url, cache)
         except error.ConnectionError as _error:
-            logger.debug("Unable to connect to URL: {0}. {1}".format(url,
-                _error))
-            raise error.TVDBIdError("No Show with id {0} found".format(
-                series_id))
+            logger.debug("Unable to connect to URL: {0}. {1}"
+                         .format(url, _error))
+            raise error.TVDBIdError("No Show with id {0} found"
+                                    .format(series_id))
 
         if data.strip():
             data = generate_tree(data)
@@ -674,8 +679,8 @@ class TVDB(object):
         :return: A :class:`Episode()` instance
         :raise: TVDBIdError if no episode is found with the given Id
 
-        Given a valid episode Id the corresponding episode data is fetched and the :class:`Episode()`
-        instance is returned.
+        Given a valid episode Id the corresponding episode data is fetched and
+        the :class:`Episode()` instance is returned.
 
         Example::
 
@@ -687,7 +692,8 @@ class TVDB(object):
             >>> episode.EpisodeName
             'Crocodile'
         """
-        logger.debug("Getting episode with id {0} with language {1}".format(episode_id, language))
+        logger.debug("Getting episode with id {0} with language {1}"
+                     .format(episode_id, language))
 
         if language != 'all' and language not in self.languages:
             raise error.TVDBValueError("{0} is not a valid language".format(
@@ -702,14 +708,17 @@ class TVDB(object):
         try:
             data = self.loader.load(url, cache)
         except error.ConnectionError as _error:
-            logger.debug("Unable to connect to URL: {0}. {1}".format(url,_error))
-            raise error.TVDBIdError("No Episode with id {0} found".format(episode_id))
+            logger.debug("Unable to connect to URL: {0}. {1}"
+                         .format(url, _error))
+            raise error.TVDBIdError("No Episode with id {0} found"
+                                    .format(episode_id))
 
         if data.strip():
             data = generate_tree(data)
         else:
             logger.debug("Empty data received for id {0}".format(episode_id))
-            raise error.TVDBIdError("No Episode with id {0} found".format(episode_id))
+            raise error.TVDBIdError("No Episode with id {0} found"
+                                    .format(episode_id))
 
         episodes = parse_xml(data, "Episode")
         assert len(episodes) <= 1, "Should not find more than one episodes"
@@ -717,4 +726,5 @@ class TVDB(object):
         if len(episodes) >= 1:
             return Episode(episodes[0], None)
         else:
-            raise error.TVDBIdError("No Episode with id {0} found".format(episode_id))
+            raise error.TVDBIdError("No Episode with id {0} found"
+                                    .format(episode_id))
