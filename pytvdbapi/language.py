@@ -47,6 +47,7 @@ class Language(object):
                                             self.abbreviation,
                                             self.language_id)
 
+
 # pylint: disable=R0924
 class LanguageList(Mapping):
     """Managing a list of language objects"""

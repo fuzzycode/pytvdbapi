@@ -227,6 +227,7 @@ class Season(Mapping):
         self.episodes[int(episode.EpisodeNumber)] = episode
 # pylint: enable=R0924
 
+
 # pylint: disable=R0924
 class Show(Mapping):
     """
@@ -440,6 +441,7 @@ class Show(Mapping):
                                for d in parse_xml(data, "Banner")]
 # pylint: enable=R0924
 
+
 # pylint: disable=R0924
 class Search(object):
     """
@@ -480,6 +482,7 @@ class Search(object):
     def __iter__(self):
         return iter(self.result)
 # pylint: enable=R0924
+
 
 class TVDB(object):
     """
