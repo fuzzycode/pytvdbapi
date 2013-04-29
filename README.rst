@@ -11,7 +11,7 @@ Key Features
 ------------
   * A clean and easy to use interface
   * A well documented API
-  * Support for Python 3.2
+  * Support for Python 2.6, 2.7, 3.2 and 3.3
   * Thoroughly tested against all supported platforms. Tests covering ~97% of
     the code base.
   * Continuously tested against PEP8 and pylint.
@@ -28,12 +28,6 @@ Install
 The easiest and recommended way to install **pytvdbapi** is to use pip_::
 
     $pip install pytvdbapi
-
-Or you can download the desired version from https://github.com/fuzzycode/pytvdbapi/downloads/
-and unpack it and execute::
-
-    $cd pytvdbapi/
-    $python setup.py install
 
 Depending on your platform, you may need root permission to execute the above
 commands.
