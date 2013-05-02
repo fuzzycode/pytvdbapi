@@ -67,7 +67,4 @@ class Loader(object):
             raise error.ConnectionError(
                 "Bad status returned from server. {0}".format(response.status))
         else:
-            if type(content) in (str,):
-                return content
-            else:
-                return content.decode("utf-8")
+            return content.decode("utf-8")

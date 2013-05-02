@@ -42,17 +42,24 @@ import sys
 import os
 from collections import Mapping  # This will change in 3.3
 
-# pylint: disable=E0611, F0401
+# pylint: disable=E0611, F0401, W0622
 from pkg_resources import resource_filename
 from pytvdbapi.actor import Actor
 from pytvdbapi.banner import Banner
 
+try:
+    from io import open  # For Py 2.6 - 2.7
+except ImportError:
+    pass
 
-if sys.version_info < (3, 0):
+try:
     from urllib import quote
-    import ConfigParser as configparser
-else:
+except ImportError:
     from urllib.parse import quote
+
+try:
+    import ConfigParser as configparser
+except ImportError:
     import configparser
 # pylint: enable=E0611, F0401
 
@@ -544,14 +551,13 @@ class TVDB(object):
         #If requested, update the local language file from the server
         if self.config['force_lang']:
             logger.debug("updating Language file from server")
-            with open(language_file, "wt") as languages:
+            with open(language_file, "wt", encoding='utf-8') as languages:
                 url = config.get("urls", "languages", raw=True)
                 language_data = self.loader.load(url % self.config)
                 languages.write(language_data)
 
         #Setup the list of supported languages
-        with open(language_file, "rt") as languages:
-            self.languages = LanguageList(generate_tree(languages.read()))
+        self.languages = LanguageList(generate_tree(language_file))
 
         #Create the list of available mirrors
         url = config.get("urls", "mirrors", raw=True)

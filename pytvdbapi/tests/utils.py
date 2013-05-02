@@ -19,10 +19,17 @@
 
 __all__ = ['file_loader']
 
+# pylint: disable W0622
+try:
+    from io import open  # For Py 2.6 - 2.7
+except ImportError:
+    pass
+# pylint: enable W0622
+
 
 def file_loader(file):
     try:
-        handle = open(file)
+        handle = open(file, mode='rt', encoding='utf-8')
         data = handle.read()
     except IOError:
         print("Unable to open {0}".format(file))

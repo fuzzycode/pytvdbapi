@@ -56,7 +56,7 @@ class Actor(object):
     def __unicode__(self):
         try:
             return unicode('<Actor - {0}>').format(self.Name)
-        except NameError: #unicode function is removed in Python 3
+        except NameError:  # unicode function is removed in Python 3
             return '<Actor - {0}>'.format(self.Name)
 
     def __getattr__(self, item):
