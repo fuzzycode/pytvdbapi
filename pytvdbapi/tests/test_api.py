@@ -344,6 +344,17 @@ class TestGet(unittest.TestCase):
         self.assertEqual(show.SeriesName, "Dexter")
         self.assertEqual(show.id, 79349)
 
+    def test_get_show(self):
+        """
+        It should be possible to use the get_show alias to get a show
+        given the right show id.
+        """
+        api = TVDB("B43FF87DE395DF56")
+        show = api.get_show(79349, "en")
+
+        self.assertEqual(show.SeriesName, "Dexter")
+        self.assertEqual(show.id, 79349)
+
     def test_invalid_Language(self):
         """
         Function should raise TVDBValueError if an invalid language is

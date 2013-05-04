@@ -670,6 +670,13 @@ class TVDB(object):
         else:
             raise error.TVDBIdError("No Show with id {0} found".format(series_id))
 
+    get_series = get
+    """
+    .. versionadded:: 0.4
+
+    An alias for the :func:`get` function to make it clearer what is being fetched.
+    """
+
     def get_episode(self, episode_id, language, cache=True):
         """
         .. versionadded:: 0.4
