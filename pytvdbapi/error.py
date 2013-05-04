@@ -26,7 +26,8 @@ pytvdbapi will only raise exceptions that are of type :class:`PytvdbapiError`.
 import logging
 
 __all__ = ['PytvdbapiError', 'BadData', 'ConnectionError',
-           'TVDBAttributeError', 'TVDBIndexError']
+           'TVDBAttributeError', 'TVDBIndexError', 'TVDBIdError',
+           'TVDBValueError', 'TVDBNotFoundError']
 
 #Module level logger
 logger = logging.getLogger(__name__)  # pylint: disable=C0103
@@ -85,3 +86,4 @@ class TVDBIdError(PytvdbapiError):
 
 class TVDBNotFoundError(PytvdbapiError):
     """Raised when the data can not be found. Represent the 404 http code."""
+    pass
