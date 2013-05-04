@@ -67,7 +67,7 @@ from pytvdbapi.mirror import MirrorList, TypeMask
 from pytvdbapi.utils import merge
 from pytvdbapi.xmlhelpers import parse_xml, generate_tree
 
-
+# URL templates used for loading the data from thetvdb.com
 __mirrors__ = "http://www.thetvdb.com/api/%(api_key)s/mirrors.xml"
 __time__ = "http://www.thetvdb.com/api/Updates.php?type=none"
 __languages__ = "http://www.thetvdb.com/api/%(api_key)s/languages.xml"
@@ -80,7 +80,7 @@ __banners__ = "%(mirror)s/api/%(api_key)s/series/%(seriesid)s/banners.xml"
 
 __all__ = ['Episode', 'Season', 'Show', 'Search', 'TVDB']
 
-#Module logger object
+# Module logger object
 logger = logging.getLogger(__name__)  # pylint: disable=C0103
 
 
