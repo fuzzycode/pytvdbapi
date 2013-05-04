@@ -81,3 +81,7 @@ class TVDBValueError(PytvdbapiError):
 class TVDBIdError(PytvdbapiError):
     """Raised when trying to get a show using an invalid Show ID"""
     pass
+
+
+class TVDBNotFoundError(PytvdbapiError):
+    """Raised when the data can not be found. Represent the 404 http code."""
