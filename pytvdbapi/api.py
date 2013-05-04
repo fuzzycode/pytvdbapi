@@ -56,11 +56,6 @@ try:
     from urllib import quote
 except ImportError:
     from urllib.parse import quote
-
-try:
-    import ConfigParser as configparser
-except ImportError:
-    import configparser
 # pylint: enable=E0611, F0401
 
 
@@ -73,14 +68,20 @@ from pytvdbapi.utils import merge
 from pytvdbapi.xmlhelpers import parse_xml, generate_tree
 
 
+__mirrors__ = "http://www.thetvdb.com/api/%(api_key)s/mirrors.xml"
+__time__ = "http://www.thetvdb.com/api/Updates.php?type=none"
+__languages__ = "http://www.thetvdb.com/api/%(api_key)s/languages.xml"
+__search__ = "http://www.thetvdb.com/api/GetSeries.php?seriesname=%(series)s&language=%(language)s"
+__series__ = "%(mirror)s/api/%(api_key)s/series/%(seriesid)s/all/%(language)s.xml"
+__episode__ = "%(mirror)s/api/%(api_key)s/episodes/%(episodeid)s/%(language)s.xml"
+__actors__ = "%(mirror)s/api/%(api_key)s/series/%(seriesid)s/actors.xml"
+__banners__ = "%(mirror)s/api/%(api_key)s/series/%(seriesid)s/banners.xml"
+
+
 __all__ = ['Episode', 'Season', 'Show', 'Search', 'TVDB']
 
 #Module logger object
 logger = logging.getLogger(__name__)  # pylint: disable=C0103
-
-#Read the URL configs from file
-config = configparser.ConfigParser()  # pylint: disable=C0103
-config.read(resource_filename(__name__, 'data/pytvdbapi.cfg'))
 
 
 class Episode(object):
@@ -332,9 +333,7 @@ class Show(Mapping):
     def __iter__(self):
         if not self.seasons:
             self._populate_data()
-
-        return iter(sorted(list(
-            self.seasons.values()), key=lambda season: season.season_number))
+        return iter(sorted(list(self.seasons.values()), key=lambda season: season.season_number))
 
     def __len__(self):
         if not len(self.seasons):
@@ -374,7 +373,7 @@ class Show(Mapping):
                    'seriesid': self.id,
                    'language': self.lang}
 
-        url = config.get("urls", "series", raw=True) % context
+        url = __series__ % context
         data = generate_tree(self.api.loader.load(url))
         episodes = [d for d in parse_xml(data, "Episode")]
 
@@ -411,7 +410,7 @@ class Show(Mapping):
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.api.config['api_key'],
                    'seriesid': self.id}
-        url = config.get("urls", "actors", raw=True) % context
+        url = __actors__ % context
         logger.debug('Loading Actors data from {0}'.format(url))
 
         data = generate_tree(self.api.loader.load(url))
@@ -435,15 +434,13 @@ class Show(Mapping):
                    'api_key': self.api.config['api_key'],
                    'seriesid': self.id}
 
-        url = config.get("urls", "banners", raw=True) % context
+        url = __banners__ % context
         logger.debug('Loading Actors data from {0}'.format(url))
 
         data = generate_tree(self.api.loader.load(url))
-
         mirror = self.api.mirrors.get_mirror(TypeMask.BANNER).url
 
-        self.banner_objects = [Banner(mirror, d, self)
-                               for d in parse_xml(data, "Banner")]
+        self.banner_objects = [Banner(mirror, b, self) for b in parse_xml(data, "Banner")]
 # pylint: enable=R0924
 
 
@@ -549,16 +546,14 @@ class TVDB(object):
         if self.config['force_lang']:
             logger.debug("updating Language file from server")
             with open(language_file, "wt", encoding='utf-8') as languages:
-                url = config.get("urls", "languages", raw=True)
-                language_data = self.loader.load(url % self.config)
+                language_data = self.loader.load(__languages__ % self.config)
                 languages.write(language_data)
 
         #Setup the list of supported languages
         self.languages = LanguageList(generate_tree(language_file))
 
         #Create the list of available mirrors
-        url = config.get("urls", "mirrors", raw=True)
-        tree = generate_tree(self.loader.load(url % self.config))
+        tree = generate_tree(self.loader.load(__mirrors__ % self.config))
         self.mirrors = MirrorList(tree)
 
     def search(self, show, language, cache=True):
@@ -592,7 +587,6 @@ class TVDB(object):
             ...
             <Show - Dexter>
         """
-
         logger.debug("Searching for {0} using language {1}".format(show, language))
 
         if language != 'all' and language not in self.languages:
@@ -603,8 +597,7 @@ class TVDB(object):
                 show = str(show.encode('utf-8'))
 
             context = {'series': quote(show), "language": language}
-            url = config.get("urls", "search", raw=True)
-            data = generate_tree(self.loader.load(url % context, cache))
+            data = generate_tree(self.loader.load(__search__ % context, cache))
             shows = [Show(d, self, language) for d in parse_xml(data, "Series")]
 
             self.search_buffer[(show, language)] = shows
@@ -645,8 +638,7 @@ class TVDB(object):
                    'mirror': self.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.config['api_key']}
 
-        url = config.get("urls", "series", raw=True) % context
-
+        url = __series__ % context
         try:
             data = self.loader.load(url, cache)
         except error.TVDBNotFoundError:
@@ -670,12 +662,14 @@ class TVDB(object):
         else:
             raise error.TVDBIdError("No Show with id {0} found".format(series_id))
 
+    # pylint: disable=W0105
     get_series = get
     """
     .. versionadded:: 0.4
 
     An alias for the :func:`get` function to make it clearer what is being fetched.
     """
+    # pylint: enable=W0105
 
     def get_episode(self, episode_id, language, cache=True):
         """
@@ -711,7 +705,7 @@ class TVDB(object):
                    'mirror': self.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.config['api_key']}
 
-        url = config.get("urls", "episode", raw=True) % context
+        url = __episode__ % context
 
         try:
             data = self.loader.load(url, cache)

@@ -344,13 +344,13 @@ class TestGet(unittest.TestCase):
         self.assertEqual(show.SeriesName, "Dexter")
         self.assertEqual(show.id, 79349)
 
-    def test_get_show(self):
+    def test_get_series(self):
         """
-        It should be possible to use the get_show alias to get a show
+        It should be possible to use the get_series alias to get a show
         given the right show id.
         """
         api = TVDB("B43FF87DE395DF56")
-        show = api.get_show(79349, "en")
+        show = api.get_series(79349, "en")
 
         self.assertEqual(show.SeriesName, "Dexter")
         self.assertEqual(show.id, 79349)
