@@ -66,8 +66,7 @@ class Actor(object):
             try:
                 return self.data[item]
             except KeyError:
-                raise TVDBAttributeError("Actor has no {0} attribute".format(
-                    item))
+                raise TVDBAttributeError("Actor has no {0} attribute".format(item))
 
     def __dir__(self):
         return list(self.data.keys()) + ['image_url']

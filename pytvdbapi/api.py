@@ -40,7 +40,7 @@ import logging
 import tempfile
 import sys
 import os
-from collections import Mapping  # This will change in 3.3
+from collections import Mapping
 
 # pylint: disable=E0611, F0401, W0622
 from pkg_resources import resource_filename
@@ -144,8 +144,7 @@ class Episode(object):
             return self.data[item]
         except KeyError:
             logger.error("Episode has no attribute {0}".format(item))
-            raise error.TVDBAttributeError(
-                "Episode has no attribute {0}".format(item))
+            raise error.TVDBAttributeError("Episode has no attribute {0}".format(item))
 
     def __dir__(self):
         attributes = [d for d in list(self.__dict__.keys()) if d != "data"]
@@ -153,9 +152,9 @@ class Episode(object):
 
     def __repr__(self):
         try:
-            return "<Episode S{0:03d}E{1:03d} - {2}>".format(
-                int(self.SeasonNumber), int(self.EpisodeNumber),
-                self.EpisodeName)
+            return "<Episode S{0:03d}E{1:03d} - {2}>".format(int(self.SeasonNumber),
+                                                             int(self.EpisodeNumber),
+                                                             self.EpisodeName)
         except error.TVDBAttributeError:
             return "<Episode>"
 
@@ -321,8 +320,7 @@ class Show(Mapping):
         try:
             return self.data[item]
         except KeyError:
-            raise error.TVDBAttributeError("Show has no attribute names %s" %
-                                           item)
+            raise error.TVDBAttributeError("Show has no attribute names {0}".format(item))
 
     def __repr__(self):
         return "<Show - {0}>".format(self.SeriesName)
@@ -538,8 +536,7 @@ class TVDB(object):
         #extract all argument and store for later use
         self.config['force_lang'] = kwargs.get("force_lang", False)
         self.config['api_key'] = api_key
-        self.config['cache_dir'] = kwargs.get(
-            "cache_dir", os.path.join(tempfile.gettempdir(), name))
+        self.config['cache_dir'] = kwargs.get("cache_dir", os.path.join(tempfile.gettempdir(), name))
         self.config['actors'] = kwargs.get('actors', False)
         self.config['banners'] = kwargs.get('banners', False)
 
@@ -596,12 +593,10 @@ class TVDB(object):
             <Show - Dexter>
         """
 
-        logger.debug("Searching for {0} using language {1}"
-                     .format(show, language))
+        logger.debug("Searching for {0} using language {1}".format(show, language))
 
         if language != 'all' and language not in self.languages:
-            raise error.TVDBValueError(
-                "{0} is not a valid language".format(language))
+            raise error.TVDBValueError("{0} is not a valid language".format(language))
 
         if (show, language) not in self.search_buffer:
             if sys.version_info < (3, 0):
@@ -610,8 +605,7 @@ class TVDB(object):
             context = {'series': quote(show), "language": language}
             url = config.get("urls", "search", raw=True)
             data = generate_tree(self.loader.load(url % context, cache))
-            shows = [Show(d, self, language)
-                     for d in parse_xml(data, "Series")]
+            shows = [Show(d, self, language) for d in parse_xml(data, "Series")]
 
             self.search_buffer[(show, language)] = shows
 
@@ -642,12 +636,10 @@ class TVDB(object):
             >>> show.SeriesName
             'Dexter'
         """
-        logger.debug("Getting show with id {0} with language {1}".format(
-            series_id, language))
+        logger.debug("Getting show with id {0} with language {1}".format(series_id, language))
 
         if language != 'all' and language not in self.languages:
-            raise error.TVDBValueError("{0} is not a valid language".format(
-                language))
+            raise error.TVDBValueError("{0} is not a valid language".format(language))
 
         context = {'seriesid': series_id, "language": language,
                    'mirror': self.mirrors.get_mirror(TypeMask.XML).url,
@@ -659,19 +651,16 @@ class TVDB(object):
             data = self.loader.load(url, cache)
         except error.TVDBNotFoundError:
             logger.debug("Id {0} not found".format(series_id))
-            raise error.TVDBIdError("Series id {0} not found"
-                                    .format(series_id))
+            raise error.TVDBIdError("Series id {0} not found".format(series_id))
         except error.ConnectionError as _error:
-            logger.debug("Unable to connect to URL: {0}. {1}"
-                         .format(url, _error))
+            logger.debug("Unable to connect to URL: {0}. {1}".format(url, _error))
             raise
 
         if data.strip():
             data = generate_tree(data)
         else:
             logger.debug("Empty data received for id {0}".format(series_id))
-            raise error.TVDBIdError("No Show with id {0} found".format(
-                series_id))
+            raise error.TVDBIdError("No Show with id {0} found".format(series_id))
 
         series = parse_xml(data, "Series")
         assert len(series) <= 1, "Should not find more than one series"
@@ -679,8 +668,7 @@ class TVDB(object):
         if len(series) >= 1:
             return Show(series[0], self, language)
         else:
-            raise error.TVDBIdError("No Show with id {0} found".format(
-                series_id))
+            raise error.TVDBIdError("No Show with id {0} found".format(series_id))
 
     def get_episode(self, episode_id, language, cache=True):
         """
@@ -707,12 +695,10 @@ class TVDB(object):
             >>> episode.EpisodeName
             'Crocodile'
         """
-        logger.debug("Getting episode with id {0} with language {1}"
-                     .format(episode_id, language))
+        logger.debug("Getting episode with id {0} with language {1}".format(episode_id, language))
 
         if language != 'all' and language not in self.languages:
-            raise error.TVDBValueError("{0} is not a valid language".format(
-                language))
+            raise error.TVDBValueError("{0} is not a valid language".format(language))
 
         context = {'episodeid': episode_id, "language": language,
                    'mirror': self.mirrors.get_mirror(TypeMask.XML).url,
@@ -723,19 +709,16 @@ class TVDB(object):
         try:
             data = self.loader.load(url, cache)
         except error.TVDBNotFoundError:
-            raise error.TVDBIdError("No Episode with id {0} found"
-                                    .format(episode_id))
+            raise error.TVDBIdError("No Episode with id {0} found".format(episode_id))
         except error.ConnectionError as _error:
-            logger.debug("Unable to connect to URL: {0}. {1}"
-                         .format(url, _error))
+            logger.debug("Unable to connect to URL: {0}. {1}".format(url, _error))
             raise
 
         if data.strip():
             data = generate_tree(data)
         else:
             logger.debug("Empty data received for id {0}".format(episode_id))
-            raise error.TVDBIdError("No Episode with id {0} found"
-                                    .format(episode_id))
+            raise error.TVDBIdError("No Episode with id {0} found".format(episode_id))
 
         episodes = parse_xml(data, "Episode")
         assert len(episodes) <= 1, "Should not find more than one episodes"
@@ -743,5 +726,4 @@ class TVDB(object):
         if len(episodes) >= 1:
             return Episode(episodes[0], None)
         else:
-            raise error.TVDBIdError("No Episode with id {0} found"
-                                    .format(episode_id))
+            raise error.TVDBIdError("No Episode with id {0} found".format(episode_id))
