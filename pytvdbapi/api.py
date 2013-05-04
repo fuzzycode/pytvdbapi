@@ -657,11 +657,14 @@ class TVDB(object):
 
         try:
             data = self.loader.load(url, cache)
+        except error.TVDBNotFoundError:
+            logger.debug("Id {0} not found".format(series_id))
+            raise error.TVDBIdError("Series id {0} not found"
+                                    .format(series_id))
         except error.ConnectionError as _error:
             logger.debug("Unable to connect to URL: {0}. {1}"
                          .format(url, _error))
-            raise error.TVDBIdError("No Show with id {0} found"
-                                    .format(series_id))
+            raise
 
         if data.strip():
             data = generate_tree(data)
@@ -719,11 +722,13 @@ class TVDB(object):
 
         try:
             data = self.loader.load(url, cache)
+        except error.TVDBNotFoundError:
+            raise error.TVDBIdError("No Episode with id {0} found"
+                                    .format(episode_id))
         except error.ConnectionError as _error:
             logger.debug("Unable to connect to URL: {0}. {1}"
                          .format(url, _error))
-            raise error.TVDBIdError("No Episode with id {0} found"
-                                    .format(episode_id))
+            raise
 
         if data.strip():
             data = generate_tree(data)

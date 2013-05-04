@@ -63,7 +63,9 @@ class Loader(object):
             raise error.ConnectionError(
                 "Unable to connect to {0}".format(url))
 
-        if response.status != 200:
+        if response.status in [404]:
+            raise error.TVDBNotFoundError("Data not found")
+        elif response.status not in [200, 304]:
             raise error.ConnectionError(
                 "Bad status returned from server. {0}".format(response.status))
         else:
