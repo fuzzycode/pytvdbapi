@@ -160,8 +160,8 @@ class Episode(object):
             return "<Episode>"
 
 
-# pylint: disable=R0924
 class Season(Mapping):
+    # pylint: disable=R0924
     """
     :raise: TVDBIndexError
 
@@ -232,11 +232,10 @@ class Season(Mapping):
         logger.debug("{0} adding episode {1}".format(self, episode))
 
         self.episodes[int(episode.EpisodeNumber)] = episode
-# pylint: enable=R0924
 
 
-# pylint: disable=R0924
 class Show(Mapping):
+    # pylint: disable=R0924
     """
     :raise: TVDBAttributeError, TVDBIndexError
 
@@ -441,11 +440,10 @@ class Show(Mapping):
         mirror = self.api.mirrors.get_mirror(TypeMask.BANNER).url
 
         self.banner_objects = [Banner(mirror, b, self) for b in parse_xml(data, "Banner")]
-# pylint: enable=R0924
 
 
-# pylint: disable=R0924
 class Search(object):
+    # pylint: disable=R0924
     """
     A search result returned from calling :func:`TVDB.search()`. It supports
     iterating over the results, and the individual shows matching the search
@@ -483,7 +481,6 @@ class Search(object):
 
     def __iter__(self):
         return iter(self.result)
-# pylint: enable=R0924
 
 
 class TVDB(object):
