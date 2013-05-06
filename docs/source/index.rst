@@ -14,6 +14,7 @@ Contents:
    license
    api_index
    contact
+   credits
 
 Indices and tables
 ==================
