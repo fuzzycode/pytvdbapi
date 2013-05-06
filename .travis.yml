@@ -16,8 +16,19 @@ install:
   - pip install pep8 pylint sphinx coverage --use-mirrors
 
 script:
+  # Validate PEP8 compliance
   - pep8 -r  --statistics  --count pytvdbapi/
+
+  # Validate PyLint
+  - pylint --rcfile=pylint.cfg pytvdbapi
+
+  # Test the examples in the README file
   - python -m doctest -v README.rst
+
+  # Test that the documentation is working
+  - cd docs/source/
+  - sphinx-build -W -b html -d /tmp/doctrees .  /tmp/html
+  - sphinx-build -W -b linkcheck -d /tmp/doctrees .  /tmp/linkcheck
 
 notifications:
   email:
