@@ -12,9 +12,8 @@ Key Features
   * A clean and easy to use interface
   * A well documented API
   * Support for Python 2.6, 2.7, 3.2 and 3.3
-  * Thoroughly tested against all supported platforms. Tests covering ~97% of
-    the code base.
-  * Continuously tested against PEP8 and pylint.
+  * Thoroughly tested against all supported versions. |statusimage|
+
 
 
 Dependencies
@@ -41,7 +40,7 @@ Note that no guaranties are made as to the stability of the source tree::
 ArchLinux
 ----------
 Tobias Röttger is kindly maintaining an ArchLinux package of **pytvdbapi** that
-can be found at https://aur.archlinux.org/packages.php?ID=58697.
+can be found `here <https://aur.archlinux.org/packages.php?ID=58697>`_.
 
 Usage
 =====
@@ -116,7 +115,7 @@ It also comes with a version of the documentation included in
 
 Known Issues
 ============
-  * At the moment, **pytvdbapi** only works with Python 2.6, 2.7 and 3.2,
+  * At the moment, **pytvdbapi** only works with Python 2.6, 2.7, 3.2 and 3.3,
     **NOT 3.0 or 3.1**. This is due to an
     `issue <http://code.google.com/p/httplib2/issues/detail?id=195>`_
     with httplib2 on Python 3.0, 3.1.
@@ -143,7 +142,8 @@ develop@bjornlarsson.net or you can follow me on twitter
 
 
 
-
+.. |statusimage| image:: https://travis-ci.org/fuzzycode/pytvdbapi.png?branch=master
+    :target: https://travis-ci.org/fuzzycode/pytvdbapi
 .. _thetvdb.com: http://thetvdb.com
 .. _PyPI: http://pypi.python.org/pypi
 .. _pip: http://www.pip-installer.org/en/latest/index.html
