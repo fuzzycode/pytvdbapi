@@ -5,13 +5,20 @@ python:
   - 2.6
   - 2.7
   - 3.2
+  - 3.3
 
+branches:
+  only:
+    - master
 
 install:
   - pip install -r requirements.txt --use-mirrors
-  - pip install pep8 --use-mirrors
+  - pip install pep8 pylint sphinx coverage --use-mirrors
 
 script:
   - pep8 -r  --statistics  --count pytvdbapi/
-  - python -m setup.py test
   - python -m doctest -v README.rst
+
+notifications:
+  email:
+    - develop@bjornlarsson.net
