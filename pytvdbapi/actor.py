@@ -54,6 +54,7 @@ class Actor(object):
         return self.__unicode__()
 
     def __unicode__(self):
+        # pylint: disable=E0602
         try:
             return unicode('<Actor - {0}>').format(self.Name)
         except NameError:  # unicode function is removed in Python 3

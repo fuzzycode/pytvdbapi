@@ -13,15 +13,12 @@ branches:
 
 install:
   - pip install -r requirements.txt --use-mirrors
-  - pip install pep8 pylint sphinx --use-mirrors
+  - pip install pep8 sphinx --use-mirrors
   - pip install -e .
 
 script:
   # Validate PEP8 compliance
   - pep8 -r  --statistics  --count pytvdbapi/
-
-  # Validate PyLint compliance
-  - pylint --rcfile=pylint.cfg pytvdbapi
 
   # Test the examples in the README file
   - python -m doctest -v README.rst

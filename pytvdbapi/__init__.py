@@ -25,7 +25,7 @@ A clean, resource friendly and easy to use API for thetvdb.com_.
 
 import logging
 try:
-    from logging import NullHandler
+    from logging import NullHandler  # pylint: disable=E0611
 except ImportError:
     from pytvdbapi.backport import NullHandler
 

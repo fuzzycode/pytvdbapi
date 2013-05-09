@@ -28,7 +28,7 @@ import os.path
 import xml.etree.ElementTree as ET
 
 try:
-    from xml.etree.ElementTree import ParseError
+    from xml.etree.ElementTree import ParseError  # pylint: disable=E0611
 except ImportError:
     # For Python 2.6
     from xml.parsers.expat import ExpatError as ParseError
