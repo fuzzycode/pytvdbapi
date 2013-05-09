@@ -69,14 +69,14 @@ from pytvdbapi.utils import merge
 from pytvdbapi.xmlhelpers import parse_xml, generate_tree
 
 # URL templates used for loading the data from thetvdb.com
-__mirrors__ = "http://www.thetvdb.com/api/%(api_key)s/mirrors.xml"
+__mirrors__ = "http://www.thetvdb.com/api/{api_key}/mirrors.xml"
 __time__ = "http://www.thetvdb.com/api/Updates.php?type=none"
-__languages__ = "http://www.thetvdb.com/api/%(api_key)s/languages.xml"
-__search__ = "http://www.thetvdb.com/api/GetSeries.php?seriesname=%(series)s&language=%(language)s"
-__series__ = "%(mirror)s/api/%(api_key)s/series/%(seriesid)s/all/%(language)s.xml"
-__episode__ = "%(mirror)s/api/%(api_key)s/episodes/%(episodeid)s/%(language)s.xml"
-__actors__ = "%(mirror)s/api/%(api_key)s/series/%(seriesid)s/actors.xml"
-__banners__ = "%(mirror)s/api/%(api_key)s/series/%(seriesid)s/banners.xml"
+__languages__ = "http://www.thetvdb.com/api/{api_key}/languages.xml"
+__search__ = "http://www.thetvdb.com/api/GetSeries.php?seriesname={series}&language={language}"
+__series__ = "{mirror}/api/{api_key}/series/{seriesid}/all/{language}.xml"
+__episode__ = "{mirror}/api/{api_key}/episodes/{episodeid}/{language}.xml"
+__actors__ = "{mirror}/api/{api_key}/series/{seriesid}/actors.xml"
+__banners__ = "{mirror}/api/{api_key}/series/{seriesid}/banners.xml"
 
 
 __all__ = ['Episode', 'Season', 'Show', 'Search', 'TVDB']
@@ -378,7 +378,7 @@ class Show(Mapping):
                    'seriesid': self.id,
                    'language': self.lang}
 
-        url = __series__ % context
+        url = __series__.format(**context)
         data = generate_tree(self.api.loader.load(url))
         episodes = [d for d in parse_xml(data, "Episode")]
 
@@ -415,7 +415,8 @@ class Show(Mapping):
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.config['api_key'],
                    'seriesid': self.id}
-        url = __actors__ % context
+        url = __actors__.format(**context)
+
         logger.debug('Loading Actors data from {0}'.format(url))
 
         data = generate_tree(self.api.loader.load(url))
@@ -439,7 +440,7 @@ class Show(Mapping):
                    'api_key': self.config['api_key'],
                    'seriesid': self.id}
 
-        url = __banners__ % context
+        url = __banners__.format(**context)
         logger.debug('Loading Actors data from {0}'.format(url))
 
         data = generate_tree(self.api.loader.load(url))
@@ -559,14 +560,14 @@ class TVDB(object):
         if self.config['force_lang']:
             logger.debug("updating Language file from server")
             with open(language_file, "wt", encoding='utf-8') as languages:
-                language_data = self.loader.load(__languages__ % self.config)
+                language_data = self.loader.load(__languages__.format(**self.config))
                 languages.write(language_data)
 
         #Setup the list of supported languages
         self.languages = LanguageList(generate_tree(language_file))
 
         #Create the list of available mirrors
-        tree = generate_tree(self.loader.load(__mirrors__ % self.config))
+        tree = generate_tree(self.loader.load(__mirrors__.format(**self.config)))
         self.mirrors = MirrorList(tree)
 
     def search(self, show, language, cache=True):
@@ -610,7 +611,7 @@ class TVDB(object):
                 show = str(show.encode('utf-8'))
 
             context = {'series': quote(show), "language": language}
-            data = generate_tree(self.loader.load(__search__ % context, cache))
+            data = generate_tree(self.loader.load(__search__.format(**context), cache))
             shows = [Show(d, self, language, self.config) for d in parse_xml(data, "Series")]
 
             self.search_buffer[(show, language)] = shows
@@ -651,7 +652,7 @@ class TVDB(object):
                    'mirror': self.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.config['api_key']}
 
-        url = __series__ % context
+        url = __series__.format(**context)
         try:
             data = self.loader.load(url, cache)
         except error.TVDBNotFoundError:
@@ -724,7 +725,7 @@ class TVDB(object):
                    'mirror': self.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.config['api_key']}
 
-        url = __episode__ % context
+        url = __episode__.format(**context)
 
         try:
             data = self.loader.load(url, cache)
