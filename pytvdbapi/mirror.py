@@ -54,9 +54,16 @@ class Mirror(object):
         return "<{0} ({1}:{2})>".format("Mirror", self.url, self.type_mask)
 
 
-# pylint: disable=R0924
 class MirrorList(object):
-    """Managing a list of available mirrors"""
+    # pylint: disable=R0924
+    """
+    Managing a list of available mirrors
+
+    .. Note: The use of a Mirror List and different mirrors has been deprecated by
+        the developers at `thetvdb.com <http://thetvdb.com>`_ and they will always
+        return one and the same mirror information when requested. This functionality
+        could and will be removed from future versions of **pytvdbapi**.
+    """
     def __init__(self, etree):
         self.data = [
             Mirror(m['id'], m['mirrorpath'], m['typemask'])
@@ -75,14 +82,11 @@ class MirrorList(object):
         :return: A :class:`Mirror` object
         :raise: :class:`PytvdbapiError`
 
-        Returns a random :class:`Mirror` object that matches the provided
-        type_mask
+        Returns a random :class:`Mirror` object that matches the provided type_mask.
         """
         try:
             return random.choice(
                 [m for m in self.data if
                  int(m.type_mask) & int(type_mask) == int(type_mask)])
         except IndexError:
-            raise error.PytvdbapiError("No Mirror matching {0} found"
-                                       .format(type_mask))
-# pylint: enable=R0924
+            raise error.PytvdbapiError("No Mirror matching {0} found".format(type_mask))
