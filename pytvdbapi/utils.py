@@ -48,7 +48,7 @@ def merge(dict1, dict2, decision=lambda x, y: y):
     return result
 
 
-class TransformedDictionary(MutableMapping):
+class TransformedDictionary(MutableMapping, object):
     """
     An abstract dictionary base class that support transformation
     of the key used for storing.
@@ -87,22 +87,9 @@ class TransformedDictionary(MutableMapping):
         """"""
         return self._data.items()
 
-    def iteritems(self):
-        """"""
-        return self._data.iteritems()
-
-    def itervalues(self):
-        """"""
-        return self._data.itervalues()
-
-    def iterkeys(self):
-        """"""
-        return self._data.iterkeys()
-
     def values(self):
         """"""
         return self._data.values()
-
 
 class InsensitiveDictionary(TransformedDictionary):
     """
