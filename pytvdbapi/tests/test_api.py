@@ -77,6 +77,41 @@ class TestApi(basetest.pytvdbapiTest):
 
         self.assertEqual(len(search), 2)
 
+    def test_ignore_case(self):
+        """
+        It should be possible to pass the ignore_case keyword to the api
+        and access all show/season/episode attributes in a case insensitive
+        way.
+        """
+        api = TVDB("B43FF87DE395DF56", ignore_case=True)
+        search = api.search("friends", 'en')
+
+        # Load and update the show
+        show = search[0]
+        show.update()
+
+        self.assertEqual(show.IMDB_ID, show.imdb_id)
+        self.assertEqual(show.ImDB_id, show.imDb_Id)
+
+        #self.assertEqual(show.seriesid, show.SERIESID)
+        #self.assertEqual(show.sErIeSiD, show.SeRiEsId)
+
+        #self.assertEqual(show.zap2it_id, show.Zap2It_iD)
+        #self.assertEqual(show.zap2it_id, show.ZAP2IT_ID)
+
+    def test_attribute_case(self):
+        """
+        When ignore_case is False, all attributes should be case sensitive
+        """
+        api = TVDB("B43FF87DE395DF56", ignore_case=False)
+        search = api.search("friends", 'en')
+
+        # Load and update the show
+        show = search[0]
+        show.update()
+
+        self.assertRaises(error.TVDBAttributeError, show.__getattr__, "ImDB_id")
+
     def test_cache_dir(self):
         """It should be possible to specify a custom cache directory"""
         #TODO: Implement this
