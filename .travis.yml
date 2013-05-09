@@ -14,7 +14,7 @@ branches:
 install:
   - pip install -r requirements.txt --use-mirrors
   - pip install pep8 pylint sphinx --use-mirrors
-  - pip intsall -e .
+  - pip install -e .
 
 script:
   # Validate PEP8 compliance
