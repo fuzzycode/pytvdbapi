@@ -17,11 +17,15 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
+# pylint: disable=R0922
+
 """
 A module for utility functionality.
 """
 
-__all__ = ['merge']
+from collections import MutableMapping
+
+__all__ = ['merge', 'TransformedDictionary', 'InsensitiveDictionary']
 
 
 def merge(dict1, dict2, decision=lambda x, y: y):
@@ -35,10 +39,84 @@ def merge(dict1, dict2, decision=lambda x, y: y):
     Merging two dictionaries together using *decision* to determine what
     values will be used.
     """
-    result = dict(dict1)
+    result = dict1
     for key, value in list(dict2.items()):
         if key in result:
             result[key] = decision(result[key], value)
         else:
             result[key] = value
     return result
+
+
+class TransformedDictionary(MutableMapping):
+    """
+    An abstract dictionary base class that support transformation
+    of the key used for storing.
+    """
+    def __transform__(self, key):
+        raise NotImplementedError("Not implemented")
+
+    def __init__(self, *args, **kwargs):
+        self._data = dict()
+        self.update(dict(*args, **kwargs))
+
+    def __getitem__(self, item):
+        return self._data[self.__transform__(item)]
+
+    def __setitem__(self, key, value):
+        self._data[self.__transform__(key)] = value
+
+    def __delitem__(self, key):
+        del self._data[self.__transform__(key)]
+
+    def __len__(self):
+        return len(self._data)
+
+    def __iter__(self):
+        return iter(self._data)
+
+    def keys(self):
+        """"""
+        return self._data.keys()
+
+    def clear(self):
+        """"""
+        self._data.clear()
+
+    def items(self):
+        """"""
+        return self._data.items()
+
+    def iteritems(self):
+        """"""
+        return self._data.iteritems()
+
+    def itervalues(self):
+        """"""
+        return self._data.itervalues()
+
+    def iterkeys(self):
+        """"""
+        return self._data.iterkeys()
+
+    def values(self):
+        """"""
+        return self._data.values()
+
+
+class InsensitiveDictionary(TransformedDictionary):
+    """
+    A dictionary supporting the use of case insensitive keys
+    """
+    def __init__(self, *args, **kwargs):
+        self.ignore_case = kwargs.pop('ignore_case', False)
+        super(InsensitiveDictionary, self).__init__(*args, **kwargs)
+
+    def __transform__(self, key):
+        if self.ignore_case:
+            try:
+                return key.lower()
+            except AttributeError:
+                return key
+        else:
+            return key
