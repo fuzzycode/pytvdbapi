@@ -46,6 +46,7 @@ from collections import Mapping
 from pkg_resources import resource_filename
 from pytvdbapi.actor import Actor
 from pytvdbapi.banner import Banner
+from pytvdbapi.utils import InsensitiveDictionary
 
 try:
     from io import open  # For Py 2.6 - 2.7
@@ -137,8 +138,11 @@ class Episode(object):
 
     .. _thetvdb.com: http://thetvdb.com
     """
-    def __init__(self, data, season):
-        self.data, self.season = data, season
+    def __init__(self, data, season, config):
+        self.season, self.config = season, config
+        ignore_case = self.config.get('ignore_case', False)
+
+        self.data = InsensitiveDictionary(ignore_case=ignore_case, **data)  # pylint: disable=W0142
 
     def __getattr__(self, item):
         try:
@@ -148,7 +152,7 @@ class Episode(object):
             raise error.TVDBAttributeError("Episode has no attribute {0}".format(item))
 
     def __dir__(self):
-        attributes = [d for d in list(self.__dict__.keys()) if d != "data"]
+        attributes = [d for d in list(self.__dict__.keys()) if d not in ('data', 'config')]
         return list(self.data.keys()) + attributes
 
     def __repr__(self):
@@ -214,8 +218,7 @@ class Season(Mapping):
         return len(self.episodes)
 
     def __iter__(self):
-        return iter(sorted(list(
-            self.episodes.values()), key=lambda ep: ep.EpisodeNumber))
+        return iter(sorted(list(self.episodes.values()), key=lambda ep: ep.EpisodeNumber))
 
     def __repr__(self):
         return "<Season {0:03}>".format(self.season_number)
@@ -235,7 +238,7 @@ class Season(Mapping):
 
 
 class Show(Mapping):
-    # pylint: disable=R0924
+    # pylint: disable=R0924, R0902
     """
     :raise: TVDBAttributeError, TVDBIndexError
 
@@ -309,24 +312,27 @@ class Show(Mapping):
 
     .. _thetvdb.com: http://thetvdb.com
     """
-    def __init__(self, data, api, language):
-        self.api, self.data, self.lang = api, data, language
+    def __init__(self, data, api, language, config):
+        self.api, self.lang, self.config = api, language, config
         self.seasons = dict()
 
         self.actor_objects = list()
         self.banner_objects = list()
 
+        self.ignore_case = self.config.get('ignore_case', False)
+        self.data = InsensitiveDictionary(ignore_case=self.ignore_case, **data)  # pylint: disable=W0142
+
     def __getattr__(self, item):
         try:
             return self.data[item]
         except KeyError:
-            raise error.TVDBAttributeError("Show has no attribute names {0}".format(item))
+            raise error.TVDBAttributeError("Show has no attribute named {0}".format(item))
 
     def __repr__(self):
         return "<Show - {0}>".format(self.SeriesName)
 
     def __dir__(self):
-        attributes = [d for d in list(self.__dict__.keys()) if d != "data"]
+        attributes = [d for d in list(self.__dict__.keys()) if d not in ('data', 'config', 'ignore_case')]
         return list(self.data.keys()) + attributes
 
     def __iter__(self):
@@ -368,7 +374,7 @@ class Show(Mapping):
         logger.debug("Populating season data from URL.")
 
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
-                   'api_key': self.api.config['api_key'],
+                   'api_key': self.config['api_key'],
                    'seriesid': self.id,
                    'language': self.lang}
 
@@ -379,22 +385,22 @@ class Show(Mapping):
         show_data = parse_xml(data, "Series")
         assert len(show_data) == 1, "Should only have 1 Show section"
 
-        self.data = merge(self.data, show_data[0])
+        self.data = merge(self.data, InsensitiveDictionary(show_data[0], ignore_case=self.ignore_case))
 
         for episode_data in episodes:
             season_nr = int(episode_data['SeasonNumber'])
             if not season_nr in self.seasons:
                 self.seasons[season_nr] = Season(season_nr, self)
 
-            episode = Episode(episode_data, self.seasons[season_nr])
+            episode = Episode(episode_data, self.seasons[season_nr], self.config)
             self.seasons[season_nr].append(episode)
 
         #If requested, load the extra actors data
-        if self.api.config['actors']:
+        if self.config.get('actors', False):
             self._load_actors()
 
         #if requested, load the extra banners data
-        if self.api.config['banners']:
+        if self.config.get('banners', False):
             self._load_banners()
 
     def _load_actors(self):
@@ -407,7 +413,7 @@ class Show(Mapping):
             manage its structure.
         """
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
-                   'api_key': self.api.config['api_key'],
+                   'api_key': self.config['api_key'],
                    'seriesid': self.id}
         url = __actors__ % context
         logger.debug('Loading Actors data from {0}'.format(url))
@@ -430,7 +436,7 @@ class Show(Mapping):
             manage its structure.
         """
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
-                   'api_key': self.api.config['api_key'],
+                   'api_key': self.config['api_key'],
                    'seriesid': self.id}
 
         url = __banners__ % context
@@ -516,6 +522,15 @@ class TVDB(object):
       separate XML file and would require an additional request to the server
       to obtain. To limit the resource usage, the banner information will only
       be loaded when explicitly requested.
+
+    .. versionadded:: 0.4
+
+    * *ignore_case* (default=False) If set to True, all attributes on the :class:`Show` and
+      :class:`Episode` instances will be accessible in a case insensitive manner. If set to
+      False, the default, all attributes will be case sensitive and retain the same casing
+      as provided by `thetvdb.com <http://thetvdb.com>`_.
+
+
     """
 
     def __init__(self, api_key, **kwargs):
@@ -533,6 +548,7 @@ class TVDB(object):
         self.config['cache_dir'] = kwargs.get("cache_dir", os.path.join(tempfile.gettempdir(), name))
         self.config['actors'] = kwargs.get('actors', False)
         self.config['banners'] = kwargs.get('banners', False)
+        self.config['ignore_case'] = kwargs.get('ignore_case', False)
 
         #Create the loader object to use
         self.loader = Loader(self.config['cache_dir'])
@@ -595,7 +611,7 @@ class TVDB(object):
 
             context = {'series': quote(show), "language": language}
             data = generate_tree(self.loader.load(__search__ % context, cache))
-            shows = [Show(d, self, language) for d in parse_xml(data, "Series")]
+            shows = [Show(d, self, language, self.config) for d in parse_xml(data, "Series")]
 
             self.search_buffer[(show, language)] = shows
 
@@ -655,7 +671,7 @@ class TVDB(object):
         assert len(series) <= 1, "Should not find more than one series"
 
         if len(series) >= 1:
-            return Show(series[0], self, language)
+            return Show(series[0], self, language, self.config)
         else:
             raise error.TVDBIdError("No Show with id {0} found".format(series_id))
 
@@ -680,8 +696,12 @@ class TVDB(object):
         :return: A :class:`Episode()` instance
         :raise: TVDBIdError if no episode is found with the given Id
 
+
         Given a valid episode Id the corresponding episode data is fetched and
         the :class:`Episode()` instance is returned.
+
+        .. Note:: When the :class:`Episode()` is loaded using :func:`get_episode()`
+            the episode attribute will be None.
 
         Example::
 
@@ -692,7 +712,9 @@ class TVDB(object):
             308834
             >>> episode.EpisodeName
             'Crocodile'
+
         """
+
         logger.debug("Getting episode with id {0} with language {1}".format(episode_id, language))
 
         if language != 'all' and language not in self.languages:
@@ -722,6 +744,6 @@ class TVDB(object):
         assert len(episodes) <= 1, "Should not find more than one episodes"
 
         if len(episodes) >= 1:
-            return Episode(episodes[0], None)
+            return Episode(episodes[0], None, self.config)
         else:
             raise error.TVDBIdError("No Episode with id {0} found".format(episode_id))
