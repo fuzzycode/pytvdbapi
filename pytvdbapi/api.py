@@ -606,7 +606,7 @@ class TVDB(object):
         if language != 'all' and language not in self.languages:
             raise error.TVDBValueError("{0} is not a valid language".format(language))
 
-        if (show, language) not in self.search_buffer or cache==False:
+        if (show, language) not in self.search_buffer or not cache:
             if sys.version_info < (3, 0):
                 show = str(show.encode('utf-8'))
 
