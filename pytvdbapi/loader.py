@@ -32,14 +32,29 @@ from pytvdbapi import error
 #Module logger object
 logger = logging.getLogger(__name__)  # pylint: disable=C0103
 
+try:
+    from httplib2 import socks
+except ImportError:
+    socks = None  # pylint: disable=C0103
+    logger.warning("Usage of proxy server will not be supported")
+
 
 class Loader(object):
     """
     A object for loading data from a provided url.
     Uses httplib2 to do the heavy lifting.
     """
-    def __init__(self, cache_path):
-        self.http = httplib2.Http(cache=os.path.abspath(cache_path))
+    def __init__(self, cache_path, **kwargs):
+        proxy = kwargs.get('proxy', None)
+        if proxy:
+            try:
+                proxy = httplib2.ProxyInfo(socks.PROXY_TYPE_HTTP, proxy[0], proxy[1])
+            except IndexError:
+                proxy = None
+        else:
+            proxy = None
+
+        self.http = httplib2.Http(cache=os.path.abspath(cache_path), proxy_info=proxy)
 
     def load(self, url, cache=True):
         """
@@ -60,13 +75,12 @@ class Loader(object):
         try:
             response, content = self.http.request(url, headers=header)
         except (httplib2.RelativeURIError, httplib2.ServerNotFoundError):
-            raise error.ConnectionError("Unable to connect to {0}"
-                                        .format(url))
+            raise error.ConnectionError("Unable to connect to {0}".format(url))
 
         if response.status in [404]:
             raise error.TVDBNotFoundError("Data not found")
         elif response.status not in [200, 304]:
-            raise error.ConnectionError("Bad status returned from server. {0}"
-                                        .format(response.status))
+            raise error.ConnectionError(
+                "Bad status returned from server. {0}".format(response.status))
         else:
             return content.decode("utf-8")

@@ -531,6 +531,12 @@ class TVDB(object):
       False, the default, all attributes will be case sensitive and retain the same casing
       as provided by `thetvdb.com <http://thetvdb.com>`_.
 
+    * *proxy* (default=None) Should be a tuple with server address and port number. If set
+        **pytvdbapi** will try to use the proxy to connect to the tvdb.com servers.
+
+        .. Note:: **pytvdbapi** depends on the proxy support of httplib2 and they depend
+           on socks for implementing proxy handling. Currently socks only supports Python 2.X and therefore
+           **pytvdbapi** will only support proxy usage on Python 2.6 and 2.7.
 
     """
 
@@ -550,9 +556,10 @@ class TVDB(object):
         self.config['actors'] = kwargs.get('actors', False)
         self.config['banners'] = kwargs.get('banners', False)
         self.config['ignore_case'] = kwargs.get('ignore_case', False)
+        self.config['proxy'] = kwargs.get('proxy', None)
 
         #Create the loader object to use
-        self.loader = Loader(self.config['cache_dir'])
+        self.loader = Loader(self.config['cache_dir'], proxy=self.config['proxy'])
 
         language_file = resource_filename(__name__, 'data/languages.xml')
 
