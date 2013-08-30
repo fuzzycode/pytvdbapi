@@ -441,7 +441,7 @@ class Show(Mapping):
                    'seriesid': self.id}
 
         url = __banners__.format(**context)
-        logger.debug('Loading Actors data from {0}'.format(url))
+        logger.debug('Loading Banner data from {0}'.format(url))
 
         data = generate_tree(self.api.loader.load(url))
         mirror = self.api.mirrors.get_mirror(TypeMask.BANNER).url
