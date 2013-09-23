@@ -122,7 +122,10 @@ class Episode(object):
         'EpImgFlag', 'EpisodeName', 'EpisodeNumber', 'FirstAired',
         'GuestStars', 'IMDB_ID', 'Language', 'Overview', 'ProductionCode',
         'Rating', 'RatingCount', 'SeasonNumber', 'Writer', 'absolute_number',
-        'filename', 'id', 'lastupdated', 'season', 'seasonid', 'seriesid']
+        'filename', 'id', 'lastupdated', 'season', 'seasonid', 'seriesid',
+        'thumb_added', 'thumb_height', 'thumb_width', 'tms_export', 'tms_review_blurry',
+        'tms_review_by', 'tms_review_dark', 'tms_review_date', 'tms_review_logo',
+        'tms_review_other', 'tms_review_unsure']
         >>> episode.EpisodeName
         'Love American Style'
         >>> episode.GuestStars #doctest: +NORMALIZE_WHITESPACE
@@ -291,7 +294,7 @@ class Show(Mapping):
         'Status', 'actor_objects', 'added', 'addedBy', 'api',
          'banner', 'banner_objects', 'fanart', 'id', 'lang',
         'language', 'lastupdated', 'poster', 'seasons', 'seriesid',
-         'zap2it_id']
+         'tms_wanted', 'zap2it_id']
         >>> len(show)
         9
         >>> show[5]

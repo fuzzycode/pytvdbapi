@@ -179,7 +179,7 @@ class TestShow(unittest.TestCase):
 
         friends.update()
 
-        self.assertEqual(len(dir(friends)), 32)
+        self.assertEqual(len(dir(friends)), 33)
 
     def test_iterate_show(self):
         """It should be possible to iterate over the show to get all seasons"""
@@ -240,7 +240,7 @@ class TestEpisode(unittest.TestCase):
         friends = _load_show("friends")
         ep = friends[3][7]
 
-        self.assertEqual(len(dir(ep)), 27)
+        self.assertEqual(len(dir(ep)), 32)
 
     def test_invalid_episode_index(self):
         """
