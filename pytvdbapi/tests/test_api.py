@@ -240,7 +240,7 @@ class TestEpisode(unittest.TestCase):
         friends = _load_show("friends")
         ep = friends[3][7]
 
-        self.assertEqual(len(dir(ep)), 32)
+        self.assertEqual(len(dir(ep)), 38)
 
     def test_invalid_episode_index(self):
         """
