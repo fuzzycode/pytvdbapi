@@ -562,6 +562,8 @@ class TVDB(object):
         #If requested, update the local language file from the server
         if self.config['force_lang']:
             logger.debug("updating Language file from server")
+            # pylint: disable=W1501, W0511
+            # TODO: Fix this code so that the lint directive can be removed
             with open(language_file, "wt", encoding='utf-8') as languages:
                 language_data = self.loader.load(__languages__.format(**self.config))
                 languages.write(language_data)

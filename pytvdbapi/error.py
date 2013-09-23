@@ -48,6 +48,8 @@ class BadData(PytvdbapiError):
     pass
 
 
+# pylint: disable=W0622, W0511
+# TODO: Change this name so it does not collide with the builtin name and remove the lint directive
 class ConnectionError(PytvdbapiError):
     """
     Raised by the :class:`Loader` when unable to connect to the provided URL.
