@@ -89,7 +89,7 @@ class Banner(object):
         >>> assert len(show.banner_objects) > 0
         >>> banner = show.banner_objects[0]
         >>> banner.banner_url
-        'http://thetvdb.com/banners/fanart/original/79349-16.jpg'
+        'http://thetvdb.com/banners/fanart/original/79349-42.jpg'
         >>> banner.Language
         'en'
 
