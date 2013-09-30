@@ -294,7 +294,7 @@ class Show(Mapping):
         'Status', 'actor_objects', 'added', 'addedBy', 'api',
          'banner', 'banner_objects', 'fanart', 'id', 'lang',
         'language', 'lastupdated', 'poster', 'seasons', 'seriesid',
-         'tms_wanted', 'zap2it_id']
+         'tms_priority', 'tms_wanted', 'zap2it_id']
         >>> len(show)
         9
         >>> show[5]
