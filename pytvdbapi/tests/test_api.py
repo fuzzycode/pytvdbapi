@@ -66,17 +66,6 @@ class TestApi(basetest.pytvdbapiTest):
 
         self.assertRaises(error.BadData, generate_tree, data)
 
-    def test_force_language(self):
-        """
-        It should be possible to use the "force_lang" keyword when
-        creating the TVDB instance
-        """
-
-        api = TVDB("B43FF87DE395DF56", force_lang=True)
-        search = api.search("dexter", "it")
-
-        self.assertEqual(len(search), 2)
-
     def test_ignore_case(self):
         """
         It should be possible to pass the ignore_case keyword to the api
