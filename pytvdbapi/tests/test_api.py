@@ -179,7 +179,7 @@ class TestShow(unittest.TestCase):
 
         friends.update()
 
-        self.assertEqual(len(dir(friends)), 33)
+        self.assertEqual(len(dir(friends)), 34)
 
     def test_iterate_show(self):
         """It should be possible to iterate over the show to get all seasons"""
