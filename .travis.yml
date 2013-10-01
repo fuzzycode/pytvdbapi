@@ -26,6 +26,7 @@ script:
 
   # Run all unittests and doctests
   - coverage run setup.py test
+  - coverage report -m
 
   # Test that the documentation is working
   - cd docs/source/
