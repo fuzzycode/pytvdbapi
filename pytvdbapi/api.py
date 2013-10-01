@@ -307,7 +307,7 @@ class Show(Mapping):
         9
 
        >>> show[5]
-        <Season 005>
+       <Season 005>
 
         >>> for season in show:
         ...     print(season)
