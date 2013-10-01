@@ -52,7 +52,7 @@ class BadData(PytvdbapiError):
 # TODO: Change this name so it does not collide with the builtin name and remove the lint directive
 class ConnectionError(PytvdbapiError):
     """
-    Raised by the :class:`Loader` when unable to connect to the provided URL.
+    Raised by the :class:`pytvdbapi.Loader` when unable to connect to the provided URL.
     """
     pass
 
@@ -60,7 +60,7 @@ class ConnectionError(PytvdbapiError):
 class TVDBAttributeError(PytvdbapiError):
     """
     A replacement for the standard AttributeError. Will be raised when
-    accessing invalid attributes of :class:`Show` and :class:`Episode`
+    accessing invalid attributes of :class:`pytvdbapi.api.Show` and :class:`pytvdbapi.api.Episode`
     instances
     """
     pass
@@ -69,7 +69,7 @@ class TVDBAttributeError(PytvdbapiError):
 class TVDBIndexError(PytvdbapiError):
     """
     A replacement for the standard IndexError. Will be raised when accessing
-    invalid indexes of :class:`Show` and :class:`Season` instances.
+    invalid indexes of :class:`pytvdbapi.api.Show` and :class:`pytvdbapi.api.Season` instances.
     """
     pass
 
