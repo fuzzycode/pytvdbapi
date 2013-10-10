@@ -414,14 +414,23 @@ class Show(Mapping):
         if self.config.get('banners', False):
             self._load_banners()
 
-    def _load_actors(self):
+    def load_actors(self):
         """
-        Loads the extended Actor data from `thetvdb.com <http://thetvdb.com>`_
-        and adds this to the actor_objects attribute.
+        .. versionadded:: 0.4
 
-        .. Note: This function is not intended to be used by clients of the
-            API and should only be used internally by the Show class to
-            manage its structure.
+        Loads the extended actor information into a list of :class:`pytvdbapi.actor.Actor` objects.
+        They are available through the *actor_objects* attribute of the show.
+
+        If you have used the :code:`actors=True` keyword when creating the :class:`TVDB` instance
+        the actors will be loaded automatically and there is no need to use this function.
+
+        .. note::
+          The :class:`Show` instance always contain a list of actor names. If that is all you need, do not
+          use this function to avoid unnecessary network traffic.
+
+        .. seealso::
+          :class:`TVDB` for information on how to use the *actors* keyword argument.
+
         """
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.config['api_key'],
