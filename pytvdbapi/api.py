@@ -447,14 +447,19 @@ class Show(Mapping):
         self.actor_objects = [Actor(mirror, d, self)
                               for d in parse_xml(data, 'Actor')]
 
-    def _load_banners(self):
+    def load_banners(self):
         """
-        Loads the extended Banner data from `thetvdb.com <http://thetvdb.com>`_
-        and adds this to the banner_objects attribute.
+        .. versionadded:: 0.4
 
-        .. Note: This function is not intended to be used by clients of the
-            API and should only be used internally by the Show class to
-            manage its structure.
+        Loads the extended banner information into a list of :class:`pytvdbapi.banner.Banner` objects.
+        They are available through the *banner_objects* attribute of the show.
+
+        If you have used the :code:`banners=True` keyword when creating the :class:`TVDB` instance the
+        banners will be loaded automatically and there is no need to use this function.
+
+        .. seealso::
+          :class:`TVDB` for information on how to use the *banners* keyword argument.
+
         """
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.config['api_key'],
