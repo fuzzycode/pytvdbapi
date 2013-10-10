@@ -651,6 +651,16 @@ class TVDB(object):
     def get(self, series_id, language, cache=True):
         """
         .. versionadded:: 0.3
+        .. deprecated:: 0.4 Use :func:`get_series` instead.
+
+        """
+
+        logger.warning("Using deprecated function get. Use get_series instead")
+        return self.get_series(series_id, language, cache)
+
+    def get_series(self, series_id, language, cache=True):
+        """
+        .. versionadded:: 0.4
 
         :param series_id: The Show Id to fetch
         :param language: The language abbreviation to search for. E.g. "en"
@@ -670,10 +680,13 @@ class TVDB(object):
             >>> show = db.get( 79349, "en" )
             >>> show.id
             79349
+
             >>> show.SeriesName
             'Dexter'
+
         """
-        logger.debug("Getting show with id {0} with language {1}".format(series_id, language))
+
+        logger.debug("Getting series with id {0} with language {1}".format(series_id, language))
 
         if language != 'all' and language not in self.languages:
             raise error.TVDBValueError("{0} is not a valid language".format(language))
@@ -706,14 +719,6 @@ class TVDB(object):
         else:
             raise error.TVDBIdError("No Show with id {0} found".format(series_id))
 
-    # pylint: disable=W0105
-    get_series = get
-    """
-    .. versionadded:: 0.4
-
-    An alias for the :func:`get` function to make it clearer what is being fetched.
-    """
-    # pylint: enable=W0105
 
     def get_episode(self, episode_id, language, cache=True):
         """
