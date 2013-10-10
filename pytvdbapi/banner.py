@@ -90,8 +90,7 @@ class Banner(object):
         >>> banner = show.banner_objects[0]
         >>> banner.banner_url # doctest: +ELLIPSIS
         'http://thetvdb.com/banners/fanart/original/79349-....jpg'
-        >>> banner.Language
-        'en'
+
 
     Showing the different banner types and their attributes.
 
@@ -101,24 +100,21 @@ if b.BannerType == "fanart"]
         ['BannerPath', 'BannerType', 'BannerType2', 'Colors', 'Language',
         'Rating', 'RatingCount', 'SeriesName', 'ThumbnailPath', 'VignettePath',
         'banner_url', 'id']
-        >>> fanart[0].BannerType2
-        '1920x1080'
+
 
         >>> posters = [b for b in show.banner_objects \
 if b.BannerType == "poster"]
         >>> dir(posters[0]) #doctest: +NORMALIZE_WHITESPACE
         ['BannerPath', 'BannerType', 'BannerType2', 'Language', 'Rating',
         'RatingCount', 'banner_url', 'id']
-        >>> posters[0].BannerType2
-        '680x1000'
+
 
         >>> seasons = [b for b in show.banner_objects \
 if b.BannerType == "season"]
         >>> dir(seasons[0]) #doctest: +NORMALIZE_WHITESPACE
         ['BannerPath', 'BannerType', 'BannerType2', 'Language', 'Rating',
         'RatingCount', 'Season', 'banner_url', 'id']
-        >>> seasons[0].BannerType2
-        'season'
+
 
     """
     def __init__(self, mirror, data, show):

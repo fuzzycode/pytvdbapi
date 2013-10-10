@@ -82,7 +82,7 @@ __banners__ = "{mirror}/api/{api_key}/series/{seriesid}/banners.xml"
 __all__ = ['Episode', 'Season', 'Show', 'Search', 'TVDB']
 
 # Module logger object
-logger = logging.getLogger(__name__)  # pylint: disable=C0103
+logger = logging.getLogger(__name__)
 
 
 class Episode(object):
@@ -117,16 +117,14 @@ class Episode(object):
         >>> show = search[0]
         >>> episode = show[1][5]
 
-        >>> dir(episode) #doctest: +NORMALIZE_WHITESPACE
+        >>> dir(episode) #doctest: +NORMALIZE_WHITESPACE, +ELLIPSIS
         ['Combined_episodenumber', 'Combined_season', 'DVD_chapter',
         'DVD_discid', 'DVD_episodenumber', 'DVD_season', 'Director',
         'EpImgFlag', 'EpisodeName', 'EpisodeNumber', 'FirstAired',
         'GuestStars', 'IMDB_ID', 'Language', 'Overview', 'ProductionCode',
         'Rating', 'RatingCount', 'SeasonNumber', 'Writer', 'absolute_number',
         'filename', 'id', 'lastupdated', 'season', 'seasonid', 'seriesid',
-        'thumb_added', 'thumb_height', 'thumb_width', 'tms_export', 'tms_review_blurry',
-        'tms_review_by', 'tms_review_dark', 'tms_review_date', 'tms_review_logo',
-        'tms_review_other', 'tms_review_unsure']
+        ...]
 
         >>> episode.EpisodeName
         'Love American Style'
@@ -293,7 +291,7 @@ class Show(Mapping):
 
         >>> show.update()
 
-        >>> dir(show) #doctest: +NORMALIZE_WHITESPACE
+        >>> dir(show) #doctest: +NORMALIZE_WHITESPACE, +ELLIPSIS
         ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'AliasNames',
          'ContentRating', 'FirstAired', 'Genre', 'IMDB_ID',
         'Language', 'Network', 'NetworkID', 'Overview', 'Rating',
@@ -301,7 +299,7 @@ class Show(Mapping):
         'Status', 'actor_objects', 'added', 'addedBy', 'api',
          'banner', 'banner_objects', 'fanart', 'id', 'lang',
         'language', 'lastupdated', 'poster', 'seasons', 'seriesid',
-         'tms_priority', 'tms_wanted', 'zap2it_id']
+         ...]
 
         >>> len(show)
         9
