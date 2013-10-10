@@ -14,6 +14,7 @@ branches:
 install:
   - pip install -r requirements.txt --use-mirrors
   - pip install pep8 sphinx --use-mirrors
+  - pip install coveralls
   - pip install -e .
 
 script:
@@ -24,12 +25,16 @@ script:
   - python -m doctest -v README.rst
 
   # Run all unittests and doctests
-  - python -m setup.py test
+  - coverage run setup.py test
+  - coverage report -m
 
   # Test that the documentation is working
   - cd docs/source/
   - sphinx-build -W -b html -d /tmp/doctrees .  /tmp/html
   - sphinx-build -W -b linkcheck -d /tmp/doctrees .  /tmp/linkcheck
+
+after_success:
+  - coveralls
 
 notifications:
   email:

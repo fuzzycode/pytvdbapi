@@ -1,5 +1,7 @@
-About
-=====
+pytvdbapi - A python API for thetvdb.com
+========================================
+|statusimage| |coverageimage| |pypiimage|
+
 **pytvdbapi** is a python API for thetvdb.com_ online database for tv-shows.
 The API is designed to be as easy and intuitive as possible to use.
 
@@ -12,7 +14,7 @@ Key Features
   * A clean and easy to use interface
   * A well documented API
   * Support for Python 2.6, 2.7, 3.2 and 3.3
-  * Thoroughly tested against all supported versions. |statusimage|
+  * Thoroughly tested against all supported versions.
 
 
 
@@ -144,7 +146,13 @@ develop@bjornlarsson.net or you can follow me on twitter
 
 .. |statusimage| image:: https://travis-ci.org/fuzzycode/pytvdbapi.png?branch=master
     :target: https://travis-ci.org/fuzzycode/pytvdbapi
+.. |coverageimage|  image:: https://coveralls.io/repos/fuzzycode/pytvdbapi/badge.png
+    :target: https://coveralls.io/r/fuzzycode/pytvdbapi
+.. |pypiimage| image:: https://pypip.in/v/pytvdbapi/badge.png
+    :target: https://crate.io/packages/pytvdbapi/
+
+
+
 .. _thetvdb.com: http://thetvdb.com
 .. _PyPI: http://pypi.python.org/pypi
 .. _pip: http://www.pip-installer.org/en/latest/index.html
-

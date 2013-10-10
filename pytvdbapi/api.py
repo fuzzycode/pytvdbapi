@@ -24,7 +24,7 @@ thetvdb.com API.
 
 This module is the public interface for the package.
 
-Usage::
+Basic usage::
 
     >>> from pytvdbapi import api
     >>> db = api.TVDB("B43FF87DE395DF56")
@@ -74,7 +74,7 @@ __banners__ = "{mirror}/api/{api_key}/series/{seriesid}/banners.xml"
 __all__ = ['Episode', 'Season', 'Show', 'Search', 'TVDB']
 
 # Module logger object
-logger = logging.getLogger(__name__)  # pylint: disable=C0103
+logger = logging.getLogger(__name__)
 
 __Language = namedtuple("__Language", ['abbrev', 'name', 'id'])
 
@@ -105,7 +105,7 @@ __LANGUAGES__ = {"da": __Language(abbrev="da", name="Dansk", id=10),
 
 class Episode(object):
     """
-    :raise: TVDBAttributeError
+    :raise: :class:`pytvdbapi.error.TVDBAttributeError`
 
     Holds all information about an individual episode. This should be treated
     as a read-only object to obtain the attributes of the episode.
@@ -134,26 +134,29 @@ class Episode(object):
         >>> search = db.search("Dexter", "en")
         >>> show = search[0]
         >>> episode = show[1][5]
-        >>> dir(episode) #doctest: +NORMALIZE_WHITESPACE
+
+        >>> dir(episode) #doctest: +NORMALIZE_WHITESPACE, +ELLIPSIS
         ['Combined_episodenumber', 'Combined_season', 'DVD_chapter',
         'DVD_discid', 'DVD_episodenumber', 'DVD_season', 'Director',
         'EpImgFlag', 'EpisodeName', 'EpisodeNumber', 'FirstAired',
         'GuestStars', 'IMDB_ID', '__Language', 'Overview', 'ProductionCode',
         'Rating', 'RatingCount', 'SeasonNumber', 'Writer', 'absolute_number',
         'filename', 'id', 'lastupdated', 'season', 'seasonid', 'seriesid',
-        'thumb_added', 'thumb_height', 'thumb_width', 'tms_export', 'tms_review_blurry',
-        'tms_review_by', 'tms_review_dark', 'tms_review_date', 'tms_review_logo',
-        'tms_review_other', 'tms_review_unsure']
+        ...]
+
         >>> episode.EpisodeName
         'Love American Style'
+
         >>> episode.GuestStars #doctest: +NORMALIZE_WHITESPACE
         ['Terry Woodberry', 'Carmen Olivares', 'Ashley Rose Orr',
         'Demetrius Grosse', 'Monique Curnen', 'June Angela',
         'Valerie Dillman', 'Brad Henke', 'Jose Zuniga', 'Allysa Tacher',
         'Lizette Carrion', 'Norma Fontana', 'Minerva Garcia',
         'Josh Daugherty', 'Geoffrey Rivas']
+
         >>> episode.FirstAired
         datetime.date(2006, 10, 29)
+
         >>> episode.season
         <Season 001>
 
@@ -188,12 +191,12 @@ class Episode(object):
 class Season(Mapping):
     # pylint: disable=R0924
     """
-    :raise: TVDBIndexError
+    :raise: :class:`pytvdbapi.error.TVDBIndexError`
 
     Holds all the episodes that belong to a specific season. It is possible
     to iterate over the Season to obtain the individual :class:`Episode`
     instances. It is also possible to obtain an individual episode using the
-    [ ] syntax. It will raise :class:`error.TVDBIndexError` if trying to index
+    [ ] syntax. It will raise :class:`pytvdbapi.error.TVDBIndexError` if trying to index
     an invalid episode index.
 
     Example::
@@ -261,7 +264,7 @@ class Season(Mapping):
 class Show(Mapping):
     # pylint: disable=R0924, R0902
     """
-    :raise: TVDBAttributeError, TVDBIndexError
+    :raise: :class:`pytvdbapi.error.TVDBAttributeError`, :class:`pytvdbapi.error.TVDBIndexError`
 
     Holds attributes about a single show and contains all seasons associated
     with a show. The attributes are named exactly as returned from
@@ -303,8 +306,10 @@ class Show(Mapping):
         ['AliasNames', 'FirstAired', 'IMDB_ID', 'Network', 'Overview',
           'SeriesName', 'actor_objects', 'api', 'banner', 'banner_objects',
            'id', 'lang', 'language', 'seasons', 'seriesid', 'zap2it_id']
+
         >>> show.update()
-        >>> dir(show) #doctest: +NORMALIZE_WHITESPACE
+
+        >>> dir(show) #doctest: +NORMALIZE_WHITESPACE, +ELLIPSIS
         ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'AliasNames',
          'ContentRating', 'FirstAired', 'Genre', 'IMDB_ID',
         '__Language', 'Network', 'NetworkID', 'Overview', 'Rating',
@@ -312,11 +317,14 @@ class Show(Mapping):
         'Status', 'actor_objects', 'added', 'addedBy', 'api',
          'banner', 'banner_objects', 'fanart', 'id', 'lang',
         'language', 'lastupdated', 'poster', 'seasons', 'seriesid',
-         'tms_wanted', 'zap2it_id']
+         ...]
+
         >>> len(show)
         9
-        >>> show[5]
-        <Season 005>
+
+       >>> show[5]
+       <Season 005>
+
         >>> for season in show:
         ...     print(season)
         ...
@@ -475,6 +483,9 @@ class Show(Mapping):
 class Search(object):
     # pylint: disable=R0924
     """
+
+    :raise: :class:`pytvdbapi.error.TVDBIndexError`
+
     A search result returned from calling :func:`TVDB.search()`. It supports
     iterating over the results, and the individual shows matching the search
     can be accessed using the [ ] syntax.
@@ -582,13 +593,13 @@ class TVDB(object):
         :param cache: If False, the local cache will not be used and the
             resources will be reloaded from server.
         :return: A :class:`Search()` instance
-        :raise: TVDBValueError
+        :raise: :class:`pytvdbapi.error.TVDBValueError`
 
         Searches the server for a show with the provided show name in the
         provided language. The language should be one of the supported
         language abbreviations or it could be set to *all* to search all
-        languages. It will raise :class:`TVDBValueError` if an invalid
-        language is provided.
+        languages. It will raise :class:`pytvdbapi.error.TVDBValueError` if
+        an invalid language is provided.
 
         Searches are always cached within a session to make subsequent
         searches with the same parameters really cheap and fast. If *cache*
@@ -633,7 +644,7 @@ class TVDB(object):
                     resources will be reloaded from server.
 
         :return: A :class:`Show()` instance
-        :raise: TVDBValueError, TVDBIdError
+        :raise: :class:`pytvdbapi.error.TVDBValueError`, :class:`pytvdbapi.error.TVDBIdError`
 
         Provided a valid Show ID, the data for the show is fetched and a
         corresponding :class:`Show()` object is returned.
@@ -699,8 +710,8 @@ class TVDB(object):
         :param cache: If False, the local cache will not be used and the
                     resources will be reloaded from server.
 
-        :return: A :class:`Episode()` instance
-        :raise: TVDBIdError if no episode is found with the given Id
+        :return: An :class:`Episode()` instance
+        :raise: :class:`pytvdbapi.error.TVDBIdError` if no episode is found with the given Id
 
 
         Given a valid episode Id the corresponding episode data is fetched and

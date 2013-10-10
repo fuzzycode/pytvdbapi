@@ -164,11 +164,16 @@ class TestShow(unittest.TestCase):
 
         friends = _load_show("friends")
 
-        self.assertEqual(len(dir(friends)), 15)
-
+        _before = len(dir(friends))
         friends.update()
+        _after = len(dir(friends))
 
-        self.assertEqual(len(dir(friends)), 33)
+        self.assertTrue(_after >= _before, "Calling update should increase the number of attributes")
+        self.assertTrue('actor_objects' in dir(friends), "Show should have a actor objects attribute")
+        self.assertTrue('banner_objects' in dir(friends), "Show should have a banner objects attribute")
+        self.assertTrue('lang' in dir(friends), "Show should have a lang attribute")
+        self.assertTrue('seasons' in dir(friends), "Show should have a seasons attribute")
+        self.assertTrue('api' in dir(friends), "Show should have a api attribute")
 
     def test_iterate_show(self):
         """It should be possible to iterate over the show to get all seasons"""
@@ -229,7 +234,8 @@ class TestEpisode(unittest.TestCase):
         friends = _load_show("friends")
         ep = friends[3][7]
 
-        self.assertEqual(len(dir(ep)), 38)
+        self.assertTrue(len(dir(ep)) >= 1, "There was no info from calling dir")
+        self.assertTrue('season' in dir(ep), "The episode should contain the season attribute")
 
     def test_invalid_episode_index(self):
         """
