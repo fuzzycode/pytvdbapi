@@ -408,11 +408,11 @@ class Show(Mapping):
 
         #If requested, load the extra actors data
         if self.config.get('actors', False):
-            self._load_actors()
+            self.load_actors()
 
         #if requested, load the extra banners data
         if self.config.get('banners', False):
-            self._load_banners()
+            self.load_banners()
 
     def load_actors(self):
         """
@@ -653,9 +653,17 @@ class TVDB(object):
         .. versionadded:: 0.3
         .. deprecated:: 0.4 Use :func:`get_series` instead.
 
+        :param series_id: The Show Id to fetch
+        :param language: The language abbreviation to search for. E.g. "en"
+        :param cache: If False, the local cache will not be used and the
+                    resources will be reloaded from server.
+
+        :return: A :class:`Show()` instance
+        :raise: :class:`pytvdbapi.error.TVDBValueError`, :class:`pytvdbapi.error.TVDBIdError`
+
         """
 
-        logger.warning("Using deprecated function get. Use get_series instead")
+        logger.warning("Using deprecated function 'get'. Use 'get_series' instead")
         return self.get_series(series_id, language, cache)
 
     def get_series(self, series_id, language, cache=True):
@@ -746,6 +754,7 @@ class TVDB(object):
             >>> episode = db.get_episode(308834, "en")
             >>> episode.id
             308834
+
             >>> episode.EpisodeName
             'Crocodile'
 
