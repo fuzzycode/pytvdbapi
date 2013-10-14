@@ -428,20 +428,29 @@ class Show(Mapping):
 
         #If requested, load the extra actors data
         if self.config.get('actors', False):
-            self._load_actors()
+            self.load_actors()
 
         #if requested, load the extra banners data
         if self.config.get('banners', False):
-            self._load_banners()
+            self.load_banners()
 
-    def _load_actors(self):
+    def load_actors(self):
         """
-        Loads the extended Actor data from `thetvdb.com <http://thetvdb.com>`_
-        and adds this to the actor_objects attribute.
+        .. versionadded:: 0.4
 
-        .. Note: This function is not intended to be used by clients of the
-            API and should only be used internally by the Show class to
-            manage its structure.
+        Loads the extended actor information into a list of :class:`pytvdbapi.actor.Actor` objects.
+        They are available through the *actor_objects* attribute of the show.
+
+        If you have used the :code:`actors=True` keyword when creating the :class:`TVDB` instance
+        the actors will be loaded automatically and there is no need to use this function.
+
+        .. note::
+          The :class:`Show` instance always contain a list of actor names. If that is all you need, do not
+          use this function to avoid unnecessary network traffic.
+
+        .. seealso::
+          :class:`TVDB` for information on how to use the *actors* keyword argument.
+
         """
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.config['api_key'],
@@ -458,14 +467,19 @@ class Show(Mapping):
         self.actor_objects = [Actor(mirror, d, self)
                               for d in parse_xml(data, 'Actor')]
 
-    def _load_banners(self):
+    def load_banners(self):
         """
-        Loads the extended Banner data from `thetvdb.com <http://thetvdb.com>`_
-        and adds this to the banner_objects attribute.
+        .. versionadded:: 0.4
 
-        .. Note: This function is not intended to be used by clients of the
-            API and should only be used internally by the Show class to
-            manage its structure.
+        Loads the extended banner information into a list of :class:`pytvdbapi.banner.Banner` objects.
+        They are available through the *banner_objects* attribute of the show.
+
+        If you have used the :code:`banners=True` keyword when creating the :class:`TVDB` instance the
+        banners will be loaded automatically and there is no need to use this function.
+
+        .. seealso::
+          :class:`TVDB` for information on how to use the *banners* keyword argument.
+
         """
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.config['api_key'],
@@ -637,6 +651,24 @@ class TVDB(object):
     def get(self, series_id, language, cache=True):
         """
         .. versionadded:: 0.3
+        .. deprecated:: 0.4 Use :func:`get_series` instead.
+
+        :param series_id: The Show Id to fetch
+        :param language: The language abbreviation to search for. E.g. "en"
+        :param cache: If False, the local cache will not be used and the
+                    resources will be reloaded from server.
+
+        :return: A :class:`Show()` instance
+        :raise: :class:`pytvdbapi.error.TVDBValueError`, :class:`pytvdbapi.error.TVDBIdError`
+
+        """
+
+        logger.warning("Using deprecated function 'get'. Use 'get_series' instead")
+        return self.get_series(series_id, language, cache)
+
+    def get_series(self, series_id, language, cache=True):
+        """
+        .. versionadded:: 0.4
 
         :param series_id: The Show Id to fetch
         :param language: The language abbreviation to search for. E.g. "en"
@@ -656,10 +688,13 @@ class TVDB(object):
             >>> show = db.get( 79349, "en" )
             >>> show.id
             79349
+
             >>> show.SeriesName
             'Dexter'
+
         """
-        logger.debug("Getting show with id {0} with language {1}".format(series_id, language))
+
+        logger.debug("Getting series with id {0} with language {1}".format(series_id, language))
 
         if language != 'all' and language not in __LANGUAGES__:
             raise error.TVDBValueError("{0} is not a valid language".format(language))
@@ -692,14 +727,6 @@ class TVDB(object):
         else:
             raise error.TVDBIdError("No Show with id {0} found".format(series_id))
 
-    # pylint: disable=W0105
-    get_series = get
-    """
-    .. versionadded:: 0.4
-
-    An alias for the :func:`get` function to make it clearer what is being fetched.
-    """
-    # pylint: enable=W0105
 
     def get_episode(self, episode_id, language, cache=True):
         """
@@ -727,6 +754,7 @@ class TVDB(object):
             >>> episode = db.get_episode(308834, "en")
             >>> episode.id
             308834
+
             >>> episode.EpisodeName
             'Crocodile'
 

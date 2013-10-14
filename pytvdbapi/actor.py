@@ -30,6 +30,7 @@ class Actor(object):
     It Will contain all attributes as delivered from
     `thetvdb.com <http://thetvdb.com>`_, the attributes are described in
     more detail `here <http://www.thetvdb.com/wiki/index.php/API:actors.xml>`_.
+
     It will also contain the attribute *image_url* that will be the full URL
     to the image of the actor.
 
@@ -37,13 +38,15 @@ class Actor(object):
 
         >>> from pytvdbapi import api
         >>> db = api.TVDB("B43FF87DE395DF56", actors=True)
-        >>> show = db.get( 79349, "en" )  # Dexter
+        >>> show = db.get_series( 79349, "en" )  # Dexter
         >>> show.update()
         >>> actor = show.actor_objects[0]
         >>> actor
         <Actor - Michael C. Hall>
+
         >>> actor.Role
         'Dexter Morgan'
+
         >>> actor.image_url
         'http://thetvdb.com/banners/actors/70947.jpg'
     """
