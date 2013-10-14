@@ -3,8 +3,10 @@ CHANGELOG
 
 2013-04-28, 0.4.0
 -----------------
-  * Added the get_episode() function to access an episode directly using the episode id
-  * Fixed broken unit tests
+  * Added the get_episode() function to access an episode directly using the episode id.
+  * Added the option *ignore_case* to be able to access the attributes in a case insensitive manner.
+  * Added the *load_actors* and *load_banners* functions to load actors and banners on individual shows
+  * Fixed broken unit tests and improved test stability
   * Bug fixes and code clean-up
 
 2012-06-29, 0.3.0
