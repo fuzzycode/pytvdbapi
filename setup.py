@@ -32,6 +32,7 @@ from pytvdbapi.__init__ import __NAME__, version
 if sys.version_info < (2, 6):
     raise SystemExit("Your Python is too old. Only Python >= 2.6 is supported.")
 
+
 def get_description():
     try:
         return open("README.rst").read() + '\n' + open("CHANGES.txt").read()
@@ -40,21 +41,21 @@ def get_description():
 
 setup(
     name=__NAME__,
-    version = version(),
+    version=version(),
     description='A clean, resource friendly and easy to use API for thetvdb.com',
-    long_description = get_description(),
+    long_description=get_description(),
     author="Bjoern Larsson",
     author_email='develop@bjornlarsson.net',
     url="https://github.com/fuzzycode/pytvdbapi",
     keywords="TVDB thetvdb.com API tv episodes",
-    license = "LGPLv3",
-    packages = find_packages(),
+    license="LGPLv3",
+    packages=find_packages(),
     platforms=["any"],
-    test_suite = 'pytvdbapi.tests',
-    package_data = {'' : ['data/*.xml', 'data/*.cfg'] },
-    exclude_package_data = { '': ['./MANIFEST.in'] },
-    install_requires = ['httplib2'],
-    classifiers = [f.strip() for f in """
+    test_suite='pytvdbapi.tests',
+    package_data={'': ['data/*.xml', 'data/*.cfg']},
+    exclude_package_data={'': ['./MANIFEST.in']},
+    install_requires=['httplib2'],
+    classifiers=[f.strip() for f in """
     Development Status :: 3 - Alpha
     Intended Audience :: Developers
     Operating System :: OS Independent
