@@ -169,11 +169,11 @@ class TestShow(unittest.TestCase):
         _after = len(dir(friends))
 
         self.assertTrue(_after >= _before, "Calling update should increase the number of attributes")
-        self.assertTrue('actor_objects' in dir(friends), "Show should have a actor objects attribute")
+        self.assertTrue('actor_objects' in dir(friends), "Show should have an actor objects attribute")
         self.assertTrue('banner_objects' in dir(friends), "Show should have a banner objects attribute")
         self.assertTrue('lang' in dir(friends), "Show should have a lang attribute")
         self.assertTrue('seasons' in dir(friends), "Show should have a seasons attribute")
-        self.assertTrue('api' in dir(friends), "Show should have a api attribute")
+        self.assertTrue('api' in dir(friends), "Show should have an api attribute")
 
     def test_iterate_show(self):
         """It should be possible to iterate over the show to get all seasons"""
@@ -226,6 +226,32 @@ class TestShow(unittest.TestCase):
             error.TVDBAttributeError, friends.__getattr__, "baar")
         self.assertRaises(
             error.TVDBAttributeError, friends.__getattr__, "laba_laba")
+
+    def test_get_actors_function(self):
+        """
+        It should be possible to load the actor object on the show instance.
+        """
+        friends = _load_show("friends")
+        self.assertEquals(len(friends.actor_objects), 0,
+                          "There should be no actors before calling the function.")
+
+        friends.load_actors()
+
+        self.assertTrue(len(friends.actor_objects) > 0,
+                        "There should be actors available after loading them.")
+
+    def test_get_banners_function(self):
+        """
+        It should be possible to load the banner objects on the show instance.
+        """
+        friends = _load_show("friends")
+        self.assertEquals(len(friends.banner_objects), 0,
+                          "There should be no banners before calling the function.")
+
+        friends.load_banners()
+
+        self.assertTrue(len(friends.banner_objects) > 0,
+                        "There should be banners available after loading them.")
 
 
 class TestEpisode(unittest.TestCase):
@@ -316,8 +342,6 @@ class TestSearch(unittest.TestCase):
 
         self.assertEqual(len(search), 1)
         self.assertEqual(search.search, "dexter")
-
-        _ = search[0]
 
     def test_case_insensitive(self):
         """The test should be case insensitive"""

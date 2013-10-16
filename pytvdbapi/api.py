@@ -727,7 +727,6 @@ class TVDB(object):
         else:
             raise error.TVDBIdError("No Show with id {0} found".format(series_id))
 
-
     def get_episode(self, episode_id, language, cache=True):
         """
         .. versionadded:: 0.4
