@@ -139,7 +139,7 @@ class Episode(object):
         ['Combined_episodenumber', 'Combined_season', 'DVD_chapter',
         'DVD_discid', 'DVD_episodenumber', 'DVD_season', 'Director',
         'EpImgFlag', 'EpisodeName', 'EpisodeNumber', 'FirstAired',
-        'GuestStars', 'IMDB_ID', '__Language', 'Overview', 'ProductionCode',
+        'GuestStars', 'IMDB_ID', 'Language', 'Overview', 'ProductionCode',
         'Rating', 'RatingCount', 'SeasonNumber', 'Writer', 'absolute_number',
         'filename', 'id', 'lastupdated', 'season', 'seasonid', 'seriesid',
         ...]
@@ -312,7 +312,7 @@ class Show(Mapping):
         >>> dir(show) #doctest: +NORMALIZE_WHITESPACE, +ELLIPSIS
         ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'AliasNames',
          'ContentRating', 'FirstAired', 'Genre', 'IMDB_ID',
-        '__Language', 'Network', 'NetworkID', 'Overview', 'Rating',
+        'Language', 'Network', 'NetworkID', 'Overview', 'Rating',
          'RatingCount', 'Runtime', 'SeriesID', 'SeriesName',
         'Status', 'actor_objects', 'added', 'addedBy', 'api',
          'banner', 'banner_objects', 'fanart', 'id', 'lang',
