@@ -75,7 +75,7 @@ class TestApi(basetest.pytvdbapiTest):
         api = TVDB("B43FF87DE395DF56", force_lang=True)
         search = api.search("dexter", "it")
 
-        self.assertEqual(len(search), 2)
+        self.assertTrue(len(search) > 1)
 
     def test_ignore_case(self):
         """
