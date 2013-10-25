@@ -544,11 +544,11 @@ class TVDB(object):
     :param kwargs:
 
     This is the main entry point for the API. The functionality of the API is
-    controlled by configuring the key word arguments. The supported key word
+    controlled by configuring the keyword arguments. The supported keyword
     arguments are:
 
-    * *force_lang* (default=False). Deprecated in version 0.4. Using it will have no affect but will issue a
-       warning in the log file.
+    * *force_lang* (default=False). Deprecated in version 0.4. Using it will
+      have no affect but will issue a warning in the log file.
 
     * *cache_dir* (default=/<system tmp dir>/pytvdbapi/). Specifies the
       directory to use for caching the server requests.
