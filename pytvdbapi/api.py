@@ -76,31 +76,31 @@ __all__ = ['Episode', 'Season', 'Show', 'Search', 'TVDB']
 # Module logger object
 logger = logging.getLogger(__name__)
 
-__Language = namedtuple("__Language", ['abbrev', 'name', 'id'])
+Language = namedtuple("Language", ['abbrev', 'name', 'id'])
 
-__LANGUAGES__ = {"da": __Language(abbrev="da", name="Dansk", id=10),
-                 "fi": __Language(abbrev="fi", name="Suomeksi", id=11),
-                 "nl": __Language(abbrev="nl", name="Nederlands", id=13),
-                 "de": __Language(abbrev="de", name="Deutsch", id=14),
-                 "it": __Language(abbrev="it", name="Italiano", id=15),
-                 "es": __Language(abbrev="es", name="Español", id=16),
-                 "fr": __Language(abbrev="fr", name="Français", id=17),
-                 "pl": __Language(abbrev="pl", name="Polski", id=18),
-                 "hu": __Language(abbrev="hu", name="Magyar", id=19),
-                 "el": __Language(abbrev="el", name="Ελληνικά", id=20),
-                 "tr": __Language(abbrev="tr", name="Türkçe", id=21),
-                 "ru": __Language(abbrev="ru", name="русский язык", id=22),
-                 "he": __Language(abbrev="he", name=" עברית", id=24),
-                 "ja": __Language(abbrev="ja", name="日本語", id=25),
-                 "pt": __Language(abbrev="pt", name="Português", id=26),
-                 "zh": __Language(abbrev="zh", name="中文", id=27),
-                 "cs": __Language(abbrev="cs", name="čeština", id=28),
-                 "sl": __Language(abbrev="sl", name="Slovenski", id=30),
-                 "hr": __Language(abbrev="hr", name="Hrvatski", id=31),
-                 "ko": __Language(abbrev="ko", name="한국어", id=32),
-                 "en": __Language(abbrev="en", name="English", id=7),
-                 "sv": __Language(abbrev="sv", name="Svenska", id=8),
-                 "no": __Language(abbrev="no", name="Norsk", id=9)}
+__LANGUAGES__ = {"da": Language(abbrev="da", name="Dansk", id=10),
+                 "fi": Language(abbrev="fi", name="Suomeksi", id=11),
+                 "nl": Language(abbrev="nl", name="Nederlands", id=13),
+                 "de": Language(abbrev="de", name="Deutsch", id=14),
+                 "it": Language(abbrev="it", name="Italiano", id=15),
+                 "es": Language(abbrev="es", name="Español", id=16),
+                 "fr": Language(abbrev="fr", name="Français", id=17),
+                 "pl": Language(abbrev="pl", name="Polski", id=18),
+                 "hu": Language(abbrev="hu", name="Magyar", id=19),
+                 "el": Language(abbrev="el", name="Ελληνικά", id=20),
+                 "tr": Language(abbrev="tr", name="Türkçe", id=21),
+                 "ru": Language(abbrev="ru", name="русский язык", id=22),
+                 "he": Language(abbrev="he", name=" עברית", id=24),
+                 "ja": Language(abbrev="ja", name="日本語", id=25),
+                 "pt": Language(abbrev="pt", name="Português", id=26),
+                 "zh": Language(abbrev="zh", name="中文", id=27),
+                 "cs": Language(abbrev="cs", name="čeština", id=28),
+                 "sl": Language(abbrev="sl", name="Slovenski", id=30),
+                 "hr": Language(abbrev="hr", name="Hrvatski", id=31),
+                 "ko": Language(abbrev="ko", name="한국어", id=32),
+                 "en": Language(abbrev="en", name="English", id=7),
+                 "sv": Language(abbrev="sv", name="Svenska", id=8),
+                 "no": Language(abbrev="no", name="Norsk", id=9)}
 
 
 class Episode(object):
@@ -547,7 +547,8 @@ class TVDB(object):
     controlled by configuring the key word arguments. The supported key word
     arguments are:
 
-    * *force_lang* (default=False).
+    * *force_lang* (default=False). Deprecated in version 0.4. Using it will have no affect but will issue a
+       warning in the log file.
 
     * *cache_dir* (default=/<system tmp dir>/pytvdbapi/). Specifies the
       directory to use for caching the server requests.
@@ -569,12 +570,11 @@ class TVDB(object):
 
     .. versionadded:: 0.4
 
-    * *ignore_case* (default=False) If set to True, all attributes on the :class:`Show` and
-      :class:`Episode` instances will be accessible in a case insensitive manner. If set to
-      False, the default, all attributes will be case sensitive and retain the same casing
+    * *ignore_case* (default=False) If set to True, all attributes on the
+      :class:`Show` and :class:`Episode` instances will be accessible in a
+      case insensitive manner. If set to False, the default, all
+      attributes will be case sensitive and retain the same casing
       as provided by `thetvdb.com <http://thetvdb.com>`_.
-
-
     """
 
     def __init__(self, api_key, **kwargs):
@@ -585,6 +585,9 @@ class TVDB(object):
 
         #Store the path to where we are
         self.path = os.path.abspath(os.path.dirname(__file__))
+
+        if 'force_lang' in kwargs:
+            logger.warning("'force_lang' keyword argument is deprecated as of version 0.4")
 
         #extract all argument and store for later use
         self.config['api_key'] = api_key
