@@ -40,7 +40,7 @@ import logging
 import tempfile
 import sys
 import os
-from collections import Mapping, namedtuple
+from collections import Mapping
 
 # pylint: disable=E0611, F0401, W0622
 from pytvdbapi.actor import Actor
@@ -71,13 +71,30 @@ __actors__ = "{mirror}/api/{api_key}/series/{seriesid}/actors.xml"
 __banners__ = "{mirror}/api/{api_key}/series/{seriesid}/banners.xml"
 
 
-__all__ = ['Episode', 'Season', 'Show', 'Search', 'TVDB']
+__all__ = ['Language', 'Episode', 'Season', 'Show', 'Search', 'TVDB']
 
 # Module logger object
 logger = logging.getLogger(__name__)
 
-Language = namedtuple("Language", ['abbrev', 'name', 'id'])
 
+class Language(object):
+    """
+    Representing a language that is supported by the API.
+    """
+
+    def __init__(self, abbrev, name, id):
+        self.abbreviation = abbrev
+        """A two letter abbreviation representing the language, e.g. *en*. This
+        is what should be passed when specifying a language to the API.
+        """
+
+        self.name = name
+        """The localised name of the language."""
+
+        self._id = id
+
+
+# The list of API supported languages
 __LANGUAGES__ = {"da": Language(abbrev="da", name="Dansk", id=10),
                  "fi": Language(abbrev="fi", name="Suomeksi", id=11),
                  "nl": Language(abbrev="nl", name="Nederlands", id=13),
