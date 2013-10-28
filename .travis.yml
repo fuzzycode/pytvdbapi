@@ -25,7 +25,7 @@ script:
   - python -m doctest -v README.rst
 
   # Run all unittests and doctests
-  - coverage run setup.py test
+  - coverage run --source=pytvdbapi setup.py test
   - coverage report -m
 
   # Test that the documentation is working
