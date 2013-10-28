@@ -70,7 +70,7 @@ indexing::
     <Season 001>
 
     >>> show[1][4]
-    <Episode S001E004 - Return of the Shirt>
+    <Episode S001E004>
 
 
 To list all episodes of a show::
@@ -79,23 +79,23 @@ To list all episodes of a show::
     ...     for episode in season:
     ...         print(episode) #doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
     ...
-    <Episode S000E001 - Robin Sparkles Music Video - Let's Go to the Mall>
-    <Episode S000E002 - Robin Sparkles Music Video - Sandcastles In the Sand>
-    <Episode S000E003 - Marshall's Music Video - You Just Got Slapped>
-    <Episode S000E004 - Lily and Marshall's Honeymoon Videos>
-    <Episode S000E005 - Barney Stinson's Video Resume>
-    <Episode S000E006 - Nothing Suits Me Like A Suit>
-    <Episode S000E007 - A Night With Your Mother Panel Discussion>
-    <Episode S000E008 - The Beaver Song>
-    <Episode S000E009 - Best Night Ever>
-    <Episode S000E010 - Best Night Ever: Behind the Scenes>
-    <Episode S001E001 - Pilot>
-    <Episode S001E002 - Purple Giraffe>
+    <Episode S000E001>
+    <Episode S000E002>
+    <Episode S000E003>
+    <Episode S000E004>
+    <Episode S000E005>
+    <Episode S000E006>
+    <Episode S000E007>
+    <Episode S000E008>
+    <Episode S000E009>
+    <Episode S000E010>
+    <Episode S001E001>
+    <Episode S001E002>
     ...
     ...
-    <Episode S007E010 - Tick Tick Tick...>
-    <Episode S007E011 - The Rebound Girl>
-    <Episode S007E012 - Symphony of Illumination>
+    <Episode S007E010>
+    <Episode S007E011>
+    <Episode S007E012>
     ...
 
 Testing

@@ -210,9 +210,8 @@ class Episode(object):
 
     def __repr__(self):
         try:
-            return "<Episode S{0:03d}E{1:03d} - {2}>".format(int(self.SeasonNumber),
-                                                             int(self.EpisodeNumber),
-                                                             self.EpisodeName)
+            return "<Episode S{0:03d}E{1:03d}>".format(int(self.SeasonNumber),
+                                                       int(self.EpisodeNumber))
         except error.TVDBAttributeError:
             return "<Episode>"
 
@@ -238,22 +237,23 @@ class Season(Mapping):
         >>> len(season)
         12
         >>> season[3]
-        <Episode S001E003 - Popping Cherry>
+        <Episode S001E003>
+
         >>> for episode in season:
         ...     print(episode)
         ...
-        <Episode S001E001 - Dexter>
-        <Episode S001E002 - Crocodile>
-        <Episode S001E003 - Popping Cherry>
-        <Episode S001E004 - Let's Give the Boy a Hand>
-        <Episode S001E005 - Love American Style>
-        <Episode S001E006 - Return to Sender>
-        <Episode S001E007 - Circle of Friends>
-        <Episode S001E008 - Shrink Wrap>
-        <Episode S001E009 - Father Knows Best>
-        <Episode S001E010 - Seeing Red>
-        <Episode S001E011 - Truth Be Told>
-        <Episode S001E012 - Born Free>
+        <Episode S001E001>
+        <Episode S001E002>
+        <Episode S001E003>
+        <Episode S001E004>
+        <Episode S001E005>
+        <Episode S001E006>
+        <Episode S001E007>
+        <Episode S001E008>
+        <Episode S001E009>
+        <Episode S001E010>
+        <Episode S001E011>
+        <Episode S001E012>
     """
 
     def __init__(self, season_number, show):
@@ -387,7 +387,7 @@ class Show(Mapping):
             raise error.TVDBAttributeError("Show has no attribute named {0}".format(item))
 
     def __repr__(self):
-        return "<Show - {0}>".format(self.SeriesName)
+        return "<Show>".format(self.SeriesName)
 
     def __dir__(self):
         attributes = [d for d in list(self.__dict__.keys()) if d not in ('data', 'config', 'ignore_case')]
@@ -553,7 +553,7 @@ class Search(object):
         >>> for s in search:
         ...     print(s)
         ...
-        <Show - Dexter>
+        <Show>
     """
 
     def __init__(self, result, search, language):
@@ -669,8 +669,14 @@ class TVDB(object):
             >>> for s in search:
             ...     print(s)
             ...
-            <Show - Dexter>
+            <Show>
         """
+        if sys.version < '3':
+            try:
+                show = show.decode('utf-8')
+            except UnicodeEncodeError:
+                pass
+
         logger.debug("Searching for {0} using language {1}".format(show, language).encode('utf-8'))
 
         if language != 'all' and language not in __LANGUAGES__:
