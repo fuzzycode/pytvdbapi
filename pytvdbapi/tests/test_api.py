@@ -344,7 +344,7 @@ class TestSearch(unittest.TestCase):
         self.assertEqual(search.search, "dexter")
 
     def test_case_insensitive(self):
-        """The test should be case insensitive"""
+        """The search should be case insensitive"""
         api = TVDB("B43FF87DE395DF56")
         search = api.search("DeXtEr", "en")
 
