@@ -94,7 +94,7 @@ class Language(object):
         self._id = id
 
     def __repr__(self):
-        return "<{0} - {1}".format(self.name, self.abbreviation)
+        return "<{0} - {1}>".format('Language', self.abbreviation)
 
 
 # The list of API supported languages
@@ -671,14 +671,14 @@ class TVDB(object):
             ...
             <Show - Dexter>
         """
-        logger.debug("Searching for {0} using language {1}".format(show, language))
+        logger.debug("Searching for {0} using language {1}".format(show, language).encode('utf-8'))
 
         if language != 'all' and language not in __LANGUAGES__:
             raise error.TVDBValueError("{0} is not a valid language".format(language))
 
         if (show, language) not in self.search_buffer or not cache:
             if sys.version_info < (3, 0):
-                show = str(show.encode('utf-8'))
+                show = show.encode('utf-8')
 
             context = {'series': quote(show), "language": language}
             data = generate_tree(self.loader.load(__search__.format(**context), cache))
@@ -744,6 +744,8 @@ class TVDB(object):
                    'api_key': self.config['api_key']}
 
         url = __series__.format(**context)
+        logger.debug('Getting series from {0}'.format(url))
+
         try:
             data = self.loader.load(url, cache)
         except error.TVDBNotFoundError:
@@ -809,6 +811,7 @@ class TVDB(object):
                    'api_key': self.config['api_key']}
 
         url = __episode__.format(**context)
+        logger.debug('Getting episode from {0}'.format(url))
 
         try:
             data = self.loader.load(url, cache)
