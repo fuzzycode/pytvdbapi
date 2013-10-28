@@ -55,7 +55,7 @@ except ImportError:
     # pylint: enable=E0611, F0401
 
 from pytvdbapi import error
-from pytvdbapi.__init__ import __NAME__ as name
+from pytvdbapi.__init__ import __NAME__ as project_name
 from pytvdbapi.loader import Loader
 from pytvdbapi.mirror import MirrorList, TypeMask
 from pytvdbapi.utils import merge
@@ -71,7 +71,7 @@ __actors__ = "{mirror}/api/{api_key}/series/{seriesid}/actors.xml"
 __banners__ = "{mirror}/api/{api_key}/series/{seriesid}/banners.xml"
 
 
-__all__ = ['Language', 'Episode', 'Season', 'Show', 'Search', 'TVDB']
+__all__ = ['languages', 'Language', 'TVDB', 'Search', 'Show', 'Season', 'Episode']
 
 # Module logger object
 logger = logging.getLogger(__name__)
@@ -83,15 +83,18 @@ class Language(object):
     """
 
     def __init__(self, abbrev, name, id):
+        # pylint: disable=W0105
         self.abbreviation = abbrev
         """A two letter abbreviation representing the language, e.g. *en*. This
-        is what should be passed when specifying a language to the API.
-        """
+        is what should be passed when specifying a language to the API."""
 
         self.name = name
         """The localised name of the language."""
 
         self._id = id
+
+    def __repr__(self):
+        return "<{0} - {1}".format(self.name, self.abbreviation)
 
 
 # The list of API supported languages
@@ -118,6 +121,15 @@ __LANGUAGES__ = {"da": Language(abbrev="da", name="Dansk", id=10),
                  "en": Language(abbrev="en", name="English", id=7),
                  "sv": Language(abbrev="sv", name="Svenska", id=8),
                  "no": Language(abbrev="no", name="Norsk", id=9)}
+
+
+def languages():
+    """
+    :return: A list of :class:`Language` objects
+
+    Returns the list of all API supported languages.
+    """
+    return [lang for lang in __LANGUAGES__.values()]
 
 
 class Episode(object):
@@ -213,8 +225,8 @@ class Season(Mapping):
     Holds all the episodes that belong to a specific season. It is possible
     to iterate over the Season to obtain the individual :class:`Episode`
     instances. It is also possible to obtain an individual episode using the
-    [ ] syntax. It will raise :class:`pytvdbapi.error.TVDBIndexError` if trying to index
-    an invalid episode index.
+    [ ] syntax. It will raise :class:`pytvdbapi.error.TVDBIndexError` if trying
+    to index an invalid episode index.
 
     Example::
 
@@ -459,14 +471,17 @@ class Show(Mapping):
         They are available through the *actor_objects* attribute of the show.
 
         If you have used the :code:`actors=True` keyword when creating the :class:`TVDB` instance
-        the actors will be loaded automatically and there is no need to use this function.
+        the actors will be loaded automatically and there is no need to use this
+        function.
 
         .. note::
-          The :class:`Show` instance always contain a list of actor names. If that is all you need, do not
-          use this function to avoid unnecessary network traffic.
+          The :class:`Show` instance always contain a list of actor names. If
+          that is all you need, do not use this function to avoid unnecessary
+          network traffic.
 
         .. seealso::
-          :class:`TVDB` for information on how to use the *actors* keyword argument.
+          :class:`TVDB` for information on how to use the *actors* keyword
+          argument.
 
         """
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
@@ -492,10 +507,12 @@ class Show(Mapping):
         They are available through the *banner_objects* attribute of the show.
 
         If you have used the :code:`banners=True` keyword when creating the :class:`TVDB` instance the
-        banners will be loaded automatically and there is no need to use this function.
+        banners will be loaded automatically and there is no need to use this
+        function.
 
         .. seealso::
-          :class:`TVDB` for information on how to use the *banners* keyword argument.
+          :class:`TVDB` for information on how to use the *banners* keyword
+          argument.
 
         """
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
@@ -564,15 +581,12 @@ class TVDB(object):
     controlled by configuring the keyword arguments. The supported keyword
     arguments are:
 
-    * *force_lang* (default=False). Deprecated in version 0.4. Using it will
-      have no affect but will issue a warning in the log file.
-
-    * *cache_dir* (default=/<system tmp dir>/pytvdbapi/). Specifies the
+    * **cache_dir** (default=/<system tmp dir>/pytvdbapi/). Specifies the
       directory to use for caching the server requests.
 
     .. versionadded:: 0.3
 
-    * *actors* (default=False) The extended actor information is stored in a
+    * **actors** (default=False) The extended actor information is stored in a
       separate XML file and would require an additional request to the server
       to obtain. To limit the resource usage, the actor information will only
       be loaded when explicitly requested.
@@ -580,18 +594,24 @@ class TVDB(object):
       .. note:: The :class:`Show()` object always contain a list of actor
         names.
 
-    * *banners* (default=False) The extended banner information is stored in a
+    * **banners** (default=False) The extended banner information is stored in a
       separate XML file and would require an additional request to the server
       to obtain. To limit the resource usage, the banner information will only
       be loaded when explicitly requested.
 
     .. versionadded:: 0.4
 
-    * *ignore_case* (default=False) If set to True, all attributes on the
+    * **ignore_case** (default=False) If set to True, all attributes on the
       :class:`Show` and :class:`Episode` instances will be accessible in a
       case insensitive manner. If set to False, the default, all
       attributes will be case sensitive and retain the same casing
       as provided by `thetvdb.com <http://thetvdb.com>`_.
+
+    .. deprecated:: 0.4
+
+    * **force_lang** (default=False). It is no longer possible to reload the
+      language file. Using it will have no affect but will issue a warning in
+      the log file.
     """
 
     def __init__(self, api_key, **kwargs):
@@ -608,7 +628,7 @@ class TVDB(object):
 
         #extract all argument and store for later use
         self.config['api_key'] = api_key
-        self.config['cache_dir'] = kwargs.get("cache_dir", os.path.join(tempfile.gettempdir(), name))
+        self.config['cache_dir'] = kwargs.get("cache_dir", os.path.join(tempfile.gettempdir(), project_name))
         self.config['actors'] = kwargs.get('actors', False)
         self.config['banners'] = kwargs.get('banners', False)
         self.config['ignore_case'] = kwargs.get('ignore_case', False)

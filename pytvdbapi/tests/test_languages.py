@@ -17,9 +17,17 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import unicode_literals
+
 import unittest
+
 from pytvdbapi import api
-from types import NoneType
+
+try:
+    from types import NoneType
+except ImportError:
+    # Python >= 3
+    NoneType = type(None)
 
 
 class TestLanguageClass(unittest.TestCase):
@@ -54,3 +62,21 @@ class TestLanguageClass(unittest.TestCase):
 
 class TestLanguage(unittest.TestCase):
     """Test the language functionality of tvdbapi"""
+
+    def test_language_list(self):
+        """The list of languages should be correct"""
+        __languages__ = ["da", "fi", "nl", "de", "it", "es", "fr", "pl",
+                         "hu", "el", "tr", "ru", "he", "ja", "pt", "zh",
+                         "cs", "sl", "hr", "ko", "en", "sv", "no"]
+
+        ll = api.languages()
+        ld = dict((l.abbreviation, l) for l in ll)
+
+        for lang in __languages__:
+            self.assertTrue(lang in ld, "{0} should be supported".format(lang))
+
+    def test_language_function(self):
+        """It should be possible to obtain the list of supported languages"""
+
+        ll = api.languages()
+        self.assertTrue(len(ll) > 0, "Language list should not be empty")
