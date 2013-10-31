@@ -59,7 +59,7 @@ def parse_xml(etree, element):
     Parses the element tree for elements of type *element* and converts the
     data into a dictionary.
 
-    It will attempt some attempts to convert the data into native Python
+    It will attempt to convert the data into native Python
     types. The following conversions will be applied.
 
       * yyyy-mm-dd will be converted into a datetime.date object.
@@ -97,5 +97,5 @@ def parse_xml(etree, element):
 
             data[tag] = value
         _list.append(data)
-    logger.debug("Found {0} element".format(len(_list)))
+    logger.debug("Found {0} element(s)".format(len(_list)))
     return _list
