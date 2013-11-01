@@ -162,6 +162,35 @@ class TestSeason(unittest.TestCase):
 
         self.assertEqual(len(season1), 24)
 
+    def test_index(self):
+        """It should be possible to use the index method on a season"""
+        self.friends.update()
+        season = self.friends[1]
+
+        for i, ep in enumerate(season):
+            self.assertEquals(season.index(ep), i)
+
+    def test_count(self):
+        """It should be possible to use the count method on a season."""
+        self.friends.update()
+        season = self.friends[1]
+
+        for ep in season:
+            self.assertEquals(season.count(ep), 1)
+
+    def test_reversed_order(self):
+        """It should be possible to iterate the episodes in reversed order"""
+
+        self.friends.update()
+
+        season = self.friends[1]
+        reverse = reversed(season)
+        prev = len(season) + 1
+
+        for ep in reverse:
+            self.assertTrue(prev > ep.EpisodeNumber)
+            prev = ep.EpisodeNumber
+
 
 class TestShow(unittest.TestCase):
     def setUp(self):
