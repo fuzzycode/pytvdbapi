@@ -155,6 +155,13 @@ class TestSeason(unittest.TestCase):
             self.assertEqual(counter + 1, ep.EpisodeNumber)
             counter += 1
 
+    def test_episodes(self):
+        """The episodes should function properly"""
+
+        season1 = self.friends[1]
+
+        self.assertEqual(len(season1), 24)
+
 
 class TestShow(unittest.TestCase):
     def setUp(self):
@@ -300,18 +307,20 @@ class TestShow(unittest.TestCase):
 
 
 class TestEpisode(unittest.TestCase):
+    def setUp(self):
+        self.friends = _load_show('friends')
+
     def test_episode_dir(self):
         """It should be possible to call dir() on a episode instance"""
-        friends = _load_show("friends")
-        ep = friends[3][7]
+
+        ep = self.friends[3][7]
 
         self.assertTrue(len(dir(ep)) >= 1, "There was no info from calling dir")
         self.assertTrue('season' in dir(ep), "The episode should contain the season attribute")
 
     def test_episode_attributes(self):
         """Episode should have correct attributes with correct values"""
-        friends = _load_show("friends")
-        ep = friends[1][1]
+        ep = self.friends[1][1]
 
         self.assertEqual(
             ep.EpisodeName, "The One Where Monica Gets A Roommate")
@@ -323,20 +332,22 @@ class TestEpisode(unittest.TestCase):
         """Episode should raise TVDBAttributeError when accessing an invalid
         attribute
         """
-        friends = _load_show("friends")
-        ep = friends[1][1]
+        ep = self.friends[1][1]
 
         self.assertRaises(
             error.TVDBAttributeError, ep.__getattr__, "laba_laba")
         self.assertRaises(error.TVDBAttributeError, ep.__getattr__, "foo")
         self.assertRaises(error.TVDBAttributeError, ep.__getattr__, "baar")
 
-    def test_episodes(self):
-        """The episodes should function properly"""
-        friends = _load_show("friends")
-        season1 = friends[1]
+    def test_attribute_access(self):
+        """It should be possible to access attributes using standard python methods"""
 
-        self.assertEqual(len(season1), 24)
+        ep = self.friends[1][1]
+
+        self.assertEquals(True, hasattr(ep, 'Rating'))
+        self.assertEquals(False, hasattr(ep, 'foo'))
+
+        self.assertEquals(getattr(ep, 'foo', 'baar'), 'baar')
 
 
 class TestSearch(unittest.TestCase):
@@ -421,20 +432,9 @@ class TestSearch(unittest.TestCase):
         self.assertRaises(error.TVDBValueError, api.search, "dexter", "lu")
 
 
-class TestGet(unittest.TestCase):
+class TestGetSeries(unittest.TestCase):
     def test_get(self):
         """Provided the show id, you should be able to get the show object"""
-        api = TVDB("B43FF87DE395DF56")
-        show = api.get(79349, "en")
-
-        self.assertEqual(show.SeriesName, "Dexter")
-        self.assertEqual(show.id, 79349)
-
-    def test_get_series(self):
-        """
-        It should be possible to use the get_series alias to get a show
-        given the right show id.
-        """
         api = TVDB("B43FF87DE395DF56")
         show = api.get_series(79349, "en")
 
@@ -448,16 +448,16 @@ class TestGet(unittest.TestCase):
         """
 
         api = TVDB("B43FF87DE395DF56")
-        self.assertRaises(error.TVDBValueError, api.get, 79349, "foo")
-        self.assertRaises(error.TVDBValueError, api.get, 79349, "")
+        self.assertRaises(error.TVDBValueError, api.get_series, 79349, "foo")
+        self.assertRaises(error.TVDBValueError, api.get_series, 79349, "")
 
     def test_invalid_id(self):
         """If the show can not be found, a TVDBValueError should be raised"""
         api = TVDB("B43FF87DE395DF56")
 
-        self.assertRaises(error.TVDBIdError, api.get, 99999999999999, "en")
-        self.assertRaises(error.TVDBIdError, api.get, "foo", "en")
-        self.assertRaises(error.TVDBIdError, api.get, "", "en")
+        self.assertRaises(error.TVDBIdError, api.get_series, 99999999999999, "en")
+        self.assertRaises(error.TVDBIdError, api.get_series, "foo", "en")
+        self.assertRaises(error.TVDBIdError, api.get_series, "", "en")
 
 
 class TestGetEpisode(unittest.TestCase):
