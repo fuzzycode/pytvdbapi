@@ -52,10 +52,11 @@ try:
     from urllib import quote
 except ImportError:
     from urllib.parse import quote
-    # pylint: enable=E0611, F0401
+
+# pylint: enable=E0611, F0401
 
 from pytvdbapi import error
-from pytvdbapi.__init__ import __NAME__ as project_name
+from pytvdbapi.__init__ import __NAME__
 from pytvdbapi.loader import Loader
 from pytvdbapi.mirror import MirrorList, TypeMask
 from pytvdbapi.utils import merge
@@ -636,7 +637,7 @@ class TVDB(object):
 
         #extract all argument and store for later use
         self.config['api_key'] = api_key
-        self.config['cache_dir'] = kwargs.get("cache_dir", os.path.join(tempfile.gettempdir(), project_name))
+        self.config['cache_dir'] = kwargs.get("cache_dir", os.path.join(tempfile.gettempdir(), __NAME__))
         self.config['actors'] = kwargs.get('actors', False)
         self.config['banners'] = kwargs.get('banners', False)
         self.config['ignore_case'] = kwargs.get('ignore_case', False)
