@@ -40,7 +40,7 @@ import logging
 import tempfile
 import sys
 import os
-from collections import Mapping
+from collections import Sequence
 
 # pylint: disable=E0611, F0401, W0622
 from pytvdbapi.actor import Actor
@@ -216,7 +216,7 @@ class Episode(object):
             return "<Episode>"
 
 
-class Season(Mapping):
+class Season(Sequence):
     # pylint: disable=R0924
     """
     :raise: :class:`pytvdbapi.error.TVDBIndexError`
@@ -261,6 +261,9 @@ class Season(Mapping):
         self.episodes = dict()
 
     def __getitem__(self, item):
+        if not isinstance(item, int):
+            raise error.TVDBValueError("Index should be an integer")
+
         try:
             return self.episodes[item]
         except KeyError:
@@ -290,7 +293,7 @@ class Season(Mapping):
         self.episodes[int(episode.EpisodeNumber)] = episode
 
 
-class Show(Mapping):
+class Show(Sequence):
     # pylint: disable=R0924, R0902
     """
     :raise: :class:`pytvdbapi.error.TVDBAttributeError`, :class:`pytvdbapi.error.TVDBIndexError`
@@ -406,6 +409,9 @@ class Show(Mapping):
         return len(self.seasons)
 
     def __getitem__(self, item):
+        if not isinstance(item, int):
+            raise error.TVDBValueError("Index should be an integer")
+
         if not item in self.seasons:
             self._populate_data()
 
@@ -423,7 +429,7 @@ class Show(Mapping):
     def _populate_data(self):
         """
         Populates the Show object with data. This will hit the network to
-        downlaod the XML data from `thetvdb.com <http://thetvdb.com>`_.
+        download the XML data from `thetvdb.com <http://thetvdb.com>`_.
         :class:`Season` and `:class:Episode` objects will be created and
         added as needed.
 
@@ -531,7 +537,6 @@ class Show(Mapping):
 class Search(object):
     # pylint: disable=R0924
     """
-
     :raise: :class:`pytvdbapi.error.TVDBIndexError`
 
     A search result returned from calling :func:`TVDB.search()`. It supports
@@ -563,6 +568,9 @@ class Search(object):
         return len(self.result)
 
     def __getitem__(self, item):
+        if not isinstance(item, int):
+            raise error.TVDBValueError("Index should be an integer")
+
         try:
             return self.result[item]
         except (IndexError, TypeError):

@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)  # pylint: disable=C0103
 
 class PytvdbapiError(Exception):
     """Base exception for all exceptions raised by pytvdbapi"""
+
     def __init__(self, msg, *args, **kwargs):
         super(PytvdbapiError, self).__init__(msg, args, kwargs)
         logger.error(msg)
@@ -57,7 +58,7 @@ class ConnectionError(PytvdbapiError):
     pass
 
 
-class TVDBAttributeError(PytvdbapiError):
+class TVDBAttributeError(PytvdbapiError, AttributeError):
     """
     A replacement for the standard AttributeError. Will be raised when
     accessing invalid attributes of :class:`pytvdbapi.api.Show` and :class:`pytvdbapi.api.Episode`
@@ -66,7 +67,7 @@ class TVDBAttributeError(PytvdbapiError):
     pass
 
 
-class TVDBIndexError(PytvdbapiError):
+class TVDBIndexError(PytvdbapiError, IndexError):
     """
     A replacement for the standard IndexError. Will be raised when accessing
     invalid indexes of :class:`pytvdbapi.api.Show` and :class:`pytvdbapi.api.Season` instances.
@@ -74,7 +75,7 @@ class TVDBIndexError(PytvdbapiError):
     pass
 
 
-class TVDBValueError(PytvdbapiError):
+class TVDBValueError(PytvdbapiError, ValueError):
     """
     A replacement for the standard ValueError exception.
     """

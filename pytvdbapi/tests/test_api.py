@@ -48,7 +48,7 @@ class TestApi(basetest.pytvdbapiTest):
      function reliably also when not connected.
     """
 
-    def test_type_convertion(self):
+    def test_type_conversion(self):
         """Data types should be properly converted"""
         friends = _load_show("friends")
         ep = friends[1][2]
@@ -82,11 +82,11 @@ class TestApi(basetest.pytvdbapiTest):
         self.assertEqual(show.IMDB_ID, show.imdb_id)
         self.assertEqual(show.ImDB_id, show.imDb_Id)
 
-        #self.assertEqual(show.seriesid, show.SERIESID)
-        #self.assertEqual(show.sErIeSiD, show.SeRiEsId)
+        self.assertEqual(show.seriesid, show.SERIESID)
+        self.assertEqual(show.sErIeSiD, show.SeRiEsId)
 
-        #self.assertEqual(show.zap2it_id, show.Zap2It_iD)
-        #self.assertEqual(show.zap2it_id, show.ZAP2IT_ID)
+        self.assertEqual(show.zap2it_id, show.Zap2It_iD)
+        self.assertEqual(show.zap2it_id, show.ZAP2IT_ID)
 
     def test_attribute_case(self):
         """
@@ -108,35 +108,37 @@ class TestApi(basetest.pytvdbapiTest):
     def test_version_format(self):
         """The package version string should be properly formatted"""
         import re
-        format = r'^\d{1,2}\.\d{1,2}(?:\.\d{1,2})?$'
 
-        m = re.match(format, pytvdbapi.version())
+        _format = r'^\d{1,2}\.\d{1,2}(?:\.\d{1,2})?$'
+
+        m = re.match(_format, pytvdbapi.version())
         self.assertNotEqual(m, None)
 
 
 class TestSeason(unittest.TestCase):
+    def setUp(self):
+        self.friends = _load_show('friends')
+
     def test_seasons(self):
         """The seasons should function properly"""
-        friends = _load_show("friends")
 
-        self.assertEqual(len(friends), 11)
+        self.assertEqual(len(self.friends), 11)
 
     def test_invalid_season_index(self):
-        """Show should raise TVDBIndexError if trying to access invalid
+        """Season should raise exception if trying to access invalid
         season indexes"""
-        friends = _load_show("friends")
 
-        self.assertRaises(error.TVDBIndexError, friends.__getitem__, -1)
-        self.assertRaises(error.TVDBIndexError, friends.__getitem__, 12)
-        self.assertRaises(error.TVDBIndexError, friends.__getitem__, 100000)
-        self.assertRaises(error.TVDBIndexError, friends.__getitem__, "hello")
+        self.assertRaises(error.TVDBIndexError, self.friends.__getitem__, -1)
+        self.assertRaises(error.TVDBIndexError, self.friends.__getitem__, 12)
+        self.assertRaises(error.TVDBIndexError, self.friends.__getitem__, 100000)
+        self.assertRaises(error.TVDBValueError, self.friends.__getitem__, "hello")
 
     def test_iterate_season(self):
         """
         It should be possible to iterate over a season to get all episodes
         """
-        friends = _load_show("friends")
-        season1 = friends[1]
+
+        season1 = self.friends[1]
 
         for ep in season1:
             self.assertEqual(type(ep), pytvdbapi.api.Episode)
@@ -145,8 +147,8 @@ class TestSeason(unittest.TestCase):
         """The Episodes should be sorted on the episode number when iterating
          over a season
          """
-        friends = _load_show("friends")
-        season1 = friends[1]
+
+        season1 = self.friends[1]
 
         counter = 0
         for ep in season1:
@@ -155,6 +157,9 @@ class TestSeason(unittest.TestCase):
 
 
 class TestShow(unittest.TestCase):
+    def setUp(self):
+        self.friends = _load_show('friends')
+
     def test_show_dir(self):
         """
         It should be possible to call dir() on a show object.
@@ -177,10 +182,9 @@ class TestShow(unittest.TestCase):
 
     def test_iterate_show(self):
         """It should be possible to iterate over the show to get all seasons"""
-        friends = _load_show("friends")
 
         count = 0
-        for s in friends:
+        for s in self.friends:
             count += 1
             self.assertEqual(type(s), pytvdbapi.api.Season)
 
@@ -190,10 +194,9 @@ class TestShow(unittest.TestCase):
         """The seasons should be sorted on season number when iterating over
         a show
         """
-        friends = _load_show("friends")
 
         counter = 0
-        for season in friends:
+        for season in self.friends:
             self.assertEqual(counter, season.season_number)
             counter += 1
 
@@ -219,13 +222,12 @@ class TestShow(unittest.TestCase):
         The Show object should raise TVDBAttributeError when you try to
         access an invalid attribute
         """
-        friends = _load_show("friends")
 
-        self.assertRaises(error.TVDBAttributeError, friends.__getattr__, "foo")
+        self.assertRaises(error.TVDBAttributeError, self.friends.__getattr__, "foo")
         self.assertRaises(
-            error.TVDBAttributeError, friends.__getattr__, "baar")
+            error.TVDBAttributeError, self.friends.__getattr__, "baar")
         self.assertRaises(
-            error.TVDBAttributeError, friends.__getattr__, "laba_laba")
+            error.TVDBAttributeError, self.friends.__getattr__, "laba_laba")
 
     def test_get_actors_function(self):
         """
@@ -253,6 +255,49 @@ class TestShow(unittest.TestCase):
         self.assertTrue(len(friends.banner_objects) > 0,
                         "There should be banners available after loading them.")
 
+    def test_attribute_access(self):
+        """It should be possible to use standard python functions to access attributes"""
+
+        self.assertEquals(self.friends.SeriesName, getattr(self.friends, 'SeriesName'))
+        self.assertEquals('baar', getattr(self.friends, 'foo', 'baar'))
+
+        self.assertEquals(True, hasattr(self.friends, 'SeriesName'))
+        self.assertEquals(False, hasattr(self.friends, 'foo'))
+
+    def test_reversed_order(self):
+        """It should be possible to iterate the seasons in reversed order"""
+
+        reverse = reversed(self.friends)
+        prev = len(self.friends)
+        for season in reverse:
+            self.assertTrue(prev > season.season_number)
+            prev = season.season_number
+
+    def test_index(self):
+        """It should be possible to use the index function on the seasons"""
+
+        self.friends.update()
+
+        for i, s in enumerate(self.friends):
+            self.assertEquals(self.friends.index(s), i)
+
+    def test_count(self):
+        """It should be possible to use the count function on the seasons"""
+
+        self.friends.update()
+
+        for s in self.friends:
+            self.assertEquals(self.friends.count(s), 1)
+
+    def test_invalid_index(self):
+        """class should raise an exception if trying to use an invalid index"""
+
+        #Non integer index
+        self.assertRaises(error.TVDBValueError, self.friends.__getitem__, 'foo')
+
+        #Index out of range
+        self.assertRaises(error.TVDBIndexError, self.friends.__getitem__, 9999)
+
 
 class TestEpisode(unittest.TestCase):
     def test_episode_dir(self):
@@ -262,19 +307,6 @@ class TestEpisode(unittest.TestCase):
 
         self.assertTrue(len(dir(ep)) >= 1, "There was no info from calling dir")
         self.assertTrue('season' in dir(ep), "The episode should contain the season attribute")
-
-    def test_invalid_episode_index(self):
-        """
-        The Season should raise TVDBIndexError when trying to access invalid
-        indexes
-         """
-        friends = _load_show("friends")
-        episode = friends[2]
-
-        self.assertRaises(error.TVDBIndexError, episode.__getitem__, -1)
-        self.assertRaises(error.TVDBIndexError, episode.__getitem__, 100)
-        self.assertRaises(error.TVDBIndexError, episode.__getitem__, 1000)
-        self.assertRaises(error.TVDBIndexError, episode.__getitem__, "foo")
 
     def test_episode_attributes(self):
         """Episode should have correct attributes with correct values"""
@@ -315,10 +347,10 @@ class TestSearch(unittest.TestCase):
         api = TVDB("B43FF87DE395DF56")
         search = api.search("dexter", "en")
 
-        self.assertRaises(error.TVDBIndexError, search.__getitem__, 2)
-        self.assertRaises(error.TVDBIndexError, search.__getitem__, 5)
+        self.assertRaises(error.TVDBIndexError, search.__getitem__, 10)
+        self.assertRaises(error.TVDBIndexError, search.__getitem__, 50)
         self.assertRaises(error.TVDBIndexError, search.__getitem__, 100)
-        self.assertRaises(error.TVDBIndexError, search.__getitem__, "foo")
+        self.assertRaises(error.TVDBValueError, search.__getitem__, "foo")
 
     def test_iterate_search(self):
         """It should be possible to iterate over a search result"""
@@ -351,12 +383,12 @@ class TestSearch(unittest.TestCase):
         self.assertEqual(len(search), 1)
 
     def test_numeric_names(self):
-            """It should be possible to search for shows with all
-            numeric names. E.g. 24
-            """
-            show = _load_show('24')
+        """It should be possible to search for shows with all
+        numeric names. E.g. 24
+        """
+        show = _load_show('24')
 
-            self.assertEqual(show.FirstAired, datetime.date(2001, 11, 6))
+        self.assertEqual(show.FirstAired, datetime.date(2001, 11, 6))
 
     def test_unicode_search(self):
         """
@@ -409,7 +441,7 @@ class TestGet(unittest.TestCase):
         self.assertEqual(show.SeriesName, "Dexter")
         self.assertEqual(show.id, 79349)
 
-    def test_invalid_Language(self):
+    def test_invalid_language(self):
         """
         Function should raise TVDBValueError if an invalid language is
         passed
@@ -440,7 +472,7 @@ class TestGetEpisode(unittest.TestCase):
         self.assertEqual(ep.id, 308834)
         self.assertEqual(ep.EpisodeName, 'Crocodile')
 
-    def test_invalid_Language(self):
+    def test_invalid_language(self):
         """
         Function should raise TVDBValueError if an invalid language is
         passed
