@@ -785,7 +785,6 @@ class TVDB(object):
         try:
             data = self.loader.load(url, cache)
         except error.TVDBNotFoundError:
-            logger.debug("Id {0} not found".format(series_id))
             raise error.TVDBIdError("Series id {0} not found".format(series_id))
         except error.ConnectionError as _error:
             logger.debug("Unable to connect to URL: {0}. {1}".format(url, _error))
@@ -794,7 +793,6 @@ class TVDB(object):
         if data.strip():
             data = generate_tree(data)
         else:
-            logger.debug("Empty data received for id {0}".format(series_id))
             raise error.TVDBIdError("No Show with id {0} found".format(series_id))
 
         series = parse_xml(data, "Series")
@@ -860,7 +858,6 @@ class TVDB(object):
         if data.strip():
             data = generate_tree(data)
         else:
-            logger.debug("Empty data received for id {0}".format(episode_id))
             raise error.TVDBIdError("No Episode with id {0} found".format(episode_id))
 
         episodes = parse_xml(data, "Episode")
