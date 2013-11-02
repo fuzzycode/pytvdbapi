@@ -191,6 +191,26 @@ class TestSeason(unittest.TestCase):
             self.assertTrue(prev > ep.EpisodeNumber)
             prev = ep.EpisodeNumber
 
+    def test_slice(self):
+        """It should be possible to use slice syntax on the Season"""
+
+        season = self.friends[1]
+
+        # Normal slice
+        _range = season[2:5]
+        for i, v in enumerate(range(3, 6)):
+            self.assertEquals(_range[i].EpisodeNumber, v)
+
+        # Slice with a step size
+        _range = season[2:8:2]
+        for i, v in enumerate(range(3, 9, 2)):
+            self.assertEquals(_range[i].EpisodeNumber, v)
+
+        # Out of range slice
+        _range = season[20:30]
+        for i, v in enumerate(range(21, 25)):
+            self.assertEquals(_range[i].EpisodeNumber, v)
+
 
 class TestShow(unittest.TestCase):
     def setUp(self):
@@ -227,7 +247,7 @@ class TestShow(unittest.TestCase):
         pickled_show = pickle.dumps(friends)
         loaded_show = pickle.loads(pickled_show)
 
-        self.assertTrue(loaded_show.SeriesName == friends.SeriesName, "Show should keep its lang attribute")
+        self.assertTrue(loaded_show.SeriesName == friends.SeriesName, "Show should keep its name attribute")
 
     def test_iterate_show(self):
         """It should be possible to iterate over the show to get all seasons"""

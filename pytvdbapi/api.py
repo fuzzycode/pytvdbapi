@@ -265,14 +265,17 @@ class Season(Sequence):
         self.episodes = dict()
 
     def __getitem__(self, item):
-        if not type(item) in (int, slice):
-            raise error.TVDBValueError("Index should be an integer")
+        if isinstance(item, int):
+            try:
+                return self.episodes[item]
+            except KeyError:
+                raise error.TVDBIndexError("Episode {0} not found".format(item))
 
-        try:
-            return self.episodes[item]
-        except KeyError:
-            logger.error("Episode {0} not found".format(item))
-            raise error.TVDBIndexError("Index {0} not found".format(item))
+        elif isinstance(item, slice):
+            indices = sorted(self.episodes.keys())[item]  # Slice the keys
+            return [self[i] for i in indices]
+        else:
+            raise error.TVDBValueError("Index should be an integer")
 
     def __reversed__(self):
         for i in sorted(self.episodes.keys(), reverse=True):
