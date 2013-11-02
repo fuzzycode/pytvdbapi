@@ -211,6 +211,20 @@ class TestSeason(unittest.TestCase):
         for i, v in enumerate(range(21, 25)):
             self.assertEquals(_range[i].EpisodeNumber, v)
 
+    def test_season_pickle(self):
+        """It should be possible to pickle and unpickle a season"""
+
+        import pickle
+
+        self.friends.update()
+        season = self.friends[2]
+
+        pickled_season = pickle.dumps(season)
+        loaded_season = pickle.loads(pickled_season)
+
+        self.assertTrue(loaded_season.season_number == season.season_number,
+                        "Episode should keep its name attribute")
+
 
 class TestShow(unittest.TestCase):
     def setUp(self):
@@ -428,6 +442,19 @@ class TestEpisode(unittest.TestCase):
         self.assertEquals(False, hasattr(ep, 'foo'))
 
         self.assertEquals(getattr(ep, 'foo', 'baar'), 'baar')
+
+    def test_episode_pickle(self):
+        """It should be possible to pickle and unpickle an episode"""
+
+        import pickle
+
+        self.friends.update()
+        ep = self.friends[2][3]
+
+        pickled_ep = pickle.dumps(ep)
+        loaded_ep = pickle.loads(pickled_ep)
+
+        self.assertTrue(loaded_ep.EpisodeName == ep.EpisodeName, "Episode should keep its name attribute")
 
 
 class TestSearch(unittest.TestCase):
