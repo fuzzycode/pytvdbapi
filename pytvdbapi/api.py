@@ -418,16 +418,20 @@ class Show(Sequence):
             yield self[i]
 
     def __getitem__(self, item):
-        if not type(item) in (int, slice):
-            raise error.TVDBValueError("Index should be an integer")
-
-        if not item in self.seasons:
+        if len(self.seasons) == 0:
             self._populate_data()
 
-        try:
-            return self.seasons[item]
-        except KeyError:
-            raise error.TVDBIndexError("Season {0} not found".format(item))
+        if isinstance(item, int):
+            try:
+                return self.seasons[item]
+            except KeyError:
+                raise error.TVDBIndexError("Season {0} not found".format(item))
+
+        elif isinstance(item, slice):
+            indices = sorted(self.seasons.keys())[item]  # Slice the keys
+            return [self[i] for i in indices]
+        else:
+            raise error.TVDBValueError("Index should be an integer")
 
     def update(self):
         """

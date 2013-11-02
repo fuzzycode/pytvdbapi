@@ -334,6 +334,24 @@ class TestShow(unittest.TestCase):
         #Index out of range
         self.assertRaises(error.TVDBIndexError, self.friends.__getitem__, 9999)
 
+    def test_slice(self):
+        """It should be possible to use slice syntax on the show"""
+
+        # Normal slice
+        _range = self.friends[2:5]
+        for i, v in enumerate(range(2, 5)):
+            self.assertEquals(_range[i].season_number, v)
+
+        # Slice with a step size
+        _range = self.friends[2:8:2]
+        for i, v in enumerate(range(2, 8, 2)):
+            self.assertEquals(_range[i].season_number, v)
+
+        # Out of range slice
+        _range = self.friends[8:20]
+        for i, v in enumerate(range(8, 10)):
+            self.assertEquals(_range[i].season_number, v)
+
 
 class TestEpisode(unittest.TestCase):
     def setUp(self):
