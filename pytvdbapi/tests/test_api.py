@@ -175,6 +175,19 @@ class TestShow(unittest.TestCase):
         self.assertTrue('seasons' in dir(friends), "Show should have a seasons attribute")
         self.assertTrue('api' in dir(friends), "Show should have an api attribute")
 
+    def test_show_pickle(self):
+        """It should be possible to pickle and unpickle a fully loaded show"""
+
+        import pickle
+
+        friends = _load_show("friends")
+        friends.update()
+
+        pickled_show = pickle.dumps(friends)
+        loaded_show = pickle.loads(pickled_show)
+
+        self.assertTrue(loaded_show.SeriesName == friends.SeriesName, "Show should keep its lang attribute")
+
     def test_iterate_show(self):
         """It should be possible to iterate over the show to get all seasons"""
         friends = _load_show("friends")
