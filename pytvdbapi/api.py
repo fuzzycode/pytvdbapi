@@ -71,7 +71,6 @@ __episode__ = "{mirror}/api/{api_key}/episodes/{episodeid}/{language}.xml"
 __actors__ = "{mirror}/api/{api_key}/series/{seriesid}/actors.xml"
 __banners__ = "{mirror}/api/{api_key}/series/{seriesid}/banners.xml"
 
-
 __all__ = ['languages', 'Language', 'TVDB', 'Search', 'Show', 'Season', 'Episode']
 
 # Module logger object
