@@ -179,6 +179,9 @@ class Episode(object):
 
     .. _thetvdb.com: http://thetvdb.com
     """
+
+    data = {}
+
     def __init__(self, data, season, config):
         self.season, self.config = season, config
         ignore_case = self.config.get('ignore_case', False)
@@ -358,6 +361,9 @@ class Show(Mapping):
 
     .. _thetvdb.com: http://thetvdb.com
     """
+
+    data = {}
+
     def __init__(self, data, api, language, config):
         self.api, self.lang, self.config = api, language, config
         self.seasons = dict()

@@ -57,7 +57,7 @@ class ConnectionError(PytvdbapiError):
     pass
 
 
-class TVDBAttributeError(PytvdbapiError):
+class TVDBAttributeError(PytvdbapiError, AttributeError):
     """
     A replacement for the standard AttributeError. Will be raised when
     accessing invalid attributes of :class:`pytvdbapi.api.Show` and :class:`pytvdbapi.api.Episode`
