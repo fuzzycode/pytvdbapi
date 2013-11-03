@@ -18,12 +18,14 @@
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import, print_function
-from pytvdbapi.utils import InsensitiveDictionary
 import unittest
+
+from pytvdbapi.utils import InsensitiveDictionary
 
 
 class TestInsensitiveDictionary(unittest.TestCase):
     """Test the insensitive dictionary"""
+
     def test_create_insensitive_dict(self):
         """
         It should be possible to create a case insensitive dictionary
@@ -90,3 +92,94 @@ class TestInsensitiveDictionary(unittest.TestCase):
         self.assertEqual('hello' in d, True)
         self.assertEqual('HeLlO' in d, True)
         self.assertEqual('foo' in d, False)
+
+    def test_delete(self):
+        """It should be possible to delete elements in the dict"""
+        d = InsensitiveDictionary()
+
+        d['foo'] = 'baar'
+        self.assertTrue('foo' in d, "dict should contain foo")
+        self.assertEqual(len(d), 1)
+
+        del (d['foo'])
+        self.assertFalse('foo' in d, "dict should not contain foo")
+        self.assertEqual(len(d), 0)
+
+    def test_length(self):
+        """It should be possible to use the len() method on the dict"""
+
+        d = InsensitiveDictionary()
+
+        self.assertEqual(len(d), 0)
+
+        d['foo'] = 'baar'
+        d['baz'] = 2
+        self.assertEqual(len(d), 2)
+
+    def test_non_text_keys(self):
+        """It should be possible to use non-text keys in insensitive dict"""
+
+        d = InsensitiveDictionary(ignore_case=True)
+
+        d[2] = 'baar'
+        self.assertTrue(2 in d)
+
+    def test_clear(self):
+        """It should be possible to clear a dict"""
+        d = InsensitiveDictionary()
+
+        d['foo'] = 'baar'
+        self.assertEqual(len(d), 1)
+
+        d.clear()
+        self.assertEqual(len(d), 0)
+
+    def test_keys(self):
+        """It should be possible to use the keys() method on the dict"""
+
+        d = InsensitiveDictionary()
+
+        # Create the dict
+        keys = ['foo', 'baaz', 'blaa', 2]
+        values = ['baar', 'woo', 'blug', 'wow']
+
+        for i in zip(keys, values):
+            d[i[0]] = i[1]
+
+        # Test dict
+        for k in d.keys():
+            self.assertTrue(k in keys)
+
+    def test_values(self):
+        """It should be possible to use the values() method on the dict"""
+
+        d = InsensitiveDictionary()
+
+        # Create the dict
+        keys = ['foo', 'baaz', 'blaa', 2]
+        values = ['baar', 'woo', 'blug', 'wow']
+
+        for i in zip(keys, values):
+            d[i[0]] = i[1]
+
+        # Test dict
+        for v in d.values():
+            self.assertTrue(v in values)
+
+    def test_items(self):
+        """It should be possible to use the items() method on the dict"""
+
+        d = InsensitiveDictionary()
+
+        # Create the dict
+        keys = ['foo', 'baaz', 'blaa', 2]
+        values = ['baar', 'woo', 'blug', 'wow']
+        items = zip(keys, values)
+
+        for i in items:
+            d[i[0]] = i[1]
+
+        # Test dict
+        for i in d.items():
+            self.assertTrue(i[0] in keys)
+            self.assertTrue(i[1] in values)

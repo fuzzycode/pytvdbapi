@@ -76,19 +76,27 @@ class TransformedDictionary(MutableMapping, object):
         return iter(self._data)
 
     def keys(self):
-        """"""
+        """
+        :return: A list of dictionary keys
+        """
         return self._data.keys()
 
     def clear(self):
-        """"""
+        """
+        Clear the dictionary content, making its length 0
+        """
         self._data.clear()
 
     def items(self):
-        """"""
+        """
+        :return: A list of all items in the dictionary
+        """
         return self._data.items()
 
     def values(self):
-        """"""
+        """
+        :return: A list of the values in the dictionary
+        """
         return self._data.values()
 
 
