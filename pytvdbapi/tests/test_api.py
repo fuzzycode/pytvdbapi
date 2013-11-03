@@ -127,11 +127,11 @@ class TestSeason(unittest.TestCase):
     def test_invalid_season_index(self):
         """Season should raise exception if trying to access invalid
         season indexes"""
+        season1 = self.friends[1]
 
-        self.assertRaises(error.TVDBIndexError, self.friends.__getitem__, -1)
-        self.assertRaises(error.TVDBIndexError, self.friends.__getitem__, 12)
-        self.assertRaises(error.TVDBIndexError, self.friends.__getitem__, 100000)
-        self.assertRaises(error.TVDBValueError, self.friends.__getitem__, "hello")
+        self.assertRaises(error.TVDBIndexError, season1.__getitem__, -1)
+        self.assertRaises(error.TVDBIndexError, season1.__getitem__, 100000)
+        self.assertRaises(error.TVDBValueError, season1.__getitem__, "hello")
 
     def test_iterate_season(self):
         """
