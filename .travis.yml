@@ -19,10 +19,10 @@ install:
 
 script:
   # Validate PEP8 compliance
-  # - pep8 -r  --statistics  --count pytvdbapi/
+  - pep8 -r  --statistics  --count pytvdbapi/
 
   # Test the examples in the README file
-  # - python -m doctest -v README.rst
+  - python -m doctest -v README.rst
 
   # Run all unittests and doctests
   - coverage run --source=pytvdbapi setup.py test
