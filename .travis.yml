@@ -19,22 +19,22 @@ install:
 
 script:
   # Validate PEP8 compliance
-  - pep8 -r  --statistics  --count pytvdbapi/
+  # - pep8 -r  --statistics  --count pytvdbapi/
 
   # Test the examples in the README file
-  - python -m doctest -v README.rst
+  # - python -m doctest -v README.rst
 
   # Run all unittests and doctests
   - coverage run --source=pytvdbapi setup.py test
   - coverage report -m
 
   # Test that the documentation is working
-  - cd docs/source/
-  - sphinx-build -W -b html -d /tmp/doctrees .  /tmp/html
-  - sphinx-build -W -b linkcheck -d /tmp/doctrees .  /tmp/linkcheck
+  # - cd docs/source/
+  # - sphinx-build -W -b html -d /tmp/doctrees .  /tmp/html
+  # - sphinx-build -W -b linkcheck -d /tmp/doctrees .  /tmp/linkcheck
 
 after_success:
-  - coveralls
+  - coveralls --verbose
 
 notifications:
   email:
