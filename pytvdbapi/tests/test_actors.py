@@ -20,7 +20,6 @@
 from __future__ import absolute_import, print_function, unicode_literals
 import sys
 import unittest
-import re
 
 from pytvdbapi.api import TVDB
 from pytvdbapi import error
@@ -80,19 +79,6 @@ class TestActor(unittest.TestCase):
         for actor in show.actor_objects:
             self.assertEqual(type(actor), Actor)
 
-    def test_actor_representation(self):
-        """
-        The representation of the actor should be properly formatted.
-        """
-        api = TVDB("B43FF87DE395DF56", actors=True)
-        show = api.get(79349, "en")  # Load the series Dexter
-        show.update()
-
-        regexp = re.compile("^<Actor - .*?>$")
-
-        for actor in show.actor_objects:
-            self.assertNotEqual(regexp.match(actor.__repr__()), None)
-
     def test_invalid_actor_attribute(self):
         """
         Actor instance should raise an exception when accessing an invalid
@@ -104,6 +90,7 @@ class TestActor(unittest.TestCase):
 
         actor = show.actor_objects[0]
         self.assertRaises(error.TVDBAttributeError, actor.__getattr__, 'foo')
+
 
 if __name__ == "__main__":
     sys.exit(unittest.main())

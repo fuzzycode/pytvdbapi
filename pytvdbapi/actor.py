@@ -43,8 +43,6 @@ class Actor(object):
         >>> show = db.get_series( 79349, "en" )  # Dexter
         >>> show.update()
         >>> actor = show.actor_objects[0]
-        >>> actor
-        <Actor - Michael C. Hall>
 
         >>> actor.Role
         'Dexter Morgan'
@@ -52,18 +50,16 @@ class Actor(object):
         >>> actor.image_url
         'http://thetvdb.com/banners/actors/70947.jpg'
     """
+
     def __init__(self, mirror, data, show):
         self.mirror, self.data, self.show = mirror, data, show
-
-    def __repr__(self):
-        return self.__unicode__()
 
     def __unicode__(self):
         return '<Actor - {0}>'.format(self.Name)
 
     def __getattr__(self, item):
         if item == 'image_url':
-            return self.mirror + "/banners/" + self.Image
+            return self.mirror + b"/banners/" + self.Image
         else:
             try:
                 return self.data[item]
