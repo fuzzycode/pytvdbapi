@@ -33,7 +33,7 @@ script:
   - coverage report -m
 
 after_success:
-  - coveralls --verbose
+  - coveralls
 
 notifications:
   email:
