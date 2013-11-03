@@ -204,7 +204,6 @@ class Episode(object):
         try:
             return self.data[item]
         except KeyError:
-            logger.error("Episode has no attribute {0}".format(item))
             raise error.TVDBAttributeError("Episode has no attribute {0}".format(item))
 
     def __dir__(self):
