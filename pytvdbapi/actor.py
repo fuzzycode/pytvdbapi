@@ -19,9 +19,11 @@
 
 """A module for actor related functionality."""
 
-__all__ = ['Actor']
-
+from __future__ import unicode_literals
 from pytvdbapi.error import TVDBAttributeError
+
+
+__all__ = ['Actor']
 
 
 class Actor(object):
@@ -57,11 +59,7 @@ class Actor(object):
         return self.__unicode__()
 
     def __unicode__(self):
-        # pylint: disable=E0602
-        try:
-            return unicode('<Actor - {0}>').format(self.Name)
-        except NameError:  # unicode function is removed in Python 3
-            return '<Actor - {0}>'.format(self.Name)
+        return '<Actor - {0}>'.format(self.Name)
 
     def __getattr__(self, item):
         if item == 'image_url':
