@@ -32,7 +32,7 @@ from pytvdbapi.xmlhelpers import parse_xml
 __all__ = ['TypeMask', 'Mirror', 'MirrorList']
 
 #Module logger object
-logger = logging.getLogger(__name__)  # pylint: disable=C0103
+logger = logging.getLogger(__name__)
 
 
 class TypeMask(object):

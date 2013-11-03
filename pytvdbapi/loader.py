@@ -30,7 +30,7 @@ from pytvdbapi import error
 
 
 #Module logger object
-logger = logging.getLogger(__name__)  # pylint: disable=C0103
+logger = logging.getLogger(__name__)
 
 
 class Loader(object):

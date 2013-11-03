@@ -30,7 +30,7 @@ __all__ = ['PytvdbapiError', 'BadData', 'ConnectionError',
            'TVDBValueError', 'TVDBNotFoundError']
 
 #Module level logger
-logger = logging.getLogger(__name__)  # pylint: disable=C0103
+logger = logging.getLogger(__name__)
 
 
 class PytvdbapiError(Exception):
