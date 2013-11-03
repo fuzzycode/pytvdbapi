@@ -41,7 +41,7 @@ class Banner(object):
 
     These attributes are present for all Banner objects.
 
-    * BannerPath (str). The last part of the URL pointing to the immage.\
+    * BannerPath (str). The last part of the URL pointing to the image.\
         This is appended to the correct mirror adress to form the full URL.
     * BannerType (str). This could be any of **fanart**, **season** or \
         **poster**. This value controls what other attributes are available \
@@ -60,7 +60,7 @@ class Banner(object):
     Additional to the common attributes, the following attributes are included
     on objects of type **fanart**.
 
-    * BannerType2 (str). Contains the dimension of the immage as a string.
+    * BannerType2 (str). Contains the dimension of the image as a string.
     * Colors (list).
     * SeriesName (bool).
     * ThumbnailPath (str).
@@ -70,7 +70,7 @@ class Banner(object):
 
     **poster** type does not contain any additional attributes.
 
-    * BannerType2 (str). Contains the dimension of the immage as a string.
+    * BannerType2 (str). Contains the dimension of the image as a string.
 
     *season:*
 
