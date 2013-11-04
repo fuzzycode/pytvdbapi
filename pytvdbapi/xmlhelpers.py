@@ -24,7 +24,8 @@ A helper module for parsing XML data.
 import datetime
 import logging
 import re
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as eTree
+import sys
 
 try:
     from xml.etree.ElementTree import ParseError  # pylint: disable=E0611
@@ -42,10 +43,15 @@ logger = logging.getLogger(__name__)
 
 def generate_tree(xml_data):
     """
+    :param xml_data: The string xml data to generate the tree from
+
+    :return: A new ElementTree
+    :raise: :class:`pytvdbapi.error.BadData`
+
     Converts the xml data into an element tree
     """
     try:
-        return ET.fromstring(xml_data.encode('utf-8'))
+        return eTree.fromstring(xml_data.encode('utf-8'))
     except ParseError:
         raise error.BadData("Bad XML data received")
 
@@ -74,9 +80,13 @@ def parse_xml(etree, element):
 
     _list = list()
     for item in etree.findall(element):
+
         data = dict()
         for child in list(item):
-            tag, value = child.tag, child.text
+            if sys.version < '3':
+                tag, value = child.tag, unicode(child.text)
+            else:
+                tag, value = child.tag, child.text
 
             if value:
                 value = value.strip()
