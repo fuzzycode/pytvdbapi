@@ -19,7 +19,6 @@
 
 """A module for actor related functionality."""
 
-from __future__ import unicode_literals
 from pytvdbapi.error import TVDBAttributeError
 
 
@@ -54,12 +53,9 @@ class Actor(object):
     def __init__(self, mirror, data, show):
         self.mirror, self.data, self.show = mirror, data, show
 
-    def __unicode__(self):
-        return '<Actor - {0}>'.format(self.Name)
-
     def __getattr__(self, item):
         if item == 'image_url':
-            return self.mirror + b"/banners/" + self.Image
+            return self.mirror + "/banners/" + self.Image
         else:
             try:
                 return self.data[item]
