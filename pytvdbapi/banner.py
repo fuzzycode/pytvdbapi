@@ -79,44 +79,8 @@ class Banner(object):
 
     * BannerType2 (str). Contains the word 'season'
     * Season (int).
-
-    Example::
-
-        >>> from pytvdbapi import api
-        >>> db = api.TVDB('B43FF87DE395DF56', banners=True)
-        >>> show = db.get( 79349, "en" )  # Dexter
-        >>> show.update()
-        >>> assert len(show.banner_objects) > 0
-        >>> banner = show.banner_objects[0]
-        >>> banner.banner_url # doctest: +ELLIPSIS
-        'http://thetvdb.com/banners/fanart/original/79349-....jpg'
-
-
-    Showing the different banner types and their attributes.
-
-        >>> fanart = [b for b in show.banner_objects \
-if b.BannerType == "fanart"]
-        >>> dir(fanart[0]) #doctest: +NORMALIZE_WHITESPACE
-        ['BannerPath', 'BannerType', 'BannerType2', 'Colors', 'Language',
-        'Rating', 'RatingCount', 'SeriesName', 'ThumbnailPath', 'VignettePath',
-        'banner_url', 'id']
-
-
-        >>> posters = [b for b in show.banner_objects \
-if b.BannerType == "poster"]
-        >>> dir(posters[0]) #doctest: +NORMALIZE_WHITESPACE
-        ['BannerPath', 'BannerType', 'BannerType2', 'Language', 'Rating',
-        'RatingCount', 'banner_url', 'id']
-
-
-        >>> seasons = [b for b in show.banner_objects \
-if b.BannerType == "season"]
-        >>> dir(seasons[0]) #doctest: +NORMALIZE_WHITESPACE
-        ['BannerPath', 'BannerType', 'BannerType2', 'Language', 'Rating',
-        'RatingCount', 'Season', 'banner_url', 'id']
-
-
     """
+
     def __init__(self, mirror, data, show):
         self.mirror, self.data, self.show = mirror, data, show
 

@@ -34,20 +34,6 @@ class Actor(object):
 
     It will also contain the attribute *image_url* that will be the full URL
     to the image of the actor.
-
-    Example::
-
-        >>> from pytvdbapi import api
-        >>> db = api.TVDB("B43FF87DE395DF56", actors=True)
-        >>> show = db.get_series( 79349, "en" )  # Dexter
-        >>> show.update()
-        >>> actor = show.actor_objects[0]
-
-        >>> actor.Role
-        'Dexter Morgan'
-
-        >>> actor.image_url
-        'http://thetvdb.com/banners/actors/70947.jpg'
     """
 
     def __init__(self, mirror, data, show):

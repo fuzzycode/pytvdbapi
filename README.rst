@@ -6,8 +6,7 @@ pytvdbapi - A python API for thetvdb.com
 The API is designed to be as easy and intuitive as possible to use.
 
 The API is designed to respect the functionality of thetvdb.com_ as far as
-possible. It uses caching as much as possible to reduce the workload of the
-servers.
+possible.
 
 Key Features
 ------------
@@ -15,7 +14,6 @@ Key Features
   * A well documented API
   * Support for Python 2.6, 2.7, 3.2 and 3.3
   * Thoroughly tested against all supported versions.
-
 
 
 Dependencies
@@ -33,11 +31,6 @@ The easiest and recommended way to install **pytvdbapi** is to use pip_::
 Depending on your platform, you may need root permission to execute the above
 commands.
 
-To get the latest development version you can install directly from source.
-Note that no guaranties are made as to the stability of the source tree::
-
-    $pip install git+git://github.com/fuzzycode/pytvdbapi.git
-
 
 ArchLinux
 ----------
@@ -47,65 +40,7 @@ can be found `here <https://aur.archlinux.org/packages.php?ID=58697>`_.
 Usage
 =====
 To use the API you should apply for an API key for your particular application.
-An API key can be obtained for free from thetvdb.com_. Note that the key
-used in the examples is only intended for testing purposes and should not be
-used for other purposes.
-
-To search for a specific show::
-
-    >>> from pytvdbapi import api
-    >>> db = api.TVDB("B43FF87DE395DF56")
-    >>> search = db.search("How I met your mother", "en")
-    >>> len(search)
-    1
-    >>> show = search[0]
-    >>> show.SeriesName
-    'How I Met Your Mother'
-
-
-You can index individual seasons and individual episodes using convenient
-indexing::
-
-    >>> show[1]
-    <Season 001>
-
-    >>> show[1][4]
-    <Episode S001E004>
-
-
-To list all episodes of a show::
-
-    >>> for season in show:
-    ...     for episode in season:
-    ...         print(episode) #doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
-    ...
-    <Episode S000E001>
-    <Episode S000E002>
-    <Episode S000E003>
-    <Episode S000E004>
-    <Episode S000E005>
-    <Episode S000E006>
-    <Episode S000E007>
-    <Episode S000E008>
-    <Episode S000E009>
-    <Episode S000E010>
-    <Episode S001E001>
-    <Episode S001E002>
-    ...
-    ...
-    <Episode S007E010>
-    <Episode S007E011>
-    <Episode S007E012>
-    ...
-
-Testing
-=======
-Testing **pytvdbapi** is really easy, just type the following from the package
-root folder::
-
-    $ python setup.py test
-
-If all turns out all right you should see a nice and happy OK at the end.
+An API key can be obtained for free from thetvdb.com_.
 
 
 Documentation

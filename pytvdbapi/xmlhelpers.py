@@ -84,7 +84,7 @@ def parse_xml(etree, element):
         data = dict()
         for child in list(item):
             if sys.version < '3':
-                tag, value = child.tag, unicode(child.text)
+                tag, value = child.tag, unicode(child.text)  # noqa # pylint: disable=E0602
             else:
                 tag, value = child.tag, child.text
 
