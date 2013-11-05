@@ -27,6 +27,9 @@ from pytvdbapi.banner import Banner
 
 
 class TestBanners(unittest.TestCase):
+    def setUp(self):
+        self.show = self._getShow(True)
+
     def _getShow(self, _banners=True):
         api = TVDB("B43FF87DE395DF56", banners=_banners)
         show = api.get(79349, "en")  # Load the series Dexter
@@ -39,9 +42,8 @@ class TestBanners(unittest.TestCase):
         The banner_objects list should contain banner objects when the banner
         option is selected.
         """
-        show = self._getShow()
 
-        self.assertEqual(hasattr(show, "banner_objects"), True)
+        self.assertEqual(hasattr(self.show, "banner_objects"), True)
 
     def test_no_banners(self):
         """
@@ -55,9 +57,8 @@ class TestBanners(unittest.TestCase):
         """
         The banner object should have the proper attributes.
         """
-        show = self._getShow()
 
-        for banner in show.banner_objects:
+        for banner in self.show.banner_objects:
             self.assertEqual(hasattr(banner, "BannerPath"), True)
             self.assertEqual(hasattr(banner, "BannerType"), True)
             self.assertEqual(hasattr(banner, "BannerType2"), True)
@@ -86,17 +87,14 @@ class TestBanners(unittest.TestCase):
         """
         It should be possible to iterate over the banner_objects attribute
         """
-        show = self._getShow()
-
-        for banner in show.banner_objects:
+        for banner in self.show.banner_objects:
             self.assertEqual(type(banner), Banner)
 
     def test_banner_representation(self):
         """
         The banner representation should be properly formatted.
         """
-        show = self._getShow()
-        banner = show.banner_objects[0]
+        banner = self.show.banner_objects[0]
 
         self.assertEqual(banner.__repr__(), "<Banner>")
 
@@ -105,8 +103,7 @@ class TestBanners(unittest.TestCase):
         The banner object should raise an exception when accessing an invalid
         attribute.
         """
-        show = self._getShow()
-        banner = show.banner_objects[0]
+        banner = self.show.banner_objects[0]
 
         self.assertRaises(error.TVDBAttributeError, banner.__getattr__, "foo")
 
@@ -114,8 +111,7 @@ class TestBanners(unittest.TestCase):
         """The attributes should be unicode on Python 2.X and str on Python 3.X"""
         _type = unicode if sys.version < '3' else str
 
-        show = self._getShow()
-        banner = show.banner_objects[0]
+        banner = self.show.banner_objects[0]
 
         for attr_name in dir(banner):
             attr = getattr(banner, attr_name)
