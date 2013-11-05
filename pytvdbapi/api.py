@@ -204,6 +204,9 @@ class Season(Sequence):
         else:
             raise error.TVDBValueError("Index should be an integer")
 
+    def __dir__(self):
+        return ['show', 'season_number']
+
     def __reversed__(self):
         for i in sorted(self.episodes.keys(), reverse=True):
             yield self[i]
@@ -290,7 +293,8 @@ class Show(Sequence):
         return "<Show>".format(self.SeriesName)
 
     def __dir__(self):
-        attributes = [d for d in list(self.__dict__.keys()) if d not in ('data', 'config', 'ignore_case')]
+        attributes = [d for d in list(self.__dict__.keys())
+                      if d not in ('data', 'config', 'ignore_case', 'seasons')]
         return list(self.data.keys()) + attributes
 
     def __iter__(self):

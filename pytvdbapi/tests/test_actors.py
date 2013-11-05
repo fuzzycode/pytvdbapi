@@ -91,6 +91,25 @@ class TestActor(unittest.TestCase):
         actor = show.actor_objects[0]
         self.assertRaises(error.TVDBAttributeError, actor.__getattr__, 'foo')
 
+    def test_unicode_attributes(self):
+        """The attributes should be unicode on Python 2.X and str on Python 3.X"""
+        _type = unicode if sys.version < '3' else str
+
+        api = TVDB("B43FF87DE395DF56", actors=True)
+        show = api.get(79349, "en")  # Load the series Dexter
+        show.update()
+
+        actor = show.actor_objects[0]
+
+        for attr_name in dir(actor):
+            attr = getattr(actor, attr_name)
+            if type(attr) not in (float, int):
+                if type(attr) in (list,):
+                    for a in attr:
+                        self.assertEqual(type(a), _type)
+                else:
+                    self.assertEqual(type(attr), _type)
+
 
 if __name__ == "__main__":
     sys.exit(unittest.main())

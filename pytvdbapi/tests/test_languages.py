@@ -18,8 +18,8 @@
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import unicode_literals
-
 import unittest
+import sys
 
 from pytvdbapi import api
 
@@ -58,6 +58,21 @@ class TestLanguageClass(unittest.TestCase):
                           "Attribute value should be correct")
         self.assertEquals(l._id, 2,
                           "Attribute value should be correct")
+
+    def test_unicode_attributes(self):
+        """The attributes should be unicode on Python 2.X and str on Python 3.X"""
+        _type = unicode if sys.version < '3' else str
+
+        l = api.Language("en", "English", 2)
+
+        for attr_name in ('abbreviation', 'name'):
+            attr = getattr(l, attr_name)
+            if type(attr) not in (float, int):
+                if type(attr) in (list,):
+                    for a in attr:
+                        self.assertEqual(type(a), _type)
+                else:
+                    self.assertEqual(type(attr), _type)
 
 
 class TestLanguage(unittest.TestCase):

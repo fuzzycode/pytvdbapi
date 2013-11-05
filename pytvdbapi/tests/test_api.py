@@ -399,6 +399,20 @@ class TestShow(unittest.TestCase):
         for i, v in enumerate(range(8, 10)):
             self.assertEquals(_range[i].season_number, v)
 
+    def test_unicode_attributes(self):
+        """The attributes should be unicode on Python 2.X and str on Python 3.X"""
+        _type = unicode if sys.version < '3' else str
+        self.friends.update()
+
+        for attr_name in dir(self.friends):
+            attr = getattr(self.friends, attr_name)
+            if type(attr) not in (float, int, bool, datetime.date, pytvdbapi.api.TVDB):
+                if type(attr) in (list,):
+                    for a in attr:
+                        self.assertEqual(type(a), _type)
+                else:
+                    self.assertEqual(type(attr), _type)
+
 
 class TestEpisode(unittest.TestCase):
     def setUp(self):
@@ -455,6 +469,21 @@ class TestEpisode(unittest.TestCase):
         loaded_ep = pickle.loads(pickled_ep)
 
         self.assertTrue(loaded_ep.EpisodeName == ep.EpisodeName, "Episode should keep its name attribute")
+
+    def test_unicode_attributes(self):
+        """The attributes should be unicode on Python 2.X and str on Python 3.X"""
+        _type = unicode if sys.version < '3' else str
+        self.friends.update()
+        ep = self.friends[2][3]
+
+        for attr_name in dir(ep):
+            attr = getattr(ep, attr_name)
+            if type(attr) not in (float, int, datetime.date, pytvdbapi.api.Season):
+                if type(attr) in (list,):
+                    for a in attr:
+                        self.assertEqual(type(a), _type)
+                else:
+                    self.assertEqual(type(attr), _type)
 
 
 class TestSearch(unittest.TestCase):
@@ -598,6 +627,7 @@ class TestGetEpisode(unittest.TestCase):
         self.assertRaises(error.TVDBIdError, api.get_episode, -1, "en")
         self.assertRaises(error.TVDBIdError, api.get_episode, "foo", "en")
         self.assertRaises(error.TVDBIdError, api.get_episode, "", "en")
+
 
 if __name__ == "__main__":
     sys.exit(unittest.main())

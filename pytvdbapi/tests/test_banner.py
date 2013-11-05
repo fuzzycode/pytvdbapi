@@ -110,5 +110,22 @@ class TestBanners(unittest.TestCase):
 
         self.assertRaises(error.TVDBAttributeError, banner.__getattr__, "foo")
 
+    def test_unicode_attributes(self):
+        """The attributes should be unicode on Python 2.X and str on Python 3.X"""
+        _type = unicode if sys.version < '3' else str
+
+        show = self._getShow()
+        banner = show.banner_objects[0]
+
+        for attr_name in dir(banner):
+            attr = getattr(banner, attr_name)
+            if type(attr) not in (float, int):
+                if type(attr) in (list,):
+                    for a in attr:
+                        self.assertEqual(type(a), _type)
+                else:
+                    self.assertEqual(type(attr), _type)
+
+
 if __name__ == "__main__":
     sys.exit(unittest.main())
