@@ -118,6 +118,7 @@ class TestApi(basetest.pytvdbapiTest):
 class TestSeason(unittest.TestCase):
     def setUp(self):
         self.friends = _load_show('friends')
+        self.friends.update()
 
     def test_seasons(self):
         """The seasons should function properly"""
@@ -164,7 +165,6 @@ class TestSeason(unittest.TestCase):
 
     def test_index(self):
         """It should be possible to use the index method on a season"""
-        self.friends.update()
         season = self.friends[1]
 
         for i, ep in enumerate(season):
@@ -172,7 +172,6 @@ class TestSeason(unittest.TestCase):
 
     def test_count(self):
         """It should be possible to use the count method on a season."""
-        self.friends.update()
         season = self.friends[1]
 
         for ep in season:
@@ -180,8 +179,6 @@ class TestSeason(unittest.TestCase):
 
     def test_reversed_order(self):
         """It should be possible to iterate the episodes in reversed order"""
-
-        self.friends.update()
 
         season = self.friends[1]
         reverse = reversed(season)
@@ -216,7 +213,6 @@ class TestSeason(unittest.TestCase):
 
         import pickle
 
-        self.friends.update()
         season = self.friends[2]
 
         pickled_season = pickle.dumps(season)
@@ -229,6 +225,7 @@ class TestSeason(unittest.TestCase):
 class TestShow(unittest.TestCase):
     def setUp(self):
         self.friends = _load_show('friends')
+        self.friends.update()
 
     def test_show_dir(self):
         """
@@ -256,7 +253,6 @@ class TestShow(unittest.TestCase):
         import pickle
 
         friends = _load_show("friends")
-        friends.update()
 
         pickled_show = pickle.dumps(friends)
         loaded_show = pickle.loads(pickled_show)
@@ -359,15 +355,11 @@ class TestShow(unittest.TestCase):
     def test_index(self):
         """It should be possible to use the index function on the seasons"""
 
-        self.friends.update()
-
         for i, s in enumerate(self.friends):
             self.assertEquals(self.friends.index(s), i)
 
     def test_count(self):
         """It should be possible to use the count function on the seasons"""
-
-        self.friends.update()
 
         for s in self.friends:
             self.assertEquals(self.friends.count(s), 1)
@@ -402,7 +394,6 @@ class TestShow(unittest.TestCase):
     def test_unicode_attributes(self):
         """The attributes should be unicode on Python 2.X and str on Python 3.X"""
         _type = unicode if sys.version < '3' else str
-        self.friends.update()
 
         for attr_name in dir(self.friends):
             attr = getattr(self.friends, attr_name)
@@ -417,6 +408,7 @@ class TestShow(unittest.TestCase):
 class TestEpisode(unittest.TestCase):
     def setUp(self):
         self.friends = _load_show('friends')
+        self.friends.update()
 
     def test_episode_dir(self):
         """It should be possible to call dir() on a episode instance"""
@@ -462,7 +454,6 @@ class TestEpisode(unittest.TestCase):
 
         import pickle
 
-        self.friends.update()
         ep = self.friends[2][3]
 
         pickled_ep = pickle.dumps(ep)
@@ -473,7 +464,6 @@ class TestEpisode(unittest.TestCase):
     def test_unicode_attributes(self):
         """The attributes should be unicode on Python 2.X and str on Python 3.X"""
         _type = unicode if sys.version < '3' else str
-        self.friends.update()
         ep = self.friends[2][3]
 
         for attr_name in dir(ep):
