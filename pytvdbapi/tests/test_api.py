@@ -244,7 +244,6 @@ class TestShow(unittest.TestCase):
         self.assertTrue('actor_objects' in dir(friends), "Show should have an actor objects attribute")
         self.assertTrue('banner_objects' in dir(friends), "Show should have a banner objects attribute")
         self.assertTrue('lang' in dir(friends), "Show should have a lang attribute")
-        self.assertTrue('seasons' in dir(friends), "Show should have a seasons attribute")
         self.assertTrue('api' in dir(friends), "Show should have an api attribute")
 
     def test_show_pickle(self):
