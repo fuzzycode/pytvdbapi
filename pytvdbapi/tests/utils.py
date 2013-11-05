@@ -27,12 +27,15 @@ except ImportError:
 # pylint: enable W0622
 
 
-def file_loader(file):
+def file_loader(_file):
+    """
+    :param _file: Path to load
+    """
     try:
-        handle = open(file, mode='rt', encoding='utf-8')
+        handle = open(_file, mode='rt', encoding='utf-8')
         data = handle.read()
     except IOError:
-        print("Unable to open {0}".format(file))
+        print("Unable to open {0}".format(_file))
         data = ""
     finally:
         handle.close()
