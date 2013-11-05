@@ -204,7 +204,7 @@ class Season(Sequence):
         else:
             raise error.TVDBValueError("Index should be an integer")
 
-    def __dir__(self):
+    def __dir__(self):  # pylint: disable=R0201
         return ['show', 'season_number']
 
     def __reversed__(self):
