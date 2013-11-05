@@ -40,8 +40,46 @@ can be found `here <https://aur.archlinux.org/packages.php?ID=58697>`_.
 Usage
 =====
 To use the API you should apply for an API key for your particular application.
-An API key can be obtained for free from thetvdb.com_.
+An API key can be obtained for free from thetvdb.com_. These are some of the things you
+can do with *pytvdbapi*.
 
+
+Create a db instance::
+
+    >>> from pytvdbapi import api
+    >>> db = api.TVDB('B43FF87DE395DF56')
+
+Search for a show name::
+
+    >>> result = db.search('Dexter', 'en')
+    >>> len(result)
+    1
+
+
+Obtain a show instance and access the data::
+
+    >>> show = result[0]
+    >>> print(show.SeriesName)
+    Dexter
+
+    >>> len(show)
+    9
+
+Access individual seasons::
+
+    >>> season = show[1]
+    >>> len(season)
+    12
+    >>> print(season.season_number)
+    1
+
+Access an episode within the season::
+
+    >>> episode = season[2]
+    >>> print(episode.EpisodeNumber)
+    2
+    >>> print(episode.EpisodeName)
+    Crocodile
 
 Documentation
 =============
