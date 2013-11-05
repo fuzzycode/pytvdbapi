@@ -27,16 +27,18 @@ from pytvdbapi.actor import Actor
 
 
 class TestActor(unittest.TestCase):
+    def setUp(self):
+        api = TVDB("B43FF87DE395DF56", actors=True)
+        self.show = api.get(79349, "en")  # Load the series Dexter
+        self.show.update()
+
     def test_get_actors(self):
         """
         The Show instance should have an actor_objects attribute when the
         actor data is loaded.
         """
-        api = TVDB("B43FF87DE395DF56", actors=True)
-        show = api.get(79349, "en")  # Load the series Dexter
-        show.update()
 
-        self.assertEqual(hasattr(show, "actor_objects"), True)
+        self.assertEqual(hasattr(self.show, "actor_objects"), True)
 
     def test_no_actors(self):
         """
@@ -53,11 +55,7 @@ class TestActor(unittest.TestCase):
         """
         The attributes of the Actors class should be correct
         """
-        api = TVDB("B43FF87DE395DF56", actors=True)
-        show = api.get(79349, "en")  # Load the series Dexter
-        show.update()
-
-        actor = show.actor_objects[0]
+        actor = self.show.actor_objects[0]
 
         self.assertEqual(hasattr(actor, "id"), True)
         self.assertEqual(hasattr(actor, "Image"), True)
@@ -72,11 +70,8 @@ class TestActor(unittest.TestCase):
         """
         It should be possible to iterate over the actor objects
         """
-        api = TVDB("B43FF87DE395DF56", actors=True)
-        show = api.get(79349, "en")  # Load the series Dexter
-        show.update()
 
-        for actor in show.actor_objects:
+        for actor in self.show.actor_objects:
             self.assertEqual(type(actor), Actor)
 
     def test_invalid_actor_attribute(self):
@@ -84,22 +79,15 @@ class TestActor(unittest.TestCase):
         Actor instance should raise an exception when accessing an invalid
         attribute.
         """
-        api = TVDB("B43FF87DE395DF56", actors=True)
-        show = api.get(79349, "en")  # Load the series Dexter
-        show.update()
 
-        actor = show.actor_objects[0]
+        actor = self.show.actor_objects[0]
         self.assertRaises(error.TVDBAttributeError, actor.__getattr__, 'foo')
 
     def test_unicode_attributes(self):
         """The attributes should be unicode on Python 2.X and str on Python 3.X"""
         _type = unicode if sys.version < '3' else str
 
-        api = TVDB("B43FF87DE395DF56", actors=True)
-        show = api.get(79349, "en")  # Load the series Dexter
-        show.update()
-
-        actor = show.actor_objects[0]
+        actor = self.show.actor_objects[0]
 
         for attr_name in dir(actor):
             attr = getattr(actor, attr_name)
