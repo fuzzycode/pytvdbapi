@@ -21,6 +21,7 @@ try:
     from setuptools import setup, find_packages
 except ImportError:
     import distribute_setup
+
     distribute_setup.use_setuptools()
     from setuptools import setup, find_packages
 
@@ -38,6 +39,7 @@ def get_description():
         return open("README.rst").read() + '\n' + open("CHANGES.txt").read()
     except Exception:
         return "No description"
+
 
 setup(
     name=__NAME__,
@@ -64,7 +66,6 @@ setup(
     Programming Language :: Python :: 2.6
     Programming Language :: Python :: 2.7
     Programming Language :: Python :: 3
-    Programming Language :: Python :: 3.2
     Programming Language :: Python :: 3.3
     Topic :: Software Development :: Libraries :: Python Modules
     Topic :: Utilities""".splitlines() if f.strip()],
