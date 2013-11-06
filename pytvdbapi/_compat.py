@@ -22,13 +22,17 @@ A compatibility module for easing the development for Python 2.X and 3.X
 with a shared code base. Strongly inspired/copied by the approach taken by werkzeug.
 """
 
+# Exclude the whole file from style testing
+# flake8: noqa
+# pylint: skip-file
+
 import sys
 
 __all__ = ['implements_to_string']
 
 PY2 = sys.version_info[0] == 2
 
-_identity = lambda x: x
+__identity = lambda x: x
 
 if PY2:
     def implements_to_string(cls):
@@ -48,17 +52,50 @@ if PY2:
         :param encoding:
         :param error:
 
-
+        Turn a string into unicode data, non strings are returned unchanged
         """
         if isinstance(data, unicode):
             return data
         elif isinstance(data, str):
             try:
-                return data.decode(encoding=encoding, errors=error)
+                return unicode(data, encoding=encoding, errors=error)
             except UnicodeDecodeError:
                 return data
         else:
             return data
+
+    def make_bytes(data, encoding='utf-8', error='strict'):
+        """
+        :param data:
+        :param encoding:
+        :param error:
+
+        Turn unicode data into bytes
+        """
+        if data is None:
+            return None
+        if isinstance(data, (bytes, bytearray, buffer)):
+            return bytes(data)
+        if isinstance(data, unicode):
+            return data.encode(encoding, error)
+        raise TypeError('Expected bytes')
+
 else:  # Python 3 implementation
-    implements_to_string = _identity
-    make_unicode = _identity
+    implements_to_string = __identity
+    make_unicode = __identity
+
+    def make_bytes(data, encoding='utf-8', error='strict'):
+        """
+        :param data:
+        :param encoding:
+        :param error:
+
+        Turn unicode data into bytes
+        """
+        if data is None:
+            return None
+        if isinstance(data, (bytes, bytearray, memoryview)):
+            return bytes(data)
+        if isinstance(data, str):
+            return data.encode(encoding, error)
+        raise TypeError('Expected bytes')
