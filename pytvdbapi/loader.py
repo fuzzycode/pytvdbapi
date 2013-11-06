@@ -38,6 +38,7 @@ class Loader(object):
     A object for loading data from a provided url.
     Uses httplib2 to do the heavy lifting.
     """
+
     def __init__(self, cache_path):
         self.http = httplib2.Http(cache=os.path.abspath(cache_path))
 
@@ -50,7 +51,7 @@ class Loader(object):
 
         """
 
-        logger.debug("Loading data from {0}".format(url))
+        logger.debug(u"Loading data from {0}".format(url))
 
         header = dict()
         if not cache:
@@ -61,12 +62,12 @@ class Loader(object):
             response, content = self.http.request(url, headers=header)
         except (httplib2.RelativeURIError, httplib2.ServerNotFoundError):
             raise error.ConnectionError("Unable to connect to {0}"
-                                        .format(url))
+            .format(url))
 
         if response.status in [404]:
-            raise error.TVDBNotFoundError("Data not found")
+            raise error.TVDBNotFoundError(u"Data not found")
         elif response.status not in [200, 304]:
-            raise error.ConnectionError("Bad status returned from server. {0}"
-                                        .format(response.status))
+            raise error.ConnectionError(u"Bad status returned from server. {0}"
+            .format(response.status))
         else:
             return content.decode("utf-8")

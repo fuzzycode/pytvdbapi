@@ -20,11 +20,12 @@
 """A module for actor related functionality."""
 
 from pytvdbapi.error import TVDBAttributeError
-
+from pytvdbapi._compat import implements_to_string
 
 __all__ = ['Actor']
 
 
+@implements_to_string
 class Actor(object):
     """
     Representing an Actor as provided by `thetvdb.com <http://thetvdb.com>`_.
@@ -41,7 +42,7 @@ class Actor(object):
 
     def __getattr__(self, item):
         if item == 'image_url':
-            return self.mirror + "/banners/" + self.Image
+            return self.mirror + u"/banners/" + self.Image
         else:
             try:
                 return self.data[item]
@@ -50,3 +51,9 @@ class Actor(object):
 
     def __dir__(self):
         return list(self.data.keys()) + ['image_url']
+
+    def __str__(self):
+        return u'<{0} - {1}>'.format(self.__class__.__name__, self.Name)
+
+    def __repr__(self):
+        return self.__str__()

@@ -24,19 +24,18 @@ thetvdb.com API.
 
 """
 
-from __future__ import absolute_import, print_function, unicode_literals
+from __future__ import absolute_import, print_function
 
 import logging
 import tempfile
-import sys
 import os
 from collections import Sequence
 
 # pylint: disable=E0611, F0401, W0622
 from pytvdbapi.actor import Actor
 from pytvdbapi.banner import Banner
-from pytvdbapi.utils import InsensitiveDictionary
-
+from pytvdbapi.utils import InsensitiveDictionary, unicode_arguments
+from pytvdbapi._compat import implements_to_string, make_bytes
 
 try:
     from urllib import quote
@@ -53,13 +52,13 @@ from pytvdbapi.utils import merge
 from pytvdbapi.xmlhelpers import parse_xml, generate_tree
 
 # URL templates used for loading the data from thetvdb.com
-__mirrors__ = "http://www.thetvdb.com/api/{api_key}/mirrors.xml"
-__time__ = "http://www.thetvdb.com/api/Updates.php?type=none"
-__search__ = "http://www.thetvdb.com/api/GetSeries.php?seriesname={series}&language={language}"
-__series__ = "{mirror}/api/{api_key}/series/{seriesid}/all/{language}.xml"
-__episode__ = "{mirror}/api/{api_key}/episodes/{episodeid}/{language}.xml"
-__actors__ = "{mirror}/api/{api_key}/series/{seriesid}/actors.xml"
-__banners__ = "{mirror}/api/{api_key}/series/{seriesid}/banners.xml"
+__mirrors__ = u"http://www.thetvdb.com/api/{api_key}/mirrors.xml"
+__time__ = u"http://www.thetvdb.com/api/Updates.php?type=none"
+__search__ = u"http://www.thetvdb.com/api/GetSeries.php?seriesname={series}&language={language}"
+__series__ = u"{mirror}/api/{api_key}/series/{seriesid}/all/{language}.xml"
+__episode__ = u"{mirror}/api/{api_key}/episodes/{episodeid}/{language}.xml"
+__actors__ = u"{mirror}/api/{api_key}/series/{seriesid}/actors.xml"
+__banners__ = u"{mirror}/api/{api_key}/series/{seriesid}/banners.xml"
 
 __all__ = ['languages', 'Language', 'TVDB', 'Search', 'Show', 'Season', 'Episode']
 
@@ -67,6 +66,7 @@ __all__ = ['languages', 'Language', 'TVDB', 'Search', 'Show', 'Season', 'Episode
 logger = logging.getLogger(__name__)
 
 
+@implements_to_string
 class Language(object):
     """
     Representing a language that is supported by the API.
@@ -83,34 +83,36 @@ class Language(object):
 
         self._id = id
 
-    def __repr__(self):
-        return "<{0} - {1}>".format('Language', self.abbreviation)
+    def __str__(self):
+        return u'<{0} - {1}({2})>'.format(self.__class__.__name__, self.name, self.abbreviation)
 
+    def __repr__(self):
+        return self.__str__()
 
 # The list of API supported languages
-__LANGUAGES__ = {"da": Language(abbrev="da", name="Dansk", id=10),
-                 "fi": Language(abbrev="fi", name="Suomeksi", id=11),
-                 "nl": Language(abbrev="nl", name="Nederlands", id=13),
-                 "de": Language(abbrev="de", name="Deutsch", id=14),
-                 "it": Language(abbrev="it", name="Italiano", id=15),
-                 "es": Language(abbrev="es", name="Español", id=16),
-                 "fr": Language(abbrev="fr", name="Français", id=17),
-                 "pl": Language(abbrev="pl", name="Polski", id=18),
-                 "hu": Language(abbrev="hu", name="Magyar", id=19),
-                 "el": Language(abbrev="el", name="Ελληνικά", id=20),
-                 "tr": Language(abbrev="tr", name="Türkçe", id=21),
-                 "ru": Language(abbrev="ru", name="русский язык", id=22),
-                 "he": Language(abbrev="he", name=" עברית", id=24),
-                 "ja": Language(abbrev="ja", name="日本語", id=25),
-                 "pt": Language(abbrev="pt", name="Português", id=26),
-                 "zh": Language(abbrev="zh", name="中文", id=27),
-                 "cs": Language(abbrev="cs", name="čeština", id=28),
-                 "sl": Language(abbrev="sl", name="Slovenski", id=30),
-                 "hr": Language(abbrev="hr", name="Hrvatski", id=31),
-                 "ko": Language(abbrev="ko", name="한국어", id=32),
-                 "en": Language(abbrev="en", name="English", id=7),
-                 "sv": Language(abbrev="sv", name="Svenska", id=8),
-                 "no": Language(abbrev="no", name="Norsk", id=9)}
+__LANGUAGES__ = {u"da": Language(abbrev=u"da", name=u"Dansk", id=10),
+                 u"fi": Language(abbrev=u"fi", name=u"Suomeksi", id=11),
+                 u"nl": Language(abbrev=u"nl", name=u"Nederlands", id=13),
+                 u"de": Language(abbrev=u"de", name=u"Deutsch", id=14),
+                 u"it": Language(abbrev=u"it", name=u"Italiano", id=15),
+                 u"es": Language(abbrev=u"es", name=u"Español", id=16),
+                 u"fr": Language(abbrev=u"fr", name=u"Français", id=17),
+                 u"pl": Language(abbrev=u"pl", name=u"Polski", id=18),
+                 u"hu": Language(abbrev=u"hu", name=u"Magyar", id=19),
+                 u"el": Language(abbrev=u"el", name=u"Ελληνικά", id=20),
+                 u"tr": Language(abbrev=u"tr", name=u"Türkçe", id=21),
+                 u"ru": Language(abbrev=u"ru", name=u"русский язык", id=22),
+                 u"he": Language(abbrev=u"he", name=u" עברית", id=24),
+                 u"ja": Language(abbrev=u"ja", name=u"日本語", id=25),
+                 u"pt": Language(abbrev=u"pt", name=u"Português", id=26),
+                 u"zh": Language(abbrev=u"zh", name=u"中文", id=27),
+                 u"cs": Language(abbrev=u"cs", name=u"čeština", id=28),
+                 u"sl": Language(abbrev=u"sl", name=u"Slovenski", id=30),
+                 u"hr": Language(abbrev=u"hr", name=u"Hrvatski", id=31),
+                 u"ko": Language(abbrev=u"ko", name=u"한국어", id=32),
+                 u"en": Language(abbrev=u"en", name=u"English", id=7),
+                 u"sv": Language(abbrev=u"sv", name=u"Svenska", id=8),
+                 u"no": Language(abbrev=u"no", name=u"Norsk", id=9)}
 
 
 def languages():
@@ -122,6 +124,7 @@ def languages():
     return [lang for lang in __LANGUAGES__.values()]
 
 
+@implements_to_string
 class Episode(object):
     """
     :raise: :class:`pytvdbapi.error.TVDBAttributeError`
@@ -161,20 +164,21 @@ class Episode(object):
         try:
             return self.data[item]
         except KeyError:
-            raise error.TVDBAttributeError("Episode has no attribute {0}".format(item))
+            raise error.TVDBAttributeError(u"Episode has no attribute {0}".format(item))
 
     def __dir__(self):
         attributes = [d for d in list(self.__dict__.keys()) if d not in ('data', 'config')]
         return list(self.data.keys()) + attributes
 
+    def __str__(self):
+        return u'<{0} - S{1:03d}E{2:03d}>'.format(
+            self.__class__.__name__, self.SeasonNumber, self.EpisodeNumber)
+
     def __repr__(self):
-        try:
-            return "<Episode S{0:03d}E{1:03d}>".format(int(self.SeasonNumber),
-                                                       int(self.EpisodeNumber))
-        except error.TVDBAttributeError:
-            return "<Episode>"
+        return self.__str__()
 
 
+@implements_to_string
 class Season(Sequence):
     # pylint: disable=R0924
     """
@@ -196,13 +200,13 @@ class Season(Sequence):
             try:
                 return self.episodes[item]
             except KeyError:
-                raise error.TVDBIndexError("Episode {0} not found".format(item))
+                raise error.TVDBIndexError(u"Episode {0} not found".format(item))
 
         elif isinstance(item, slice):
             indices = sorted(self.episodes.keys())[item]  # Slice the keys
             return [self[i] for i in indices]
         else:
-            raise error.TVDBValueError("Index should be an integer")
+            raise error.TVDBValueError(u"Index should be an integer")
 
     def __dir__(self):  # pylint: disable=R0201
         return ['show', 'season_number']
@@ -217,8 +221,11 @@ class Season(Sequence):
     def __iter__(self):
         return iter(sorted(list(self.episodes.values()), key=lambda ep: ep.EpisodeNumber))
 
+    def __str__(self):
+        return u'<Season {0:03}>'.format(self.season_number)
+
     def __repr__(self):
-        return "<Season {0:03}>".format(self.season_number)
+        return self.__str__()
 
     def append(self, episode):
         """
@@ -229,11 +236,12 @@ class Season(Sequence):
         EpisodeNumber already exists, it will be overwritten.
         """
         assert type(episode) in (Episode,)
-        logger.debug("{0} adding episode {1}".format(self, episode))
+        logger.debug(u"{0} adding episode {1}".format(self, episode))
 
         self.episodes[int(episode.EpisodeNumber)] = episode
 
 
+@implements_to_string
 class Show(Sequence):
     # pylint: disable=R0924, R0902
     """
@@ -287,10 +295,7 @@ class Show(Sequence):
         try:
             return self.data[item]
         except KeyError:
-            raise error.TVDBAttributeError("Show has no attribute named {0}".format(item))
-
-    def __repr__(self):
-        return "<Show>".format(self.SeriesName)
+            raise error.TVDBAttributeError(u"Show has no attribute named {0}".format(item))
 
     def __dir__(self):
         attributes = [d for d in list(self.__dict__.keys())
@@ -321,13 +326,19 @@ class Show(Sequence):
             try:
                 return self.seasons[item]
             except KeyError:
-                raise error.TVDBIndexError("Season {0} not found".format(item))
+                raise error.TVDBIndexError(u"Season {0} not found".format(item))
 
         elif isinstance(item, slice):
             indices = sorted(self.seasons.keys())[item]  # Slice the keys
             return [self[i] for i in indices]
         else:
             raise error.TVDBValueError("Index should be an integer")
+
+    def __str__(self):
+        return u'<{0} - {1}>'.format(self.__class__.__name__, self.SeriesName)
+
+    def __repr__(self):
+        return self.__str__()
 
     def update(self):
         """
@@ -358,7 +369,7 @@ class Show(Sequence):
         episodes = [d for d in parse_xml(data, "Episode")]
 
         show_data = parse_xml(data, "Series")
-        assert len(show_data) == 1, "Should only have 1 Show section"
+        assert len(show_data) == 1, u"Should only have 1 Show section"
 
         self.data = merge(self.data, InsensitiveDictionary(show_data[0], ignore_case=self.ignore_case))
 
@@ -403,7 +414,7 @@ class Show(Sequence):
                    'seriesid': self.id}
         url = __actors__.format(**context)
 
-        logger.debug('Loading Actors data from {0}'.format(url))
+        logger.debug(u'Loading Actors data from {0}'.format(url))
 
         data = generate_tree(self.api.loader.load(url))
 
@@ -433,7 +444,7 @@ class Show(Sequence):
                    'seriesid': self.id}
 
         url = __banners__.format(**context)
-        logger.debug('Loading Banner data from {0}'.format(url))
+        logger.debug(u'Loading Banner data from {0}'.format(url))
 
         data = generate_tree(self.api.loader.load(url))
         mirror = self.api.mirrors.get_mirror(TypeMask.BANNER).url
@@ -466,12 +477,12 @@ class Search(object):
 
     def __getitem__(self, item):
         if not isinstance(item, int):
-            raise error.TVDBValueError("Index should be an integer")
+            raise error.TVDBValueError(u"Index should be an integer")
 
         try:
             return self.result[item]
         except (IndexError, TypeError):
-            raise error.TVDBIndexError("Index out of range ({0})".format(item))
+            raise error.TVDBIndexError(u"Index out of range ({0})".format(item))
 
     def __iter__(self):
         return iter(self.result)
@@ -519,6 +530,7 @@ class TVDB(object):
       the log file.
     """
 
+    @unicode_arguments
     def __init__(self, api_key, **kwargs):
         self.config = dict()
 
@@ -529,7 +541,7 @@ class TVDB(object):
         self.path = os.path.abspath(os.path.dirname(__file__))
 
         if 'force_lang' in kwargs:
-            logger.warning("'force_lang' keyword argument is deprecated as of version 0.4")
+            logger.warning(u"'force_lang' keyword argument is deprecated as of version 0.4")
 
         #extract all argument and store for later use
         self.config['api_key'] = api_key
@@ -545,6 +557,7 @@ class TVDB(object):
         tree = generate_tree(self.loader.load(__mirrors__.format(**self.config)))
         self.mirrors = MirrorList(tree)
 
+    @unicode_arguments
     def search(self, show, language, cache=True):
         """
         :param show: The show name to search for
@@ -566,22 +579,14 @@ class TVDB(object):
         this is recommended to increase speed and to reduce the workload of
         the servers.
         """
-        if sys.version < '3':
-            try:
-                show = show.decode('utf-8')
-            except UnicodeEncodeError:
-                pass
 
-        logger.debug("Searching for {0} using language {1}".format(show, language).encode('utf-8'))
+        logger.debug(u"Searching for {0} using language {1}".format(show, language))
 
         if language != 'all' and language not in __LANGUAGES__:
             raise error.TVDBValueError("{0} is not a valid language".format(language))
 
         if (show, language) not in self.search_buffer or not cache:
-            if sys.version_info < (3, 0):
-                show = show.encode('utf-8')
-
-            context = {'series': quote(show), "language": language}
+            context = {'series': quote(make_bytes(show)), "language": language}
             data = generate_tree(self.loader.load(__search__.format(**context), cache))
             shows = [Show(d, self, language, self.config) for d in parse_xml(data, "Series")]
 
@@ -589,6 +594,7 @@ class TVDB(object):
 
         return Search(self.search_buffer[(show, language)], show, language)
 
+    @unicode_arguments
     def get(self, series_id, language, cache=True):
         """
         .. versionadded:: 0.3
@@ -606,6 +612,7 @@ class TVDB(object):
         logger.warning("Using deprecated function 'get'. Use 'get_series' instead")
         return self.get_series(series_id, language, cache)
 
+    @unicode_arguments
     def get_series(self, series_id, language, cache=True):
         """
         .. versionadded:: 0.4
@@ -622,7 +629,7 @@ class TVDB(object):
         corresponding :class:`Show()` object is returned.
         """
 
-        logger.debug("Getting series with id {0} with language {1}".format(series_id, language))
+        logger.debug(u"Getting series with id {0} with language {1}".format(series_id, language))
 
         if language != 'all' and language not in __LANGUAGES__:
             raise error.TVDBValueError("{0} is not a valid language".format(language))
@@ -632,29 +639,30 @@ class TVDB(object):
                    'api_key': self.config['api_key']}
 
         url = __series__.format(**context)
-        logger.debug('Getting series from {0}'.format(url))
+        logger.debug(u'Getting series from {0}'.format(url))
 
         try:
             data = self.loader.load(url, cache)
         except error.TVDBNotFoundError:
-            raise error.TVDBIdError("Series id {0} not found".format(series_id))
+            raise error.TVDBIdError(u"Series id {0} not found".format(series_id))
         except error.ConnectionError as _error:
-            logger.debug("Unable to connect to URL: {0}. {1}".format(url, _error))
+            logger.debug(u"Unable to connect to URL: {0}. {1}".format(url, _error))
             raise
 
         if data.strip():
             data = generate_tree(data)
         else:
-            raise error.TVDBIdError("No Show with id {0} found".format(series_id))
+            raise error.TVDBIdError(u"No Show with id {0} found".format(series_id))
 
         series = parse_xml(data, "Series")
-        assert len(series) <= 1, "Should not find more than one series"
+        assert len(series) <= 1, u"Should not find more than one series"
 
         if len(series) >= 1:
             return Show(series[0], self, language, self.config)
         else:
-            raise error.TVDBIdError("No Show with id {0} found".format(series_id))
+            raise error.TVDBIdError(u"No Show with id {0} found".format(series_id))
 
+    @unicode_arguments
     def get_episode(self, episode_id, language, cache=True):
         """
         .. versionadded:: 0.4
@@ -678,32 +686,32 @@ class TVDB(object):
         logger.debug("Getting episode with id {0} with language {1}".format(episode_id, language))
 
         if language != 'all' and language not in __LANGUAGES__:
-            raise error.TVDBValueError("{0} is not a valid language".format(language))
+            raise error.TVDBValueError(u"{0} is not a valid language".format(language))
 
         context = {'episodeid': episode_id, "language": language,
                    'mirror': self.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.config['api_key']}
 
         url = __episode__.format(**context)
-        logger.debug('Getting episode from {0}'.format(url))
+        logger.debug(u'Getting episode from {0}'.format(url))
 
         try:
             data = self.loader.load(url, cache)
         except error.TVDBNotFoundError:
-            raise error.TVDBIdError("No Episode with id {0} found".format(episode_id))
+            raise error.TVDBIdError(u"No Episode with id {0} found".format(episode_id))
         except error.ConnectionError as _error:
-            logger.debug("Unable to connect to URL: {0}. {1}".format(url, _error))
+            logger.debug(u"Unable to connect to URL: {0}. {1}".format(url, _error))
             raise
 
         if data.strip():
             data = generate_tree(data)
         else:
-            raise error.TVDBIdError("No Episode with id {0} found".format(episode_id))
+            raise error.TVDBIdError(u"No Episode with id {0} found".format(episode_id))
 
         episodes = parse_xml(data, "Episode")
-        assert len(episodes) <= 1, "Should not find more than one episodes"
+        assert len(episodes) <= 1, u"Should not find more than one episodes"
 
         if len(episodes) >= 1:
             return Episode(episodes[0], None, self.config)
         else:
-            raise error.TVDBIdError("No Episode with id {0} found".format(episode_id))
+            raise error.TVDBIdError(u"No Episode with id {0} found".format(episode_id))

@@ -24,8 +24,26 @@ A module for utility functionality.
 """
 
 from collections import MutableMapping
+from pytvdbapi._compat import make_unicode
 
-__all__ = ['merge', 'TransformedDictionary', 'InsensitiveDictionary']
+__all__ = ['unicode_arguments', 'merge', 'TransformedDictionary', 'InsensitiveDictionary']
+
+
+def unicode_arguments(func):
+    """
+    :param func: The function to wrap
+    :type func: A function object
+
+    A wrapper to convert all text arguments into unicode objects.
+    """
+
+    def wrapper(*args, **kwargs):
+        """The conversion wrapper function"""
+        args = [make_unicode(arg) for arg in args]
+        kwargs = dict((k, make_unicode(v)) for (k, v) in kwargs.items())
+        return func(*args, **kwargs)
+
+    return wrapper
 
 
 def merge(dict1, dict2, decision=lambda x, y: y):
@@ -53,6 +71,7 @@ class TransformedDictionary(MutableMapping, object):
     An abstract dictionary base class that support transformation
     of the key used for storing.
     """
+
     def __transform__(self, key):
         raise NotImplementedError("Not implemented")
 
@@ -104,6 +123,7 @@ class InsensitiveDictionary(TransformedDictionary):
     """
     A dictionary supporting the use of case insensitive keys
     """
+
     def __init__(self, *args, **kwargs):
         self.ignore_case = kwargs.pop('ignore_case', False)
         super(InsensitiveDictionary, self).__init__(*args, **kwargs)

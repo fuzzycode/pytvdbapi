@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import, print_function, unicode_literals
+from __future__ import absolute_import, print_function
 
 import sys
 import unittest
@@ -533,13 +533,17 @@ class TestSearch(unittest.TestCase):
 
         api = TVDB("B43FF87DE395DF56")
 
-        search = api.search("Alarm für cobra 11", "de")
+        search = api.search(u"Alarm für cobra 11", "de")
         show = search[0]
-        self.assertEqual(show[1][2].EpisodeName, "Rote Rosen, schwarzer Tod")
+        self.assertEqual(show[1][2].EpisodeName, u"Rote Rosen, schwarzer Tod")
 
-        search = api.search('3年B組金八先生', "zh")
+        search = api.search("Alarm für cobra 11", u"de")
         show = search[0]
-        self.assertEqual(show[1][1].EpisodeName, "3年B組金八先生")
+        self.assertEqual(show[1][2].EpisodeName, u"Rote Rosen, schwarzer Tod")
+
+        search = api.search(u'3年B組金八先生', "zh")
+        show = search[0]
+        self.assertEqual(show[1][1].EpisodeName, u"3年B組金八先生")
 
     def test_names_with_spaces(self):
         """It should be possible to search for shows with spaces in the name"""
