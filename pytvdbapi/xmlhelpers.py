@@ -53,7 +53,7 @@ def generate_tree(xml_data):
     try:
         return eTree.fromstring(xml_data.encode('utf-8'))
     except ParseError:
-        raise error.BadData("Bad XML data received")
+        raise error.BadData(u"Bad XML data received")
 
 
 def parse_xml(etree, element):
@@ -76,7 +76,7 @@ def parse_xml(etree, element):
       one element it will be converted into a one element list.
     """
 
-    logger.debug("Parsing element tree for {0}".format(element))
+    logger.debug(u"Parsing element tree for {0}".format(element))
 
     _list = list()
     for item in etree.findall(element):
@@ -107,5 +107,5 @@ def parse_xml(etree, element):
 
             data[tag] = value
         _list.append(data)
-    logger.debug("Found {0} element(s)".format(len(_list)))
+    logger.debug(u"Found {0} element(s)".format(len(_list)))
     return _list
