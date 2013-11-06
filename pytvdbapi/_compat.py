@@ -82,7 +82,10 @@ if PY2:
 
 else:  # Python 3 implementation
     implements_to_string = __identity
-    make_unicode = __identity
+
+    def make_unicode(data, encoding='utf-8', error='strict'):
+        """"""
+        return data
 
     def make_bytes(data, encoding='utf-8', error='strict'):
         """
