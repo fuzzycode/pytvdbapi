@@ -9,10 +9,7 @@ include CHANGES.txt
 include requirements.txt
 
 #include the documentation
-recursive-include docs/build/html/ *.*
-
-#Add the data folder
-recursive-include pytvdbapi/data/ *.*
+recursive-include docs/build/html *.*
 
 #The exclude section
 exclude MANIFEST*
