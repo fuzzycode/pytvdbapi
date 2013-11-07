@@ -25,7 +25,6 @@ import datetime
 import logging
 import re
 import xml.etree.ElementTree as eTree
-import sys
 
 try:
     from xml.etree.ElementTree import ParseError  # pylint: disable=E0611
@@ -34,7 +33,7 @@ except ImportError:
     from xml.parsers.expat import ExpatError as ParseError
 
 from pytvdbapi import error
-from pytvdbapi._compat import make_bytes
+from pytvdbapi._compat import make_bytes, make_unicode
 
 __all__ = ['generate_tree', 'parse_xml']
 
@@ -84,15 +83,12 @@ def parse_xml(etree, element):
 
         data = dict()
         for child in list(item):
-            if sys.version < '3':
-                tag, value = child.tag, unicode(child.text)  # noqa # pylint: disable=E0602
-            else:
-                tag, value = child.tag, child.text
+            tag, value = child.tag, make_unicode(child.text)
 
             if value:
                 value = value.strip()
             else:
-                value = ""
+                value = u""
 
             try:  # Try to format as a datetime object
                 value = datetime.datetime.strptime(value, "%Y-%m-%d").date()

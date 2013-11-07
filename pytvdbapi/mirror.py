@@ -64,6 +64,7 @@ class MirrorList(object):
         return one and the same mirror information when requested. This functionality
         could and will be removed from future versions of **pytvdbapi**.
     """
+
     def __init__(self, etree):
         self.data = [
             Mirror(m['id'], m['mirrorpath'], m['typemask'])
@@ -89,4 +90,4 @@ class MirrorList(object):
                 [m for m in self.data if
                  int(m.type_mask) & int(type_mask) == int(type_mask)])
         except IndexError:
-            raise error.PytvdbapiError("No Mirror matching {0} found".format(type_mask))
+            raise error.PytvdbapiError(u"No Mirror matching {0} found".format(type_mask))

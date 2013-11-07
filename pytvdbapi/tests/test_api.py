@@ -399,9 +399,12 @@ class TestShow(unittest.TestCase):
             if type(attr) not in (float, int, bool, datetime.date, pytvdbapi.api.TVDB):
                 if type(attr) in (list,):
                     for a in attr:
-                        self.assertEqual(type(a), _type)
+                        self.assertEqual(type(a), _type,
+                                         u"Attr: {0} was not {1} but {2}".format(attr_name, _type,
+                                                                                 type(attr)))
                 else:
-                    self.assertEqual(type(attr), _type)
+                    self.assertEqual(type(attr), _type,
+                                     u"Attr: {0} was not {1} but {2}".format(attr_name, _type, type(attr)))
 
 
 class TestEpisode(unittest.TestCase):
@@ -470,9 +473,12 @@ class TestEpisode(unittest.TestCase):
             if type(attr) not in (float, int, datetime.date, pytvdbapi.api.Season):
                 if type(attr) in (list,):
                     for a in attr:
-                        self.assertEqual(type(a), _type)
+                        self.assertEqual(type(a), _type,
+                                         u"Attr: {0} was not {1} but {0}".format(attr_name,
+                                                                                 _type, type(attr)))
                 else:
-                    self.assertEqual(type(attr), _type)
+                    self.assertEqual(type(attr), _type,
+                                     u"Attr: {0} was not {1} but {0}".format(attr_name, _type, type(attr)))
 
 
 class TestSearch(unittest.TestCase):

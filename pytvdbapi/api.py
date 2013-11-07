@@ -332,7 +332,7 @@ class Show(Sequence):
             indices = sorted(self.seasons.keys())[item]  # Slice the keys
             return [self[i] for i in indices]
         else:
-            raise error.TVDBValueError("Index should be an integer")
+            raise error.TVDBValueError(u"Index should be an integer")
 
     def __str__(self):
         return u'<{0} - {1}>'.format(self.__class__.__name__, self.SeriesName)
@@ -357,7 +357,7 @@ class Show(Sequence):
         API and should only be used internally by the Show class to manage its
         structure.
         """
-        logger.debug("Populating season data from URL.")
+        logger.debug(u"Populating season data from URL.")
 
         context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.config['api_key'],
@@ -582,8 +582,8 @@ class TVDB(object):
 
         logger.debug(u"Searching for {0} using language {1}".format(show, language))
 
-        if language != 'all' and language not in __LANGUAGES__:
-            raise error.TVDBValueError("{0} is not a valid language".format(language))
+        if language != u'all' and language not in __LANGUAGES__:
+            raise error.TVDBValueError(u"{0} is not a valid language".format(language))
 
         if (show, language) not in self.search_buffer or not cache:
             context = {'series': quote(make_bytes(show)), "language": language}
@@ -609,7 +609,7 @@ class TVDB(object):
         :raise: :class:`pytvdbapi.error.TVDBValueError`, :class:`pytvdbapi.error.TVDBIdError`
         """
 
-        logger.warning("Using deprecated function 'get'. Use 'get_series' instead")
+        logger.warning(u"Using deprecated function 'get'. Use 'get_series' instead")
         return self.get_series(series_id, language, cache)
 
     @unicode_arguments
@@ -632,7 +632,7 @@ class TVDB(object):
         logger.debug(u"Getting series with id {0} with language {1}".format(series_id, language))
 
         if language != 'all' and language not in __LANGUAGES__:
-            raise error.TVDBValueError("{0} is not a valid language".format(language))
+            raise error.TVDBValueError(u"{0} is not a valid language".format(language))
 
         context = {'seriesid': series_id, "language": language,
                    'mirror': self.mirrors.get_mirror(TypeMask.XML).url,
@@ -683,7 +683,7 @@ class TVDB(object):
             the episode attribute will be None.
         """
 
-        logger.debug("Getting episode with id {0} with language {1}".format(episode_id, language))
+        logger.debug(u"Getting episode with id {0} with language {1}".format(episode_id, language))
 
         if language != 'all' and language not in __LANGUAGES__:
             raise error.TVDBValueError(u"{0} is not a valid language".format(language))

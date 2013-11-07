@@ -90,14 +90,6 @@ class TestBanners(unittest.TestCase):
         for banner in self.show.banner_objects:
             self.assertEqual(type(banner), Banner)
 
-    def test_banner_representation(self):
-        """
-        The banner representation should be properly formatted.
-        """
-        banner = self.show.banner_objects[0]
-
-        self.assertEqual(banner.__repr__(), "<Banner>")
-
     def test_invalid_banner_attributes(self):
         """
         The banner object should raise an exception when accessing an invalid

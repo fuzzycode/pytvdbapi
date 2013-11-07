@@ -25,8 +25,10 @@ be stored as a property of the related Show instance.
 """
 
 from pytvdbapi import error
+from pytvdbapi._compat import implements_to_string
 
 
+@implements_to_string
 class Banner(object):
     """
     Representing a Banner as provided by `thetvdb.com <http://thetvdb.com>`_.
@@ -84,18 +86,21 @@ class Banner(object):
     def __init__(self, mirror, data, show):
         self.mirror, self.data, self.show = mirror, data, show
 
+    def __str__(self):
+        return u'<Banner({1}) - {0}>'.format(self.id, self.BannerType)
+
     def __repr__(self):
-        return "<Banner>"
+        return self.__str__()
 
     def __getattr__(self, item):
         if item == "banner_url":
-            return self.mirror + "/banners/" + self.BannerPath
+            return self.mirror + u"/banners/" + self.BannerPath
         else:
             try:
                 return self.data[item]
             except KeyError:
                 raise error.TVDBAttributeError(
-                    "Banner has no {0} attribute".format(item))
+                    u"Banner has no {0} attribute".format(item))
 
     def __dir__(self):
         return list(self.data.keys()) + ["banner_url"]
