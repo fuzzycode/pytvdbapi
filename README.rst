@@ -43,7 +43,6 @@ To use the API you should apply for an API key for your particular application.
 An API key can be obtained for free from thetvdb.com_. These are some of the things you
 can do with *pytvdbapi*.
 
-
 Create a db instance::
 
     >>> from pytvdbapi import api
@@ -83,19 +82,13 @@ Access an episode within the season::
 
 Documentation
 =============
-The documentation for **pytvdbapi** is hosted at
-http://packages.python.org/pytvdbapi/.
-It also comes with a version of the documentation included in
-*docs/build/html/*.
+The documentation for **pytvdbapi** is hosted at http://packages.python.org/pytvdbapi/.
 
 Known Issues
 ============
-  * At the moment, **pytvdbapi** only works with Python 2.6, 2.7, 3.2 and 3.3,
-    **NOT 3.0 or 3.1**. This is due to an
-    `issue <http://code.google.com/p/httplib2/issues/detail?id=195>`_
-    with httplib2 on Python 3.0, 3.1.
+  * At the moment, **pytvdbapi** only works with Python 2.6, 2.7, and 3.3,
+    **NOT 3.0, 3.1 or 3.2**.
   * **pytvdbapi** does currently **NOT** support the use of Proxy Servers.
-
 
 Bugs
 ====

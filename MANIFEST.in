@@ -8,8 +8,5 @@ include README.rst
 include CHANGES.txt
 include requirements.txt
 
-#include the documentation
-recursive-include docs/build/html *.*
-
 #The exclude section
 exclude MANIFEST*
