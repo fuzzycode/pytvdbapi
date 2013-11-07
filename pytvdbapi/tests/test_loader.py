@@ -23,11 +23,10 @@ import shutil
 import sys
 import tempfile
 import unittest
-from pkg_resources import resource_filename
 
 from pytvdbapi import error
 from pytvdbapi.loader import Loader
-from pytvdbapi.tests import utils, basetest
+from pytvdbapi.tests import basetest
 
 
 class TestLoader(basetest.pytvdbapiTest):
@@ -50,21 +49,14 @@ class TestLoader(basetest.pytvdbapiTest):
 
     def test_load(self):
         """The Loader should successfully load the provided url"""
-
-        mirror_file = resource_filename(__name__, 'data/mirrors.xml')
-        data = utils.file_loader(mirror_file)
-
         url = ("http://www.thetvdb.com/api/%(api_key)s/mirrors.xml" %
                self.context)
-        result = self.loader.load(url)
 
-        #Fix any new line issues to assure it does not affect the test
-        data = data.replace('\r\n', '\n')
-        result = result.replace('\r\n', '\n')
+        # test that we can load without exceptions
+        self.loader.load(url)
 
-        self.assertEqual(data, result)
 
-    def test_failed_conection(self):
+    def test_failed_connection(self):
         """Loader should raise ConnectionError if it is not able to connect
         to the provided url
         """

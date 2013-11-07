@@ -27,6 +27,7 @@ import os
 import httplib2
 
 from pytvdbapi import error
+from pytvdbapi._compat import make_unicode
 
 #Module logger object
 logger = logging.getLogger(__name__)
@@ -54,17 +55,17 @@ class Loader(object):
 
         header = dict()
         if not cache:
-            logger.debug("Ignoring cached data.")
-            header['cache-control'] = 'no-cache'
+            logger.debug(u"Ignoring cached data.")
+            header['cache-control'] = u'no-cache'
 
         try:
             response, content = self.http.request(url, headers=header)
         except (httplib2.RelativeURIError, httplib2.ServerNotFoundError):
-            raise error.ConnectionError("Unable to connect to {0}".format(url))
+            raise error.ConnectionError(u"Unable to connect to {0}".format(url))
 
         if response.status in [404]:
             raise error.TVDBNotFoundError(u"Data not found")
         elif response.status not in [200, 304]:
             raise error.ConnectionError(u"Bad status returned from server. {0}".format(response.status))
         else:
-            return content.decode("utf-8")
+            return make_unicode(content)
