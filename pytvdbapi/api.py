@@ -150,16 +150,18 @@ def languages():
 
     Example::
         >>> from pytvdbapi import api
-        >>> for language in api.languages(): #doctest: +ELLIPSIS
+        >>> for language in api.languages():  #doctest: +ELLIPSIS
         ...     print(language)
+        <Language - čeština(cs)>
+        <Language - Dansk(da)>
+        <Language - Deutsch(de)>
         ...
-        <Language - Ελληνικά(el)>
         <Language - English(en)>
         ...
         <Language - Svenska(sv)>
-        <Language - Slovenski(sl)>
+        ...
     """
-    return [lang for lang in __LANGUAGES__.values()]
+    return sorted([lang for lang in __LANGUAGES__.values()], key=lambda l: l.abbreviation)
 
 
 @implements_to_string
@@ -822,7 +824,7 @@ class TVDB(object):
         the :class:`Episode()` instance is returned.
 
         Example::
-            >>>  from pytvdbapi import api
+            >>> from pytvdbapi import api
             >>> db = api.TVDB("B43FF87DE395DF56")
             >>> episode = db.get_episode(308834, "en") # Load an episode of dexter
             >>> print(episode.id)
