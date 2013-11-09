@@ -22,6 +22,33 @@ A small, clean and easy to use API for the thetvdb.com online DB service. It
 is designed to be fast, easy to use and to respect the functionality of the
 thetvdb.com API.
 
+Basic usage::
+
+    >>> from pytvdbapi import api
+    >>> db = api.TVDB("B43FF87DE395DF56")
+    >>> result = db.search("How I met your mother", "en")
+    >>> len(result)
+    1
+
+    >>> show = result[0]  # If there is a perfect match, it will be the first
+    >>> print(show.SeriesName)
+    How I Met Your Mother
+
+    >>> len(show)  # Show the number of seasons
+    10
+
+    >>> for season in show: #doctest: +ELLIPSIS
+    ...     for episode in season:
+    ...         print(episode.EpisodeName)
+    ...
+    Robin Sparkles Music Video - Let's Go to the Mall
+    Robin Sparkles Music Video - Sandcastles In the Sand
+    ...
+    Pilot
+    Purple Giraffe
+    Sweet Taste of Liberty
+    Return of the Shirt
+    ...
 """
 
 from __future__ import absolute_import, print_function
@@ -120,6 +147,17 @@ def languages():
     :return: A list of :class:`Language` objects
 
     Returns the list of all API supported languages.
+
+    Example::
+        >>> from pytvdbapi import api
+        >>> for language in api.languages(): #doctest: +ELLIPSIS
+        ...     print(language)
+        ...
+        <Language - Ελληνικά(el)>
+        <Language - English(en)>
+        ...
+        <Language - Svenska(sv)>
+        <Language - Slovenski(sl)>
     """
     return [lang for lang in __LANGUAGES__.values()]
 
@@ -133,8 +171,7 @@ class Episode(object):
     as a read-only object to obtain the attributes of the episode.
 
     All episode values returned from thetvdb.com_ are
-    accessible as attributes of the episode object. The attributes will be
-    named exactly as returned from thetvdb.com_ and are case sensitive.
+    accessible as attributes of the episode object.
     TVDBAttributeError will be raised if accessing an invalid attribute. Some
     type conversions of the attributes will take place as follows:
 
@@ -148,6 +185,34 @@ class Episode(object):
 
     It is possible to obtain the containing season through the Episode.season
     attribute.
+
+    Example::
+        >>> from pytvdbapi import api
+        >>> db = api.TVDB("B43FF87DE395DF56")
+        >>> result = db.search("Dexter", "en")
+        >>> show = result[0]
+        >>> episode = show[1][2]  # Get episode S01E02
+
+        >>> print(episode.season)
+        <Season 001>
+
+        >>> print(episode.EpisodeNumber)
+        2
+
+        >>> print(episode.EpisodeName)
+        Crocodile
+
+        >>> episode.FirstAired
+        datetime.date(2006, 10, 8)
+
+        >>> dir(episode) #doctest: +NORMALIZE_WHITESPACE
+        ['Combined_episodenumber',
+         'Combined_season', 'DVD_chapter', 'DVD_discid', 'DVD_episodenumber',
+         'DVD_season', 'Director', 'EpImgFlag', 'EpisodeName', 'EpisodeNumber',
+         'FirstAired', 'GuestStars', 'IMDB_ID', 'Language', 'Overview',
+         'ProductionCode', 'Rating', 'RatingCount', 'SeasonNumber', 'Writer',
+         'absolute_number', 'filename', 'id', 'lastupdated', 'season',
+         'seasonid', 'seriesid', 'thumb_added', 'thumb_height', 'thumb_width']
 
     .. _thetvdb.com: http://thetvdb.com
     """
@@ -189,6 +254,33 @@ class Season(Sequence):
     instances. It is also possible to obtain an individual episode using the
     [ ] syntax. It will raise :class:`pytvdbapi.error.TVDBIndexError` if trying
     to index an invalid episode index.
+
+    Example::
+        >>> from pytvdbapi import api
+        >>> db = api.TVDB("B43FF87DE395DF56")
+        >>> result = db.search("Dexter", "en")
+        >>> show = result[0]
+
+        >>> season = show[2]
+        >>> len(season)  # Number of episodes in the season
+        12
+
+        >>> print(season.season_number)
+        2
+
+        >>> print(season[2].EpisodeName)
+        Waiting to Exhale
+
+        >>> for episode in season: #doctest: +ELLIPSIS
+        ...     print(episode.EpisodeName)
+        ...
+        It's Alive!
+        Waiting to Exhale
+        An Inconvenient Lie
+        See-Through
+        ...
+        Left Turn Ahead
+        The British Invasion
     """
 
     def __init__(self, season_number, show):
@@ -268,6 +360,27 @@ class Show(Sequence):
 
     The Show supports iteration to iterate over the Seasons contained in the
     Show. You can also index individual seasons with the [ ] syntax.
+
+    Example::
+        >>> from pytvdbapi import api
+        >>> db = api.TVDB("B43FF87DE395DF56")
+        >>> result = db.search("dexter", "en")
+        >>> show = result[0]
+
+        >>> dir(show)  # List the set of basic attributes # doctest: +NORMALIZE_WHITESPACE
+        ['AliasNames', 'FirstAired', 'IMDB_ID', 'Network',
+         'Overview', 'SeriesName', 'actor_objects', 'api',
+         'banner', 'banner_objects', 'id', 'lang', 'language',
+         'seriesid', 'zap2it_id']
+
+        >>> show.update()  # Load the full data set from the server
+        >>> dir(show)  # List the full set of attributes # doctest: +NORMALIZE_WHITESPACE
+        ['Actors', 'Airs_DayOfWeek', 'Airs_Time', 'AliasNames',
+         'ContentRating', 'FirstAired', 'Genre', 'IMDB_ID', 'Language',
+         'Network', 'NetworkID', 'Overview', 'Rating', 'RatingCount', 'Runtime',
+         'SeriesID', 'SeriesName', 'Status', 'actor_objects', 'added', 'addedBy',
+         'api', 'banner', 'banner_objects', 'fanart', 'id', 'lang', 'language',
+         'lastupdated', 'poster', 'seriesid', 'zap2it_id']
 
     .. note:: When searching, thetvdb.com_ provides a basic set of attributes
         for the show. When the full data set is loaded thetvdb.com_ provides a
@@ -574,10 +687,32 @@ class TVDB(object):
         an invalid language is provided.
 
         Searches are always cached within a session to make subsequent
-        searches with the same parameters really cheap and fast. If *cache*
+        searches with the same parameters fast. If *cache*
         is set to True searches will also be cached across sessions,
         this is recommended to increase speed and to reduce the workload of
         the servers.
+
+        Example::
+        >>> from pytvdbapi import api
+        >>> db = api.TVDB("B43FF87DE395DF56")
+        >>> result = db.search("House", "en")
+        >>> len(result)
+        31
+
+        >>> print(result[0])
+        <Show - House>
+
+        >>> for show in result: #doctest: +ELLIPSIS
+        ...     print(show)
+        ...
+        <Show - House>
+        <Show - House Of Cosbys>
+        <Show - In The Big House>
+        <Show - Edwardian Country House>
+        ...
+        <Show - Hector's House>
+        <Show - The Magician's House>
+        ...
         """
 
         logger.debug(u"Searching for {0} using language {1}".format(show, language))
@@ -627,6 +762,13 @@ class TVDB(object):
 
         Provided a valid Show ID, the data for the show is fetched and a
         corresponding :class:`Show()` object is returned.
+
+        Example::
+            >>> from pytvdbapi import api
+            >>> db = api.TVDB("B43FF87DE395DF56")
+            >>> show = db.get( 79349, "en" )  # Load Dexter
+            >>> print(show.SeriesName)
+            Dexter
         """
 
         logger.debug(u"Getting series with id {0} with language {1}".format(series_id, language))
@@ -678,6 +820,16 @@ class TVDB(object):
 
         Given a valid episode Id the corresponding episode data is fetched and
         the :class:`Episode()` instance is returned.
+
+        Example::
+            >>>  from pytvdbapi import api
+            >>> db = api.TVDB("B43FF87DE395DF56")
+            >>> episode = db.get_episode(308834, "en") # Load an episode of dexter
+            >>> print(episode.id)
+            308834
+
+            >>> print(episode.EpisodeName)
+            Crocodile
 
         .. Note:: When the :class:`Episode()` is loaded using :func:`get_episode()`
             the episode attribute will be None.
