@@ -54,9 +54,7 @@ if PY2:
 
         Turn a string into unicode data, non strings are returned unchanged
         """
-        if isinstance(data, unicode):
-            return data
-        elif isinstance(data, str):
+        if isinstance(data, str):
             try:
                 return unicode(data, encoding=encoding, errors=error)
             except UnicodeDecodeError:
