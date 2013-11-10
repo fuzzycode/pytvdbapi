@@ -149,6 +149,7 @@ def languages():
     Returns the list of all API supported languages.
 
     Example::
+
         >>> from pytvdbapi import api
         >>> for language in api.languages():  #doctest: +ELLIPSIS
         ...     print(language)
@@ -189,6 +190,7 @@ class Episode(object):
     attribute.
 
     Example::
+
         >>> from pytvdbapi import api
         >>> db = api.TVDB("B43FF87DE395DF56")
         >>> result = db.search("Dexter", "en")
@@ -258,6 +260,7 @@ class Season(Sequence):
     to index an invalid episode index.
 
     Example::
+
         >>> from pytvdbapi import api
         >>> db = api.TVDB("B43FF87DE395DF56")
         >>> result = db.search("Dexter", "en")
@@ -364,6 +367,7 @@ class Show(Sequence):
     Show. You can also index individual seasons with the [ ] syntax.
 
     Example::
+
         >>> from pytvdbapi import api
         >>> db = api.TVDB("B43FF87DE395DF56")
         >>> result = db.search("dexter", "en")
@@ -695,26 +699,27 @@ class TVDB(object):
         the servers.
 
         Example::
-        >>> from pytvdbapi import api
-        >>> db = api.TVDB("B43FF87DE395DF56")
-        >>> result = db.search("House", "en")
-        >>> len(result)
-        31
 
-        >>> print(result[0])
-        <Show - House>
+            >>> from pytvdbapi import api
+            >>> db = api.TVDB("B43FF87DE395DF56")
+            >>> result = db.search("House", "en")
+            >>> len(result)
+            31
 
-        >>> for show in result: #doctest: +ELLIPSIS
-        ...     print(show)
-        ...
-        <Show - House>
-        <Show - House Of Cosbys>
-        <Show - In The Big House>
-        <Show - Edwardian Country House>
-        ...
-        <Show - Hector's House>
-        <Show - The Magician's House>
-        ...
+            >>> print(result[0])
+            <Show - House>
+
+            >>> for show in result: #doctest: +ELLIPSIS
+            ...     print(show)
+            ...
+            <Show - House>
+            <Show - House Of Cosbys>
+            <Show - In The Big House>
+            <Show - Edwardian Country House>
+            ...
+            <Show - Hector's House>
+            <Show - The Magician's House>
+            ...
         """
 
         logger.debug(u"Searching for {0} using language {1}".format(show, language))
@@ -766,6 +771,7 @@ class TVDB(object):
         corresponding :class:`Show()` object is returned.
 
         Example::
+
             >>> from pytvdbapi import api
             >>> db = api.TVDB("B43FF87DE395DF56")
             >>> show = db.get( 79349, "en" )  # Load Dexter
@@ -824,6 +830,7 @@ class TVDB(object):
         the :class:`Episode()` instance is returned.
 
         Example::
+
             >>> from pytvdbapi import api
             >>> db = api.TVDB("B43FF87DE395DF56")
             >>> episode = db.get_episode(308834, "en") # Load an episode of dexter
