@@ -5,6 +5,6 @@ The following persons have in some way contributed to improving **pytvdbapi**  a
 
 Contributors
 ------------
-Alexander van Ratingen
-
-Tobias Röttger
+- Alexander van Ratingen
+- Tobias Röttger
+- BenoitZugmeyer
