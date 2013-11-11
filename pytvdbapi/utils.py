@@ -23,6 +23,7 @@
 A module for utility functionality.
 """
 
+from functools import wraps
 from collections import MutableMapping
 from pytvdbapi._compat import make_unicode
 
@@ -37,13 +38,13 @@ def unicode_arguments(func):
     A wrapper to convert all text arguments into unicode objects.
     """
 
-    def wrapper(*args, **kwargs):
-        """The conversion wrapper function"""
+    @wraps(func)
+    def __wrapper__(*args, **kwargs):
         args = [make_unicode(arg) for arg in args]
         kwargs = dict((k, make_unicode(v)) for (k, v) in kwargs.items())
         return func(*args, **kwargs)
 
-    return wrapper
+    return __wrapper__
 
 
 def merge(dict1, dict2, decision=lambda x, y: y):
