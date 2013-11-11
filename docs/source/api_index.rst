@@ -1,5 +1,5 @@
-API
-===
+pytvdbapi modules
+=================
 
 .. toctree::
     :maxdepth: 2

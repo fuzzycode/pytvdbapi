@@ -3,18 +3,33 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to pytvdbapi's documentation!
-=====================================
+pytvdbapi - A Python API for thetvdb.com
+========================================
+Welcome to the documentation for *pytvdbapi* version |version|
 
-Contents:
-
+Basics
+------
 .. toctree::
-   :maxdepth: 2
+:maxdepth: 3
 
-   license
-   api_index
-   contact
+        info_index
+
+
+Modules
+-------
+.. toctree::
+:maxdepth: 3
+
+        api_index
+
+Extras
+------
+.. toctree::
+:maxdepth: 3
+
+       license
    credits
+       contact
 
 Indices and tables
 ==================

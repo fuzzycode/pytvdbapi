@@ -8,7 +8,7 @@ To provide bug reports or feature requests, please use the project provided `bug
 try to provide as much information as possible, including how to reproduce the issue,
 any log files produced and preferably a test case that highlights the issue.
 
-Or, feel free to implement the changes your self and submitting a pull request.
+Or, feel free to implement the changes yourself and submit a pull request.
 
 Twitter
 -------

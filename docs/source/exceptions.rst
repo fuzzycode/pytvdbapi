@@ -1,7 +1,7 @@
-Exceptions
-==========
+:mod:`error` Module
+-------------------
 
 .. automodule:: pytvdbapi.error
-    :members:
-    :undoc-members:
-    
+:members:
+        :undoc-members:
+        :show-inheritance:

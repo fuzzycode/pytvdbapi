@@ -37,6 +37,7 @@ class Actor(object):
     to the image of the actor.
 
     Example::
+
         >>> from pytvdbapi import api
         >>> db = api.TVDB("B43FF87DE395DF56")
         >>> result = db.search("dexter", "en")

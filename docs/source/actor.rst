@@ -1,5 +1,7 @@
-Actor
-=====
+:mod:`actor` Module
+-------------------
 
 .. automodule:: pytvdbapi.actor
-    :members:
+:members:
+        :undoc-members:
+        :show-inheritance:

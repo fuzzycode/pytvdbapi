@@ -1,5 +1,7 @@
-Banner
-======
+:mod:`banner` Module
+--------------------
 
 .. automodule:: pytvdbapi.banner
-    :members:
+:members:
+        :undoc-members:
+        :show-inheritance:
