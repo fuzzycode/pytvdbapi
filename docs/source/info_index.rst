@@ -2,6 +2,6 @@ Basics
 ======
 
 .. toctree::
-installing
+    installing
     python23
     examples

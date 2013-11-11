@@ -2,6 +2,6 @@
 -------------------
 
 .. automodule:: pytvdbapi.actor
-:members:
-        :undoc-members:
-        :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:

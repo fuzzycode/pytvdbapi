@@ -10,26 +10,26 @@ Welcome to the documentation for *pytvdbapi* version |version|
 Basics
 ------
 .. toctree::
-:maxdepth: 3
+    :maxdepth: 3
 
-        info_index
+    info_index
 
 
 Modules
 -------
 .. toctree::
-:maxdepth: 3
+    :maxdepth: 3
 
-        api_index
+    api_index
 
 Extras
 ------
 .. toctree::
-:maxdepth: 3
+    :maxdepth: 3
 
-       license
-   credits
-       contact
+    license
+    credits
+    contact
 
 Indices and tables
 ==================
