@@ -18,9 +18,9 @@
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-A module containing all the errors raised by pytvdbapi.
+A module containing all the exceptions raised by *pytvdbapi*.
 
-pytvdbapi will only raise exceptions that are of type :class:`PytvdbapiError`.
+*pytvdbapi* will only raise exceptions that are of type :class:`PytvdbapiError`.
 """
 
 import logging
@@ -60,8 +60,9 @@ class ConnectionError(PytvdbapiError):
 
 class TVDBAttributeError(PytvdbapiError, AttributeError):
     """
-    A replacement for the standard AttributeError. Will be raised when
-    accessing invalid attributes of :class:`pytvdbapi.api.Show` and :class:`pytvdbapi.api.Episode`
+    A replacement for the standard AttributeError.
+    Will be raised when accessing invalid attributes of
+    :class:`pytvdbapi.api.Show` and :class:`pytvdbapi.api.Episode`
     instances
     """
     pass
@@ -69,8 +70,10 @@ class TVDBAttributeError(PytvdbapiError, AttributeError):
 
 class TVDBIndexError(PytvdbapiError, IndexError):
     """
-    A replacement for the standard IndexError. Will be raised when accessing
-    invalid indexes of :class:`pytvdbapi.api.Show` and :class:`pytvdbapi.api.Season` instances.
+    A replacement for the standard IndexError.
+    Will be raised when accessing invalid indexes of
+    :class:`pytvdbapi.api.Show` and :class:`pytvdbapi.api.Season`
+    instances.
     """
     pass
 
