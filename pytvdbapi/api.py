@@ -18,9 +18,9 @@
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-A small, clean and easy to use API for the thetvdb.com online DB service. It
+A small, clean and easy to use API for the `thetvdb.com`_ online DB service. It
 is designed to be fast, easy to use and to respect the functionality of the
-thetvdb.com API.
+thetvdb.com_ API as much as possible.
 
 Basic usage::
 
@@ -100,13 +100,12 @@ class Language(object):
     """
 
     def __init__(self, abbrev, name, id):
-        # pylint: disable=W0105
+        #: A two letter abbreviation representing the language, e.g. *en*.
+        #: This is what should be passed when specifying a language to the API.
         self.abbreviation = abbrev
-        """A two letter abbreviation representing the language, e.g. *en*. This
-        is what should be passed when specifying a language to the API."""
 
+        #: The localised name of the language.
         self.name = name
-        """The localised name of the language."""
 
         self._id = id
 
@@ -186,7 +185,7 @@ class Episode(object):
     * A number will be converted into an int
 
 
-    It is possible to obtain the containing season through the Episode.season
+    It is possible to obtain the containing season through the *Episode.season*
     attribute.
 
     Example::
@@ -258,6 +257,9 @@ class Season(Sequence):
     instances. It is also possible to obtain an individual episode using the
     [ ] syntax. It will raise :class:`pytvdbapi.error.TVDBIndexError` if trying
     to index an invalid episode index.
+
+    It is possible to obtain the containing :class:`Show` instance through the
+    *Season.show* attribute.
 
     Example::
 
@@ -841,7 +843,7 @@ class TVDB(object):
             Crocodile
 
         .. Note:: When the :class:`Episode()` is loaded using :func:`get_episode()`
-            the episode attribute will be None.
+            the *season* attribute used to link the episode with a season will be None.
         """
 
         logger.debug(u"Getting episode with id {0} with language {1}".format(episode_id, language))
