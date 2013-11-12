@@ -20,7 +20,13 @@
 # A helper file to make common tasks a little bit easier
 
 docs:
-    @(cd docs; make html; cd ..)
+	@(cd docs; make html; cd ..)
 
 tox:
-    tox
+	tox
+
+test:
+	python setup.py test
+
+coverage:
+	coverage run --source=pytvdbapi setup.py test; coverage report -m
