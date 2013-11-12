@@ -105,7 +105,10 @@ To get in contact with me, you can send me an email at
 develop@bjornlarsson.net or you can follow me on twitter
 `@fuzzycode <https://twitter.com/#!/fuzzycode>`__
 
-
+License
+=======
+*pytvdbapi* is released under the `LGPL 3 <http://opensource.org/licenses/LGPL-3.0>`__ license. See the
+LICENSE.txt file for more details.
 
 
 
@@ -116,7 +119,6 @@ develop@bjornlarsson.net or you can follow me on twitter
     :target: https://coveralls.io/r/fuzzycode/pytvdbapi
 .. |pypiimage| image:: https://pypip.in/v/pytvdbapi/badge.png
     :target: https://crate.io/packages/pytvdbapi/
-
 
 
 .. _thetvdb.com: http://thetvdb.com
