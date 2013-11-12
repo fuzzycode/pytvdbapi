@@ -5,7 +5,7 @@ environment. In particular it describes the differences and changes regarding un
 
 Unicode Vs. Str
 ---------------
-In python 3, the :class:`unicode` object hs been removed and the standard :class:`str` type always represent
+In python 3, the :class:`unicode` object has been removed and the standard :class:`str` type always represent
 a unicode string.
 
 Internally *pytvdbapi* works exclusively with unicode. That means that on Python 2.X all text attributes
