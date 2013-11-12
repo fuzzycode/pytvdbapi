@@ -517,7 +517,7 @@ class Show(Sequence):
         Loads the extended actor information into a list of :class:`pytvdbapi.actor.Actor` objects.
         They are available through the *actor_objects* attribute of the show.
 
-        If you have used the :code:`actors=True` keyword when creating the :class:`TVDB` instance
+        If you have used the `actors=True` keyword when creating the :class:`TVDB` instance
         the actors will be loaded automatically and there is no need to use this
         function.
 
@@ -552,7 +552,7 @@ class Show(Sequence):
         Loads the extended banner information into a list of :class:`pytvdbapi.banner.Banner` objects.
         They are available through the *banner_objects* attribute of the show.
 
-        If you have used the :code:`banners=True` keyword when creating the :class:`TVDB` instance the
+        If you have used the `banners=True` keyword when creating the :class:`TVDB` instance the
         banners will be loaded automatically and there is no need to use this
         function.
 
