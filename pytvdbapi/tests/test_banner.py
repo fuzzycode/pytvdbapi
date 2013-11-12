@@ -114,6 +114,15 @@ class TestBanners(unittest.TestCase):
                 else:
                     self.assertEqual(type(attr), _type)
 
+    def test_banner_repr(self):
+        """Banner objects should have a __repr__ attribute and it should be callable"""
+
+        banner = self.show.banner_objects[2]
+
+        self.assertTrue(hasattr(banner, '__repr__'))
+        self.assertTrue(hasattr(banner, '__str__'))
+
+        repr(banner)
 
 if __name__ == "__main__":
     sys.exit(unittest.main())

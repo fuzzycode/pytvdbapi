@@ -183,3 +183,23 @@ class TestInsensitiveDictionary(unittest.TestCase):
         for i in d.items():
             self.assertTrue(i[0] in keys)
             self.assertTrue(i[1] in values)
+
+    def test_item_iteration(self):
+        """It should be possible to iterate over the items in the dict"""
+        d = InsensitiveDictionary()
+
+        # Create the dict
+        keys = ['foo', 'baaz', 'blaa', 2]
+        values = ['baar', 'woo', 'blug', 'wow']
+        items = zip(keys, values)
+
+        for i in items:
+            d[i[0]] = i[1]
+
+        # Test dict
+        for i in d:
+            self.assertTrue(i in keys)
+
+if __name__ == "__main__":
+    import sys
+    sys.exit(unittest.main())
