@@ -711,9 +711,8 @@ class TVDB(object):
             >>> print(result[0])
             <Show - House>
 
-            >>> for show in result: #doctest: +ELLIPSIS
-            ...     print(show)
-            ...
+            >>> for show in result:
+            ...     print(show) # doctest: +ELLIPSIS
             <Show - House>
             <Show - House Of Cosbys>
             <Show - In The Big House>
@@ -721,7 +720,6 @@ class TVDB(object):
             ...
             <Show - Hector's House>
             <Show - The Magician's House>
-            ...
         """
 
         logger.debug(u"Searching for {0} using language {1}".format(show, language))
