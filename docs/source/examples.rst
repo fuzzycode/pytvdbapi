@@ -21,7 +21,7 @@ You can easily loop all episodes in a show::
 
     >>> for season in show:
     ...    for episode in season:
-    ...        print(u"{0} - {1}".format(episode.EpisodeName, episode.FirstAired))
+    ...        print(u"{0} - {1}".format(episode.EpisodeName, episode.FirstAired))  # doctest: +ELLIPSIS
     ...
     Early Cuts: Alex Timmons (Chapter 1) - 2009-10-25
     ...
@@ -85,10 +85,12 @@ Episode access::
     12
 
     >>> try:
-    ...     print(season[0])
-    ...except TVDBIndexError:
-    ...     # Episodes start at index 1
-    ...     pass
+    ...    print(season[0])
+    ... except TVDBIndexError:
+    ...    # Episodes start at index 1
+    ...    print('No episode at index 0')
+    No episode at index 0
+
 
     >>> print(season[3])
     <Episode - S002E003>

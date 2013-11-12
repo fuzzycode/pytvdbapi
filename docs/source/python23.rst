@@ -15,16 +15,14 @@ all text attributes will be automatically converted as they are loaded.
     >>> from pytvdbapi import api
     >>> import sys
     >>> db = api.TVDB('B43FF87DE395DF56')
+    >>> result = db.search('Alarm für cobra 11', 'de')
 
     >>> show = result[0]
-    >>> print(show.SeriesName)
-    Alarm für Cobra 11 - Die Autobahnpolizei
 
     >>> if sys.version < '3':
     ...     assert type(show.SeriesName) is unicode
     ... else:
     ...     assert type(show.SeriesName) is str
-    ...
 
 *pytvdbapi* attempts to convert all text parameters into unicode, that means :class:`unicode` on Python 2.X
 and :class:`str` on python 3.X.
@@ -40,12 +38,11 @@ For example, both of these are valid::
     >>> print(result[0])
     <Show - Alarm für Cobra 11 - Die Autobahnpolizei>
 
+And::
 
-and::
-
-    >>> result = db.search(u'Alarm für cobra 11', 'de')
+    >>> result = db.search(u'Dexter', 'de')
     >>> len(result)
     3
     >>> print(result[0])
-    <Show - Alarm für Cobra 11 - Die Autobahnpolizei>
+    <Show - Dexter>
 

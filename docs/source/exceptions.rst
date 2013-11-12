@@ -2,6 +2,6 @@
 -------------------
 
 .. automodule:: pytvdbapi.error
-:members:
-        :undoc-members:
-        :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:
