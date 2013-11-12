@@ -55,7 +55,6 @@ class TestLoader(basetest.pytvdbapiTest):
         # test that we can load without exceptions
         self.loader.load(url)
 
-
     def test_failed_connection(self):
         """Loader should raise ConnectionError if it is not able to connect
         to the provided url
