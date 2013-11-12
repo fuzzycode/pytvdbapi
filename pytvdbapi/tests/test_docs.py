@@ -23,9 +23,10 @@ A module for managing the doc tests for the package
 
 import glob
 import os
-import pytvdbapi
 import doctest
 import unittest
+
+import pytvdbapi
 
 
 def getFiles(root, extensions, recurse=False):
@@ -78,7 +79,7 @@ def getDocumentationTests():
     exts = ['.rst', '.txt']
 
     base_path = os.path.abspath(os.path.join(base_dir, "../"))
-    docs_path = os.path.abspath(os.path.join(base_dir, "../docs/"))
+    docs_path = os.path.abspath(os.path.join(base_dir, "../docs/source/"))
 
     files = getFiles(base_path, exts) + getFiles(docs_path, exts, True)
 
