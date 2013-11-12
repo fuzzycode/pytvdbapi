@@ -99,5 +99,15 @@ class TestActor(unittest.TestCase):
                     self.assertEqual(type(attr), _type)
 
 
+    def test_actor_repr(self):
+        """Actor objects should have a __repr__ attribute and it should be callable"""
+
+        actor = self.show.actor_objects[2]
+
+        self.assertTrue(hasattr(actor, '__repr__'))
+        self.assertTrue(hasattr(actor, '__str__'))
+
+        repr(actor)
+
 if __name__ == "__main__":
     sys.exit(unittest.main())
