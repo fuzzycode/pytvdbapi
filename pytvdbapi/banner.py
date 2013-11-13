@@ -128,6 +128,8 @@ class Banner(object):
         season
     """
 
+    data = {}
+
     def __init__(self, mirror, data, show):
         self.mirror, self.data, self.show = mirror, data, show
 

@@ -124,5 +124,16 @@ class TestBanners(unittest.TestCase):
 
         repr(banner)
 
+    def test_banner_pickle(self):
+        """it should be possible to pickle a banner object"""
+        import pickle
+
+        banner = self.show.banner_objects[2]
+
+        banner_pickled = pickle.dumps(banner)
+        banner_loaded = pickle.loads(banner_pickled)
+
+        self.assertEqual(banner.BannerType, banner_loaded.BannerType)
+
 if __name__ == "__main__":
     sys.exit(unittest.main())
