@@ -98,7 +98,6 @@ class TestActor(unittest.TestCase):
                 else:
                     self.assertEqual(type(attr), _type)
 
-
     def test_actor_repr(self):
         """Actor objects should have a __repr__ attribute and it should be callable"""
 
