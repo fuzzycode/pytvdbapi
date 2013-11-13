@@ -108,5 +108,17 @@ class TestActor(unittest.TestCase):
 
         repr(actor)
 
+    def test_actor_pickled(self):
+        """It should be possible to pickle an actor object"""
+
+        import pickle
+
+        actor = self.show.actor_objects[5]
+
+        pickled_actor = pickle.dumps(actor)
+        loaded_actor = pickle.loads(pickled_actor)
+
+        self.assertEqual(actor.Name, loaded_actor.Name)
+
 if __name__ == "__main__":
     sys.exit(unittest.main())

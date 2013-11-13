@@ -60,6 +60,7 @@ class Actor(object):
         Jaime Murray - Lila Tournay
         John Lithgow - Arthur Mitchell
     """
+    data = {}
 
     def __init__(self, mirror, data, show):
         self.mirror, self.data, self.show = mirror, data, show
