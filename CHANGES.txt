@@ -1,12 +1,12 @@
 CHANGELOG
 =========
 
-2013-04-28, 0.4.0
+2013-11-13, 0.4.0
 -----------------
   * Removed support for Python 3.2
   * Improved unicode support, all text attributes are now Unicode() objects on Python 2.X
-  * Improved compatibility with standard Python functions like *hasattr()* et.al.
-  * Show, Season and Episode instances can now be pickled
+  * Improved compatibility with standard Python functions like *hasattr()* and *getattr()*
+  * Show, Season, Episode Actor and Banner instances can now be pickled
   * Added the get_episode() function to access an episode directly using the episode id.
   * Added the option *ignore_case* to be able to access the attributes in a case insensitive manner.
   * Added the *load_actors* and *load_banners* functions to load actors and banners on individual shows
