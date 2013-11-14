@@ -14,3 +14,4 @@ The Following people have in some way contributed to pytvdbapi
 --------------------------------------------------------------
   - Tobias Röttger
   - Alexander van Ratingen
+  - BenoitZugmeyer
