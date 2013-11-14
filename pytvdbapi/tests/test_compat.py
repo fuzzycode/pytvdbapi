@@ -69,6 +69,7 @@ class TestMakeUnicode(unittest.TestCase):
         else:
             self.assertEqual(type(make_unicode(b"byte string")), str)
 
+
 class TestMakeBytes(unittest.TestCase):
     def test_none(self):
         """Passing None should return None"""
