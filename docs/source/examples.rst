@@ -134,7 +134,8 @@ Case insensitive attributes
 ---------------------------
 It is possible to tell the API to ignore casing when accessing the object attributes. If you pass
 `ignore_case=True` when creating the :class:`pytvdbapi.api.TVDB` instance,
-you can access the attributes of the :class:`pytvdbapi.api.Show`, :class:`pytvdbapi.api.Season` and
+you can access the dynamically created attributes of the :class:`pytvdbapi.api.Show`,
+:class:`pytvdbapi.api.Season` and
 :class:`pytvdbapi.api.Episode` in a case insensitive manner.
 
 Example::
@@ -165,11 +166,11 @@ Example::
 
 Working with Actor and Banner Objects
 -------------------------------------
-By default, the extended information for Actors and banners are not loaded. This is to save server
-resources for data that is not needed. If you do want to this extra data you can pass `actors=True`
-and `banners=True` respectively when creating the :class:`pytvdbapi.api.TVDB` instance,
-this will cause the actors and/or banners to be loaded for all shows. If you only want this information for
-some shows, you can use the :func:`pytvdbapi.api.Show.load_actors` and
+By default, the extended information for :class:`pytvdbapi.api.Actor` and :class:`pytvdbapi.api.Banner` are
+not loaded. This is to save server resources for data that is not needed. If you do want to this extra data
+ you can pass `actors=True` and `banners=True` respectively when creating the :class:`pytvdbapi.api.TVDB`
+ instance, this will cause the actors and/or banners to be loaded for all shows. If you only want this
+ information for some shows, you can use the :func:`pytvdbapi.api.Show.load_actors` and
 :func:`pytvdbapi.api.Show.load_banners` functions instead.
 
 Using keyword arguments::
