@@ -82,7 +82,8 @@ Access an episode within the season::
 
 Documentation
 =============
-The documentation for **pytvdbapi** is hosted at http://packages.python.org/pytvdbapi/.
+The documentation for **pytvdbapi** is hosted at http://packages.python.org/pytvdbapi/ and there is a
+version over at `Readthedocs <http://pytvdbapi.readthedocs.org/en/latest/>`.
 
 Known Issues
 ============
