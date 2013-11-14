@@ -10,3 +10,6 @@ include requirements.txt
 
 #The exclude section
 exclude MANIFEST*
+
+#Exclude the docs folder
+prune docs
