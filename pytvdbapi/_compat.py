@@ -28,13 +28,16 @@ with a shared code base. Strongly inspired/copied by the approach taken by werkz
 
 import sys
 
-__all__ = ['implements_to_string']
+__all__ = ['implements_to_string', 'make_unicode', 'make_bytes', 'text_type', 'string_types']
 
 PY2 = sys.version_info[0] == 2
 
 __identity = lambda x: x
 
 if PY2:
+    text_type = unicode
+    string_types = (str, unicode)
+
     def implements_to_string(cls):
         """
         Decorator used on classes implementing the __str__ function
@@ -79,10 +82,15 @@ if PY2:
         raise TypeError('Expected bytes')
 
 else:  # Python 3 implementation
+    text_type = str
+    string_types = (str, )
+
     implements_to_string = __identity
 
     def make_unicode(data, encoding='utf-8', error='strict'):
         """"""
+        if isinstance(data, bytes):
+            return data.decode(encoding, error)
         return data
 
     def make_bytes(data, encoding='utf-8', error='strict'):
