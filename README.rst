@@ -41,7 +41,7 @@ Usage
 =====
 To use the API you should apply for an API key for your particular application.
 An API key can be obtained for free from thetvdb.com_. These are some of the things you
-can do with *pytvdbapi*.
+can do with **pytvdbapi**.
 
 Create a db instance::
 
@@ -83,7 +83,7 @@ Access an episode within the season::
 Documentation
 =============
 The documentation for **pytvdbapi** is hosted at http://packages.python.org/pytvdbapi/ and there is a
-version over at `Readthedocs <http://pytvdbapi.readthedocs.org/en/latest/>`.
+version over at `Readthedocs <http://pytvdbapi.readthedocs.org/en/latest/>`__.
 
 Known Issues
 ============
@@ -108,7 +108,7 @@ develop@bjornlarsson.net or you can follow me on twitter
 
 License
 =======
-*pytvdbapi* is released under the `LGPL 3 <http://opensource.org/licenses/LGPL-3.0>`__ license. See the
+**pytvdbapi** is released under the `LGPL 3 <http://opensource.org/licenses/LGPL-3.0>`__ license. See the
 LICENSE.txt file for more details.
 
 
