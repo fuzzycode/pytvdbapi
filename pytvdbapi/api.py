@@ -795,22 +795,18 @@ class TVDB(object):
             data = self.loader.load(url, cache)
         except error.TVDBNotFoundError:
             raise error.TVDBIdError(u"Series id {0} not found".format(series_id))
-        except error.ConnectionError as _error:
-            logger.debug(u"Unable to connect to URL: {0}. {1}".format(url, _error))
-            raise
 
         if data.strip():
             data = generate_tree(data)
         else:
-            raise error.TVDBIdError(u"No Show with id {0} found".format(series_id))
+            raise error.BadData("Bad data received")
 
         series = parse_xml(data, "Series")
-        assert len(series) <= 1, u"Should not find more than one series"
 
-        if len(series) >= 1:
-            return Show(series[0], self, language, self.config)
+        if len(series) == 0:
+            raise error.BadData("Bad data received")
         else:
-            raise error.TVDBIdError(u"No Show with id {0} found".format(series_id))
+            return Show(series[0], self, language, self.config)
 
     @unicode_arguments
     def get_episode(self, episode_id, language, cache=True):
@@ -860,19 +856,15 @@ class TVDB(object):
             data = self.loader.load(url, cache)
         except error.TVDBNotFoundError:
             raise error.TVDBIdError(u"No Episode with id {0} found".format(episode_id))
-        except error.ConnectionError as _error:
-            logger.debug(u"Unable to connect to URL: {0}. {1}".format(url, _error))
-            raise
 
         if data.strip():
             data = generate_tree(data)
         else:
-            raise error.TVDBIdError(u"No Episode with id {0} found".format(episode_id))
+            raise error.BadData("Bad data received")
 
         episodes = parse_xml(data, "Episode")
-        assert len(episodes) <= 1, u"Should not find more than one episodes"
 
-        if len(episodes) >= 1:
-            return Episode(episodes[0], None, self.config)
+        if len(episodes) == 0:
+            raise error.BadData("Bad data received")
         else:
-            raise error.TVDBIdError(u"No Episode with id {0} found".format(episode_id))
+            return Episode(episodes[0], None, self.config)
