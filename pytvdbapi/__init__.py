@@ -40,4 +40,3 @@ def version():
 
 # Make sure that we have a null handler on the base logger for the package
 logging.getLogger(__name__).addHandler(NullHandler())
-
