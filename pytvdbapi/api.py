@@ -18,9 +18,12 @@
 # along with pytvdbapi.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-A small, clean and easy to use API for the `thetvdb.com`_ online DB service. It
-is designed to be fast, easy to use and to respect the functionality of the
-thetvdb.com_ API as much as possible.
+This is the main module for **pytvdbapi** intended for client usage. It contains functions to access the
+API functionality through a :class:`TVDB` instance. Representations of :class:`Show`, :class:`Season` and
+:class:`Episode` objects.
+
+ It also contains functionality to access the list of API supported languages through the :func:`languages`
+ function.
 
 Basic usage::
 
