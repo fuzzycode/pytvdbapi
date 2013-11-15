@@ -221,6 +221,13 @@ class TestSeason(unittest.TestCase):
         self.assertTrue(loaded_season.season_number == season.season_number,
                         "Episode should keep its name attribute")
 
+    def test_dir(self):
+        """It should be possible to use dir() on a season, and it should show the right values"""
+        attributes = ['show', 'season_number']
+
+        for a in dir(self.friends[2]):
+            self.assertTrue(a in attributes)
+
 
 class TestShow(unittest.TestCase):
     def setUp(self):
@@ -479,6 +486,11 @@ class TestEpisode(unittest.TestCase):
                 else:
                     self.assertEqual(type(attr), _type,
                                      u"Attr: {0} was not {1} but {0}".format(attr_name, _type, type(attr)))
+
+    def test_repr(self):
+        """It should be possible to use the __repr__ function"""
+        ep = self.friends[2][3]
+        repr(ep)
 
 
 class TestSearch(unittest.TestCase):

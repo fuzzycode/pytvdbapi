@@ -74,6 +74,11 @@ class TestLanguageClass(unittest.TestCase):
                 else:
                     self.assertEqual(type(attr), _type)
 
+    def test_repr(self):
+        """It should be possible to use the __repr__ of the class"""
+        l = api.Language("en", "English", 2)
+        repr(l)
+
 
 class TestLanguage(unittest.TestCase):
     """Test the language functionality of tvdbapi"""
