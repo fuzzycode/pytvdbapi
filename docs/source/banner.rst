@@ -3,5 +3,4 @@
 
 .. automodule:: pytvdbapi.banner
     :members:
-    :undoc-members:
     :show-inheritance:
