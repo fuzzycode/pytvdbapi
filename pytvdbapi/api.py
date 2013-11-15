@@ -19,8 +19,8 @@
 
 """
 This is the main module for **pytvdbapi** intended for client usage. It contains functions to access the
-API functionality through a :class:`TVDB` instance. Representations of :class:`Show`, :class:`Season` and
-:class:`Episode` objects.
+API functionality through a :class:`TVDB` instance. It has implementations for representations of
+:class:`Show`, :class:`Season` and :class:`Episode` objects.
 
 It also contains functionality to access the list of API supported languages through the :func:`languages`
 function.
@@ -777,7 +777,7 @@ class TVDB(object):
 
             >>> from pytvdbapi import api
             >>> db = api.TVDB("B43FF87DE395DF56")
-            >>> show = db.get( 79349, "en" )  # Load Dexter
+            >>> show = db.get_series( 79349, "en" )  # Load Dexter
             >>> print(show.SeriesName)
             Dexter
         """
