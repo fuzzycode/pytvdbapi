@@ -19,8 +19,25 @@
 
 # A helper file to make common tasks a little bit easier
 
+.PHONY: docs clean-docs upload-docs upload tox test coverage
+
+clean-docs:
+	@(cd docs; make clean; cd ..)
+
 docs:
-	@(cd docs; make html; cd ..)
+	@(python setup.py build_sphinx)
+
+view-docs: docs
+	open docs/build/html/index.html
+
+upload-docs: clean-docs docs
+	@(python setup.py upload_sphinx)
+
+upload: tox clean-docs docs
+	@(python setup.py sdist upload -r PyPI)
+
+upload-test:
+	@(python setup.py sdist upload -r PyPI-test)
 
 tox:
 	tox
