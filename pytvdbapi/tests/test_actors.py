@@ -64,7 +64,20 @@ class TestActor(unittest.TestCase):
         self.assertEqual(hasattr(actor, "SortOrder"), True)
         self.assertEqual(hasattr(actor, "image_url"), True)
 
-        self.assertEqual(len(dir(actor)), 6)
+        self.assertEqual(len(dir(actor)), 7)
+
+    def test_insensitive_attributes(self):
+        """If selected, it should be possible to access the attributes in a case insensitive manner"""
+
+        api = TVDB("B43FF87DE395DF56", actors=True, ignore_case=True)
+        show = api.get(79349, "en")  # Load the series Dexter
+        show.update()
+
+        actor = show.actor_objects[0]
+        for a in dir(actor):
+            self.assertTrue(hasattr(actor, a))
+            self.assertTrue(hasattr(actor, a.lower()))
+            self.assertTrue(hasattr(actor, a.upper()))
 
     def test_iterable_actors(self):
         """

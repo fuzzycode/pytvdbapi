@@ -21,6 +21,7 @@
 
 from pytvdbapi.error import TVDBAttributeError
 from pytvdbapi._compat import implements_to_string
+from pytvdbapi.utils import InsensitiveDictionary
 
 __all__ = ['Actor']
 
@@ -63,19 +64,20 @@ class Actor(object):
     data = {}
 
     def __init__(self, mirror, data, show):
-        self.mirror, self.data, self.show = mirror, data, show
+        self.mirror, self.show = mirror, show
+
+        # pylint: disable=W0142
+        self.data = InsensitiveDictionary(ignore_case=show.api.config['ignore_case'], **data)
+        self.data['image_url'] = self.mirror + u"/banners/" + self.Image
 
     def __getattr__(self, item):
-        if item == 'image_url':
-            return self.mirror + u"/banners/" + self.Image
-        else:
-            try:
-                return self.data[item]
-            except KeyError:
-                raise TVDBAttributeError(u"Actor has no {0} attribute".format(item))
+        try:
+            return self.data[item]
+        except KeyError:
+            raise TVDBAttributeError(u"Actor has no {0} attribute".format(item))
 
     def __dir__(self):
-        return list(self.data.keys()) + ['image_url']
+        return list(self.data.keys())
 
     def __str__(self):
         return u'<{0} - {1}>'.format(self.__class__.__name__, self.Name)

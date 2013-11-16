@@ -74,14 +74,28 @@ class TestBanners(unittest.TestCase):
                 self.assertEqual(hasattr(banner, "ThumbnailPath"), True)
                 self.assertEqual(hasattr(banner, "VignettePath"), True)
 
-                self.assertEqual(len(dir(banner)), 12)
+                self.assertEqual(len(dir(banner)), 13)
 
             elif banner.BannerType == "season":
                 self.assertEqual(hasattr(banner, "Season"), True)
 
-                self.assertEqual(len(dir(banner)), 9)
+                self.assertEqual(len(dir(banner)), 10)
             else:  # poster type
-                self.assertEqual(len(dir(banner)), 8)
+                self.assertEqual(len(dir(banner)), 9)
+
+    def test_insensitive_attributes(self):
+        """If selected, it should be possible to access the attributes in a case insensitive manner."""
+
+        api = TVDB("B43FF87DE395DF56", banners=True, ignore_case=True)
+        show = api.get(79349, "en")  # Load the series Dexter
+        show.update()
+
+        banner = show.banner_objects[0]
+        for a in dir(banner):
+            self.assertTrue(hasattr(banner, a))
+            self.assertTrue(hasattr(banner, a.lower()))
+            self.assertTrue(hasattr(banner, a.upper()))
+
 
     def test_iterable_banners(self):
         """
