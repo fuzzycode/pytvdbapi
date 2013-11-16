@@ -65,7 +65,7 @@ from collections import Sequence
 from pytvdbapi.actor import Actor
 from pytvdbapi.banner import Banner
 from pytvdbapi.utils import InsensitiveDictionary, unicode_arguments
-from pytvdbapi._compat import implements_to_string, make_bytes
+from pytvdbapi._compat import implements_to_string, make_bytes, make_unicode
 
 try:
     from urllib import quote
@@ -170,7 +170,7 @@ def languages():
 @implements_to_string
 class Episode(object):
     """
-    :raise: :class:`pytvdbapi.error.TVDBAttributeError`
+    :raise: :exc:`pytvdbapi.error.TVDBAttributeError`
 
     Holds all information about an individual episode. This should be treated
     as a read-only object to obtain the attributes of the episode.
@@ -253,7 +253,7 @@ class Episode(object):
 class Season(Sequence):
     # pylint: disable=R0924
     """
-    :raise: :class:`pytvdbapi.error.TVDBIndexError`
+    :raise: :exc:`pytvdbapi.error.TVDBIndexError`
 
     Holds all the episodes that belong to a specific season. It is possible
     to iterate over the Season to obtain the individual :class:`Episode`
@@ -347,7 +347,7 @@ class Season(Sequence):
 class Show(Sequence):
     # pylint: disable=R0924, R0902
     """
-    :raise: :class:`pytvdbapi.error.TVDBAttributeError`, :class:`pytvdbapi.error.TVDBIndexError`
+    :raise: :exc:`pytvdbapi.error.TVDBAttributeError`, :exc:`pytvdbapi.error.TVDBIndexError`
 
     Holds attributes about a single show and contains all seasons associated
     with a show. The attributes are named exactly as returned from
@@ -579,7 +579,7 @@ class Show(Sequence):
 class Search(object):
     # pylint: disable=R0924
     """
-    :raise: :class:`pytvdbapi.error.TVDBIndexError`
+    :raise: :exc:`pytvdbapi.error.TVDBIndexError`
 
     A search result returned from calling :func:`TVDB.search()`. It supports
     iterating over the results, and the individual shows matching the search
@@ -669,7 +669,9 @@ class TVDB(object):
 
         #extract all argument and store for later use
         self.config['api_key'] = api_key
-        self.config['cache_dir'] = kwargs.get("cache_dir", os.path.join(tempfile.gettempdir(), __NAME__))
+        self.config['cache_dir'] = kwargs.get("cache_dir",
+                                              make_unicode(os.path.join(tempfile.gettempdir(),  __NAME__)))
+
         self.config['actors'] = kwargs.get('actors', False)
         self.config['banners'] = kwargs.get('banners', False)
         self.config['ignore_case'] = kwargs.get('ignore_case', False)
@@ -689,7 +691,7 @@ class TVDB(object):
         :param cache: If False, the local cache will not be used and the
             resources will be reloaded from server.
         :return: A :class:`Search()` instance
-        :raise: :class:`pytvdbapi.error.TVDBValueError`
+        :raise: :exc:`pytvdbapi.error.TVDBValueError`
 
         Searches the server for a show with the provided show name in the
         provided language. The language should be one of the supported
@@ -751,7 +753,7 @@ class TVDB(object):
                     resources will be reloaded from server.
 
         :return: A :class:`Show()` instance
-        :raise: :class:`pytvdbapi.error.TVDBValueError`, :class:`pytvdbapi.error.TVDBIdError`
+        :raise: :exc:`pytvdbapi.error.TVDBValueError`, :exc:`pytvdbapi.error.TVDBIdError`
         """
 
         logger.warning(u"Using deprecated function 'get'. Use 'get_series' instead")
@@ -768,7 +770,7 @@ class TVDB(object):
                     resources will be reloaded from server.
 
         :return: A :class:`Show()` instance
-        :raise: :class:`pytvdbapi.error.TVDBValueError`, :class:`pytvdbapi.error.TVDBIdError`
+        :raise: :exc:`pytvdbapi.error.TVDBValueError`, :exc:`pytvdbapi.error.TVDBIdError`
 
         Provided a valid Show ID, the data for the show is fetched and a
         corresponding :class:`Show()` object is returned.
@@ -822,7 +824,7 @@ class TVDB(object):
                     resources will be reloaded from server.
 
         :return: An :class:`Episode()` instance
-        :raise: :class:`pytvdbapi.error.TVDBIdError` if no episode is found with the given Id
+        :raise: :exc:`pytvdbapi.error.TVDBIdError` if no episode is found with the given Id
 
 
         Given a valid episode Id the corresponding episode data is fetched and
