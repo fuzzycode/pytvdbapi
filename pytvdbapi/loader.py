@@ -65,7 +65,7 @@ class Loader(object):
 
         if response.status in [404]:
             raise error.TVDBNotFoundError(u"Data not found")
-        elif response.status not in [200, 304]:
+        elif response.status not in [200, 304]:  # pragma: no cover
             raise error.ConnectionError(u"Bad status returned from server. {0}".format(response.status))
         else:
             return make_unicode(content)
