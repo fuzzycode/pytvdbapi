@@ -61,13 +61,13 @@ Obtain a show instance and access the data::
     >>> print(show.SeriesName)
     Dexter
 
-    >>> len(show)
+    >>> len(show)  # List the number of seasons of the show, season 0 is the specials season
     9
 
 Access individual seasons::
 
     >>> season = show[1]
-    >>> len(season)
+    >>> len(season)  # List the number of episodes in the season, they start at index 1
     12
     >>> print(season.season_number)
     1
@@ -93,7 +93,7 @@ Known Issues
 
 Bugs
 ====
-If you find any bug or want to request a new feature to the API please use
+If you find any bug or want to request a new feature to the API, please use
 the `issue tracker <https://github.com/fuzzycode/pytvdbapi/issues>`_
 associated with the project.
 

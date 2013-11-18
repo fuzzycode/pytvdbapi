@@ -19,8 +19,8 @@
 
 """
 This is the main module for **pytvdbapi** intended for client usage. It contains functions to access the
-API functionality through a :class:`TVDB` instance. It has implementations for representations of
-:class:`Show`, :class:`Season` and :class:`Episode` objects.
+API functionality through the :class:`TVDB` class and its methods. It has implementations for
+representations of :class:`Show`, :class:`Season` and :class:`Episode` objects.
 
 It also contains functionality to access the list of API supported languages through the :func:`languages`
 function.
@@ -100,6 +100,9 @@ logger = logging.getLogger(__name__)
 class Language(object):
     """
     Representing a language that is supported by the API.
+
+    .. seealso:: :func:`TVDB.get_series`, :func:`TVDB.get_episode` and :func:`TVDB.search` for functions
+        where the language can be specified.
     """
 
     def __init__(self, abbrev, name, id):
@@ -409,11 +412,11 @@ class Show(Sequence):
         self.api, self.lang, self.config = api, language, config
         self.seasons = dict()
 
-        self.actor_objects = list()
-        self.banner_objects = list()
-
         self.ignore_case = self.config.get('ignore_case', False)
         self.data = InsensitiveDictionary(ignore_case=self.ignore_case, **data)  # pylint: disable=W0142
+
+        self.data['actor_objects'] = list()
+        self.data['banner_objects'] = list()
 
     def __getattr__(self, item):
         try:
@@ -456,7 +459,7 @@ class Show(Sequence):
             indices = sorted(self.seasons.keys())[item]  # Slice the keys
             return [self[i] for i in indices]
         else:
-            raise error.TVDBValueError(u"Index should be an integer")
+            raise error.TVDBValueError(u"Index should be an integer or slice")
 
     def __str__(self):
         return u'<{0} - {1}>'.format(self.__class__.__name__, self.SeriesName)
@@ -545,6 +548,7 @@ class Show(Sequence):
         mirror = self.api.mirrors.get_mirror(TypeMask.BANNER).url
 
         #generate all the Actor objects
+        # pylint: disable=W0201
         self.actor_objects = [Actor(mirror, d, self)
                               for d in parse_xml(data, 'Actor')]
 
@@ -573,6 +577,7 @@ class Show(Sequence):
         data = generate_tree(self.api.loader.load(url))
         mirror = self.api.mirrors.get_mirror(TypeMask.BANNER).url
 
+        # pylint: disable=W0201
         self.banner_objects = [Banner(mirror, b, self) for b in parse_xml(data, "Banner")]
 
 
@@ -591,25 +596,33 @@ class Search(object):
     The shows will be stored in the same order as they are returned from
     `thetvdb.com <http://thetvdb.com>`_. They state that if there is a
     perfect match to the search, it will be the first element returned.
+
+    .. seealso:: :func:`TVDB.search` for an example of how to use the search
     """
 
     def __init__(self, result, search, language):
-        self.result, self.search, self.language = result, search, language
+        self._result = result
+
+        #: The search term used to generate the search result
+        self.search = search
+
+        #: The language used to perform the search
+        self.language = language
 
     def __len__(self):
-        return len(self.result)
+        return len(self._result)
 
     def __getitem__(self, item):
         if not isinstance(item, int):
             raise error.TVDBValueError(u"Index should be an integer")
 
         try:
-            return self.result[item]
+            return self._result[item]
         except (IndexError, TypeError):
             raise error.TVDBIndexError(u"Index out of range ({0})".format(item))
 
     def __iter__(self):
-        return iter(self.result)
+        return iter(self._result)
 
 
 class TVDB(object):
@@ -710,8 +723,6 @@ class TVDB(object):
             >>> from pytvdbapi import api
             >>> db = api.TVDB("B43FF87DE395DF56")
             >>> result = db.search("House", "en")
-            >>> len(result)
-            31
 
             >>> print(result[0])
             <Show - House>
@@ -719,12 +730,11 @@ class TVDB(object):
             >>> for show in result:
             ...     print(show) # doctest: +ELLIPSIS
             <Show - House>
-            <Show - House Of Cosbys>
-            <Show - In The Big House>
+            ...
             <Show - Edwardian Country House>
             ...
-            <Show - Hector's House>
-            <Show - The Magician's House>
+            <Show - House Of Cards (2013)>
+            ...
         """
 
         logger.debug(u"Searching for {0} using language {1}".format(show, language))

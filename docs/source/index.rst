@@ -1,3 +1,5 @@
+.. -*- coding: utf-8 -*-
+
 .. pytvdbapi documentation master file, created by
    sphinx-quickstart on Wed Nov 23 21:00:33 2011.
    You can adapt this file completely to your liking, but it should at least
@@ -5,7 +7,7 @@
 
 pytvdbapi - A Python API for thetvdb.com
 ========================================
-Welcome to the documentation for *pytvdbapi* version |version|
+Welcome to the documentation for **pytvdbapi** version |version|
 
 Basics
 ------

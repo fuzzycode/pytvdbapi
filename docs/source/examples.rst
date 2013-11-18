@@ -132,11 +132,11 @@ Access the containing season::
 
 Case insensitive attributes
 ---------------------------
-It is possible to tell the API to ignore casing when accessing the object attributes. If you pass
+It is possible to tell the API to ignore casing when accessing the objects dynamic attributes. If you pass
 `ignore_case=True` when creating the :class:`pytvdbapi.api.TVDB` instance,
 you can access the dynamically created attributes of the :class:`pytvdbapi.api.Show`,
-:class:`pytvdbapi.api.Season` and
-:class:`pytvdbapi.api.Episode` in a case insensitive manner.
+:class:`pytvdbapi.api.Season`, :class:`pytvdbapi.api.Episode`,
+:class:`pytvdbapi.actor.Actor` and :class:`pytvdbapi.banner.Banner` instances in a case insensitive manner.
 
 Example::
 
@@ -166,11 +166,13 @@ Example::
 
 Working with Actor and Banner Objects
 -------------------------------------
-By default, the extended information for :class:`pytvdbapi.api.Actor` and :class:`pytvdbapi.api.Banner` are
-not loaded. This is to save server resources for data that is not needed. If you do want to this extra data
-you can pass `actors=True` and `banners=True` respectively when creating the :class:`pytvdbapi.api.TVDB`
-instance, this will cause the actors and/or banners to be loaded for all shows. If you only want this
-information for some shows, you can use the :func:`pytvdbapi.api.Show.load_actors` and
+By default, the extended information for :class:`pytvdbapi.actor.Actor` and
+:class:`pytvdbapi.banner.Banner` are not loaded. This is to save server resources for data that is not
+necessarily needed. The :class:`pytvdbapi.api.Show` always contain a list of actor names. If you *do* want
+to use this extra actor and banner data you can pass `actors=True` and `banners=True`
+respectively when creating the :class:`pytvdbapi.api.TVDB` instance, this will cause the actors and/or
+banners to be loaded for all shows. If you only want this information for some shows, you can use the
+:func:`pytvdbapi.api.Show.load_actors` and
 :func:`pytvdbapi.api.Show.load_banners` functions instead.
 
 Using keyword arguments::
@@ -211,15 +213,22 @@ Using instance functions::
 
 Handle Network Issues
 ---------------------
+This provides a more complete example of how to handle the fact that there could be something wrong with
+the connection to the backend, or the backend could be malfunctioning and return invalid data that we can
+not work with.
+
 
 >>> from pytvdbapi import api
->>> from pytvdbapi.error import ConnectionError, BadData
+>>> from pytvdbapi.error import ConnectionError, BadData, TVDBIndexError
 >>> db = api.TVDB("B43FF87DE395DF56")
 
 >>> try:
 ...     result = db.search("Dexter", "en")  # This hits the network and could raise an exception
 ...     show = result[0]  # Find the show object that you want
 ...     show.update()  # this loads the full data set and could raise exceptions
+... except TVDBIndexError:
+...     # The search did not generate any hits
+...     pass
 ... except ConnectionError:
 ...     # Handle the fact that the server is not responding
 ...     pass

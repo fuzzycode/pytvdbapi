@@ -1,5 +1,12 @@
+.. -*- coding: utf-8 -*-
+
 Getting Started
 ===============
+About
+-----
+**pytvdbapi** is created to be an easy to use and intuitive Python API for the TV-Show database thetvdb.com_.
+It is designed with the intention of making it easier and faster to develop applications using data
+from thetvdb.com_, without having to bother about working with the raw data provided.
 
 Installing
 ----------
@@ -36,5 +43,7 @@ The following issues/problems with *pytvdbapi* are known.
 
   * No support for connections through proxy servers.
 
+
 .. _httplib2: http://code.google.com/p/httplib2/
 .. _pip: http://www.pip-installer.org/en/latest/index.html
+.. _thetvdb.com: http://thetvdb.com

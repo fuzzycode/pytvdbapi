@@ -6,7 +6,7 @@ environment. In particular it describes the differences and changes regarding un
 Unicode Vs. Str
 ---------------
 In python 3, the :class:`unicode` object has been removed and the standard :class:`str` type always represent
-a unicode string.
+a unicode string [#]_.
 
 Internally *pytvdbapi* works exclusively with unicode. That means that on Python 2.X all text attributes
 will be of type :class:`unicode` and on Python 3 they will be of type :class:`str`,
@@ -24,8 +24,8 @@ all text attributes will be automatically converted as they are loaded.
     ... else:
     ...     assert type(show.SeriesName) is str
 
-*pytvdbapi* attempts to convert all text parameters into unicode, that means :class:`unicode` on Python 2.X
-and :class:`str` on python 3.X.
+*pytvdbapi* attempts to convert all text parameters passed into unicode, that means :class:`unicode` on
+Python 2.X and :class:`str` on python 3.X.
 
 For example, both of these are valid::
 
@@ -46,3 +46,6 @@ And::
     >>> print(result[0])
     <Show - Dexter>
 
+
+.. rubric:: Footnotes
+.. [#] http://docs.python.org/3.3/howto/unicode.html
