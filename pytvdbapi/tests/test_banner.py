@@ -74,14 +74,8 @@ class TestBanners(unittest.TestCase):
                 self.assertEqual(hasattr(banner, "ThumbnailPath"), True)
                 self.assertEqual(hasattr(banner, "VignettePath"), True)
 
-                self.assertEqual(len(dir(banner)), 13)
-
             elif banner.BannerType == "season":
                 self.assertEqual(hasattr(banner, "Season"), True)
-
-                self.assertEqual(len(dir(banner)), 10)
-            else:  # poster type
-                self.assertEqual(len(dir(banner)), 9)
 
     def test_insensitive_attributes(self):
         """If selected, it should be possible to access the attributes in a case insensitive manner."""

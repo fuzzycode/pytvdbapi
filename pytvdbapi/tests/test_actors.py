@@ -64,8 +64,6 @@ class TestActor(unittest.TestCase):
         self.assertEqual(hasattr(actor, "SortOrder"), True)
         self.assertEqual(hasattr(actor, "image_url"), True)
 
-        self.assertEqual(len(dir(actor)), 7)
-
     def test_insensitive_attributes(self):
         """If selected, it should be possible to access the attributes in a case insensitive manner"""
 
