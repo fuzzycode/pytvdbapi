@@ -28,6 +28,7 @@ from pytvdbapi import error
 from pytvdbapi._compat import implements_to_string
 from pytvdbapi.utils import InsensitiveDictionary
 
+
 @implements_to_string
 class Banner(object):
     """
