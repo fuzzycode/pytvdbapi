@@ -90,7 +90,6 @@ class TestBanners(unittest.TestCase):
             self.assertTrue(hasattr(banner, a.lower()))
             self.assertTrue(hasattr(banner, a.upper()))
 
-
     def test_iterable_banners(self):
         """
         It should be possible to iterate over the banner_objects attribute
