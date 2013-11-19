@@ -34,9 +34,6 @@ class Actor(object):
     `thetvdb.com <http://thetvdb.com>`_, the attributes are described in
     more detail `here <http://www.thetvdb.com/wiki/index.php/API:actors.xml>`_.
 
-    It will also contain the attribute *image_url* that will be the full URL
-    to the image of the actor.
-
     Example::
 
         >>> from pytvdbapi import api

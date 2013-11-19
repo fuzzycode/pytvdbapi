@@ -167,15 +167,16 @@ Example::
 Working with Actor and Banner Objects
 -------------------------------------
 By default, the extended information for :class:`pytvdbapi.actor.Actor` and
-:class:`pytvdbapi.banner.Banner` are not loaded. This is to save server resources for data that is not
-necessarily needed. The :class:`pytvdbapi.api.Show` always contain a list of actor names. If you *do* want
-to use this extra actor and banner data you can pass `actors=True` and `banners=True`
+:class:`pytvdbapi.banner.Banner` are not loaded. This is to save server resources and avoid downloading
+data that is not necessarily needed. The :class:`pytvdbapi.api.Show` always contain a list of actor names.
+If you *do* want to use this extra actor and banner data you can pass `actors=True` and `banners=True`
 respectively when creating the :class:`pytvdbapi.api.TVDB` instance, this will cause the actors and/or
 banners to be loaded for all shows. If you only want this information for some shows, you can use the
 :func:`pytvdbapi.api.Show.load_actors` and
 :func:`pytvdbapi.api.Show.load_banners` functions instead.
 
 Using keyword arguments::
+
     >>> from pytvdbapi import api
     >>> db = api.TVDB("B43FF87DE395DF56", actors=True, banners=True)
     >>> result = db.search("Dexter", "en")
@@ -190,6 +191,7 @@ Using keyword arguments::
     <Actor - Michael C. Hall>
 
 Using instance functions::
+
     >>> from pytvdbapi import api
     >>> db = api.TVDB("B43FF87DE395DF56")
     >>> result = db.search("Dexter", "en")
