@@ -31,10 +31,10 @@ view-docs: docs
 	open docs/build/html/index.html
 
 upload-docs: clean-docs docs
-	@(python setup.py upload_sphinx)
+	@(python setup.py upload_sphinx -r pypi)
 
 upload: tox clean-docs docs
-	@(python setup.py sdist upload -r PyPI)
+	@(python setup.py sdist upload -r pypi)
 
 upload-test:
 	@(python setup.py sdist upload -r PyPI-test)
