@@ -6,7 +6,7 @@ CHANGELOG
   * Removed support for Python 3.2
   * Improved unicode support
   * Improved compatibility with standard Python functions like *hasattr()* and *getattr()*
-  * Show, Season, Episode Actor and Banner instances can now be pickled
+  * Show, Season, Episode, Actor and Banner instances can now be pickled
   * Added the get_episode() function to access an episode directly using the episode id.
   * Added the option *ignore_case* to be able to access the attributes in a case insensitive manner.
   * Added the *load_actors* and *load_banners* functions to load actors and banners on individual shows
