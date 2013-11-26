@@ -37,6 +37,7 @@ __identity = lambda x: x
 if PY2:
     text_type = unicode
     string_types = (str, unicode)
+    int_types = (int, long)
 
     def implements_to_string(cls):
         """
@@ -84,7 +85,7 @@ if PY2:
 else:  # Python 3 implementation
     text_type = str
     string_types = (str, )
-
+    int_types = (int, )
     implements_to_string = __identity
 
     def make_unicode(data, encoding='utf-8', error='strict'):
