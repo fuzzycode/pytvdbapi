@@ -65,7 +65,7 @@ from collections import Sequence
 from pytvdbapi.actor import Actor
 from pytvdbapi.banner import Banner
 from pytvdbapi.utils import InsensitiveDictionary, unicode_arguments
-from pytvdbapi._compat import implements_to_string, make_bytes, make_unicode
+from pytvdbapi._compat import implements_to_string, make_bytes, make_unicode, text_type, int_types
 
 try:
     from urllib import quote
@@ -89,6 +89,13 @@ __series__ = u"{mirror}/api/{api_key}/series/{seriesid}/all/{language}.xml"
 __episode__ = u"{mirror}/api/{api_key}/episodes/{episodeid}/{language}.xml"
 __actors__ = u"{mirror}/api/{api_key}/series/{seriesid}/actors.xml"
 __banners__ = u"{mirror}/api/{api_key}/series/{seriesid}/banners.xml"
+
+__imdbid__ = u"{mirror}/api/GetSeriesByRemoteID.php?imdbid={imdbid}&language=en"
+__zap2itid__ = u"{mirror}/api/GetSeriesByRemoteID.php?language=en&zap2it={zap2itid}"
+# Language is deprecated and not used, it make no difference what value is provided
+
+__airdate__ = u"{mirror}/api/GetEpisodeByAirDate.php?apikey={api_key}&seriesid={seriesid}&" \
+              u"airdate={airdate}&language={language}"
 
 __all__ = ['languages', 'Language', 'TVDB', 'Search', 'Show', 'Season', 'Episode']
 
@@ -750,30 +757,15 @@ class TVDB(object):
         return Search(self.search_buffer[(show, language)], show, language)
 
     @unicode_arguments
-    def get(self, series_id, language, cache=True):
-        """
-        .. versionadded:: 0.3
-        .. deprecated:: 0.4 Use :func:`get_series` instead.
-
-        :param series_id: The Show Id to fetch
-        :param language: The language abbreviation to search for. E.g. "en"
-        :param cache: If False, the local cache will not be used and the
-                    resources will be reloaded from server.
-
-        :return: A :class:`Show()` instance
-        :raise: :exc:`pytvdbapi.error.TVDBValueError`, :exc:`pytvdbapi.error.TVDBIdError`
-        """
-
-        logger.warning(u"Using deprecated function 'get'. Use 'get_series' instead")
-        return self.get_series(series_id, language, cache)
-
-    @unicode_arguments
-    def get_series(self, series_id, language, cache=True):
+    def get_series(self, series_id, language, id_type='tvdb', cache=True):
         """
         .. versionadded:: 0.4
+        .. versionchanged:: 0.5 Added *id_type* parameter
 
         :param series_id: The Show Id to fetch
         :param language: The language abbreviation to search for. E.g. "en"
+        :param id_type: Information about what kind of id is provided. Should be one of *('tvdb', 'imdb',
+            'zap2it')*
         :param cache: If False, the local cache will not be used and the
                     resources will be reloaded from server.
 
@@ -791,17 +783,33 @@ class TVDB(object):
             >>> print(show.SeriesName)
             Dexter
         """
-
-        logger.debug(u"Getting series with id {0} with language {1}".format(series_id, language))
-
-        if language != 'all' and language not in __LANGUAGES__:
+        if id_type not in ('tvdb', 'imdb', 'zap2it'):
+            raise error.TVDBValueError("Invalid id type")
+        elif language != 'all' and language not in __LANGUAGES__:
             raise error.TVDBValueError(u"{0} is not a valid language".format(language))
+
+        # Map id type to url template
+        __url__ = {'tvdb': __series__, 'imdb': __imdbid__, 'zap2it': __zap2itid__}
+
+        try:
+            series_id = text_type(series_id)
+        except ValueError:
+            raise error.TVDBValueError(
+                "Invalid id type, expected {0} or {1}, got {2}".format(text_type, int_types, type(series_id)))
+
+        if id_type == 'imdb':
+            series_id = series_id[2:] if series_id.startswith('tt') else series_id
+        elif id_type == 'zap2it':
+            series_id = series_id if series_id.startswith('EP') else u'EP' + series_id.rjust(8, '0')
+
+        logger.debug(
+            u"Getting series with id {0}({2}) with language {1}".format(series_id, language, id_type))
 
         context = {'seriesid': series_id, "language": language,
                    'mirror': self.mirrors.get_mirror(TypeMask.XML).url,
-                   'api_key': self.config['api_key']}
+                   'api_key': self.config['api_key'], 'imdbid': series_id, 'zap2itid': series_id}
 
-        url = __series__.format(**context)
+        url = __url__[id_type].format(**context)
         logger.debug(u'Getting series from {0}'.format(url))
 
         try:
