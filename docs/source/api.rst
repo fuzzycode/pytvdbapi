@@ -42,6 +42,5 @@ API Access
     .. These are all hidden behind decorators, so we have to add them explicitly here
 
     .. automethod:: pytvdbapi.api.TVDB.search(show, language, cache=True)
-    .. automethod:: pytvdbapi.api.TVDB.get(series_id, language, cache=True)
-    .. automethod:: pytvdbapi.api.TVDB.get_series(series_id, language, cache=True)
+    .. automethod:: pytvdbapi.api.TVDB.get_series(series_id, language, id_type='tvdb', cache=True)
     .. automethod:: pytvdbapi.api.TVDB.get_episode(series_id, language, cache=True)

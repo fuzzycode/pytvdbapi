@@ -32,7 +32,7 @@ class TestBanners(unittest.TestCase):
 
     def _getShow(self, _banners=True):
         api = TVDB("B43FF87DE395DF56", banners=_banners)
-        show = api.get(79349, "en")  # Load the series Dexter
+        show = api.get_series(79349, "en")  # Load the series Dexter
         show.update()
 
         return show
@@ -81,7 +81,7 @@ class TestBanners(unittest.TestCase):
         """If selected, it should be possible to access the attributes in a case insensitive manner."""
 
         api = TVDB("B43FF87DE395DF56", banners=True, ignore_case=True)
-        show = api.get(79349, "en")  # Load the series Dexter
+        show = api.get_series(79349, "en")  # Load the series Dexter
         show.update()
 
         banner = show.banner_objects[0]

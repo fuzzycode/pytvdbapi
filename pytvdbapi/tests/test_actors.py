@@ -29,7 +29,7 @@ from pytvdbapi.actor import Actor
 class TestActor(unittest.TestCase):
     def setUp(self):
         api = TVDB("B43FF87DE395DF56", actors=True)
-        self.show = api.get(79349, "en")  # Load the series Dexter
+        self.show = api.get_series(79349, "en")  # Load the series Dexter
         self.show.update()
 
     def test_get_actors(self):
@@ -46,7 +46,7 @@ class TestActor(unittest.TestCase):
         actor data has not been loaded.
         """
         api = TVDB("B43FF87DE395DF56", actors=False)
-        show = api.get(79349, "en")  # Load the series Dexter
+        show = api.get_series(79349, "en")  # Load the series Dexter
         show.update()
 
         self.assertEqual(len(show.actor_objects), 0)
@@ -68,7 +68,7 @@ class TestActor(unittest.TestCase):
         """If selected, it should be possible to access the attributes in a case insensitive manner"""
 
         api = TVDB("B43FF87DE395DF56", actors=True, ignore_case=True)
-        show = api.get(79349, "en")  # Load the series Dexter
+        show = api.get_series(79349, "en")  # Load the series Dexter
         show.update()
 
         actor = show.actor_objects[0]

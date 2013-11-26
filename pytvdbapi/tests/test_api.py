@@ -580,7 +580,7 @@ class TestSearch(unittest.TestCase):
 
 
 class TestGetSeries(unittest.TestCase):
-    def test_get(self):
+    def test_get_series(self):
         """Provided the show id, you should be able to get the show object"""
         api = TVDB("B43FF87DE395DF56")
         show = api.get_series(79349, "en")
@@ -605,6 +605,38 @@ class TestGetSeries(unittest.TestCase):
         self.assertRaises(error.TVDBIdError, api.get_series, 99999999999999, "en")
         self.assertRaises(error.TVDBIdError, api.get_series, "foo", "en")
         self.assertRaises(error.TVDBIdError, api.get_series, "", "en")
+
+    def test_invalid_id_type(self):
+        """Function should raise Value error if the wrong type is provided"""
+        api = TVDB("B43FF87DE395DF56")
+
+        self.assertRaises(error.TVDBValueError, api.get_series, 79349, 'en', 'foo')
+
+    def test_imdb_id(self):
+        """It should be possible to use the imdb id to get the series"""
+        api = TVDB("B43FF87DE395DF56")
+
+        show = api.get_series(773262, 'en', 'imdb')
+        self.assertEqual(show.seriesid, 79349)  # Dexter
+
+        show = api.get_series('tt0773262', 'en', 'imdb')
+        self.assertEqual(show.seriesid, 79349)  # Dexter
+
+    def test_zap2it_id(self):
+        """It should be possible to load the show using the zap2it id"""
+        api = TVDB("B43FF87DE395DF56")
+
+        show = api.get_series('EP00859795', 'en', 'zap2it')
+        self.assertEqual(show.seriesid, 79349)  # Dexter
+
+        show = api.get_series(859795, 'en', 'zap2it')
+        self.assertEqual(show.seriesid, 79349)  # Dexter
+
+    def test_bad_id(self):
+        """Function should raise value error if a bad id is passed"""
+        api = TVDB("B43FF87DE395DF56")
+
+        #self.assertRaises(error.TVDBValueError, api.get_series, api, 'en')
 
 
 class TestGetEpisode(unittest.TestCase):

@@ -91,7 +91,7 @@ class Banner(object):
 
         >>> from pytvdbapi import api
         >>> db = api.TVDB('B43FF87DE395DF56', banners=True)
-        >>> show = db.get( 79349, "en" )  # Dexter
+        >>> show = db.get_series( 79349, "en" )  # Dexter
         >>> show.update()
 
         >>> assert len(show.banner_objects) > 0
