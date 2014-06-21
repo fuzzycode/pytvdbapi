@@ -23,6 +23,8 @@ A module providing the default loader to use to load urls.
 
 import logging
 import os
+import zipfile
+from StringIO import StringIO
 
 import httplib2
 
@@ -68,5 +70,15 @@ class Loader(object):
             raise error.TVDBNotFoundError(u"Data not found")
         elif response.status not in [200, 304]:  # pragma: no cover
             raise error.ConnectionError(u"Bad status returned from server. {0}".format(response.status))
-        else:
-            return make_unicode(content)
+
+        data = make_unicode(content)
+
+        if response['content-type'] == "application/zip":
+            zd = StringIO()
+            zd.write(data)
+            zf = zipfile.ZipFile(zd)
+            data = zf.open(
+                '{}.xml'.format(os.path.basename(url)[:-4])
+            ).read()
+
+        return data

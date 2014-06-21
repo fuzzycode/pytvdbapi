@@ -86,7 +86,7 @@ from pytvdbapi.xmlhelpers import parse_xml, generate_tree, has_element
 __mirrors__ = u"http://www.thetvdb.com/api/{api_key}/mirrors.xml"
 __time__ = u"http://www.thetvdb.com/api/Updates.php?type=none"
 __search__ = u"http://www.thetvdb.com/api/GetSeries.php?seriesname={series}&language={language}"
-__series__ = u"{mirror}/api/{api_key}/series/{seriesid}/all/{language}.xml"
+__series__ = u"{mirror}/api/{api_key}/series/{seriesid}/all/{language}.zip"
 __episode__ = u"{mirror}/api/{api_key}/episodes/{episodeid}/{language}.xml"
 __actors__ = u"{mirror}/api/{api_key}/series/{seriesid}/actors.xml"
 __banners__ = u"{mirror}/api/{api_key}/series/{seriesid}/banners.xml"
