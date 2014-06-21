@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+2014-06-22, 0.4.1
+-----------------
+  * Use zip format for retrieving series data.
+
 2013-11-22, 0.4.0
 -----------------
   * Removed support for Python 3.2
