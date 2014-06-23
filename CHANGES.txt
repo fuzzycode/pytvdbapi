@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+2014-06-23, 0.4.2
+-----------------
+  * Save full data when using get_series to avoid multiple fetches of the same
+    data when populating
+
 2014-06-22, 0.4.1
 -----------------
   * Use zip format for retrieving series data.
