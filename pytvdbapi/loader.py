@@ -78,7 +78,7 @@ class Loader(object):
             zd.write(data)
             zf = zipfile.ZipFile(zd)
             data = zf.open(
-                '{}.xml'.format(os.path.basename(url)[:-4])
+                '{0}.xml'.format(os.path.basename(url)[:-4])
             ).read()
 
         return data
