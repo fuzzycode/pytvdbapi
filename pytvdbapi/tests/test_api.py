@@ -103,7 +103,7 @@ class TestApi(basetest.pytvdbapiTest):
 
     def test_cache_dir(self):
         """It should be possible to specify a custom cache directory"""
-        #TODO: Implement this
+        # TODO: Implement this
 
     def test_version_format(self):
         """The package version string should be properly formatted"""
@@ -292,14 +292,14 @@ class TestShow(unittest.TestCase):
         self.assertEqual(friends.SeriesName, "Friends")
         self.assertEqual(friends.id, 79168)
 
-        #This should not yet be loaded so should raise an error
+        # This should not yet be loaded so should raise an error
         self.assertRaises(
             error.TVDBAttributeError, friends.__getattr__, "Genre")
 
-        #Load in the rest of the attributes
+        # Load in the rest of the attributes
         friends.update()
 
-        #Now this data should be available
+        # Now this data should be available
         self.assertEqual(friends.Genre, ['Comedy'])
 
     def test_invalid_show_attribute(self):
@@ -373,10 +373,10 @@ class TestShow(unittest.TestCase):
     def test_invalid_index(self):
         """class should raise an exception if trying to use an invalid index"""
 
-        #Non integer index
+        # Non integer index
         self.assertRaises(error.TVDBValueError, self.friends.__getitem__, 'foo')
 
-        #Index out of range
+        # Index out of range
         self.assertRaises(error.TVDBIndexError, self.friends.__getitem__, 9999)
 
     def test_slice(self):
@@ -636,7 +636,7 @@ class TestGetSeries(unittest.TestCase):
         """Function should raise value error if a bad id is passed"""
         api = TVDB("B43FF87DE395DF56")
 
-        #self.assertRaises(error.TVDBValueError, api.get_series, api, 'en')
+        # self.assertRaises(error.TVDBValueError, api.get_series, api, 'en')
 
 
 class TestGetEpisode(unittest.TestCase):

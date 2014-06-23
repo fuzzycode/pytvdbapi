@@ -29,9 +29,10 @@ import random
 from pytvdbapi import error
 from pytvdbapi.xmlhelpers import parse_xml
 
+
 __all__ = ['TypeMask', 'Mirror', 'MirrorList']
 
-#Module logger object
+# Module logger object
 logger = logging.getLogger(__name__)
 
 

@@ -29,7 +29,7 @@ __all__ = ['PytvdbapiError', 'BadData', 'ConnectionError',
            'TVDBAttributeError', 'TVDBIndexError', 'TVDBIdError',
            'TVDBValueError', 'TVDBNotFoundError']
 
-#Module level logger
+# Module level logger
 logger = logging.getLogger(__name__)
 
 

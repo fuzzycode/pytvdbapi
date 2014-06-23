@@ -37,7 +37,7 @@ from pytvdbapi._compat import make_bytes, make_unicode
 
 __all__ = ['has_element', 'generate_tree', 'parse_xml']
 
-#Module level logger object
+# Module level logger object
 logger = logging.getLogger(__name__)
 
 

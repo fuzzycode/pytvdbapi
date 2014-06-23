@@ -60,7 +60,7 @@ def getDocTests():
     # Grab all python modules in that package
     files = glob.glob(base_path + "/*.py")
 
-    #Add all modules in the package
+    # Add all modules in the package
     for file in files:
         module = os.path.splitext(os.path.basename(file))[0]
         tests.addTest(doctest.DocTestSuite("pytvdbapi." + module))

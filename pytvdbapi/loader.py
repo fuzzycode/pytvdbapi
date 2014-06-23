@@ -29,7 +29,8 @@ import httplib2
 from pytvdbapi import error
 from pytvdbapi._compat import make_unicode
 
-#Module logger object
+
+# Module logger object
 logger = logging.getLogger(__name__)
 
 
