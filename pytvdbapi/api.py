@@ -402,7 +402,7 @@ class Show(Sequence):
          'Network', 'NetworkID', 'Overview', 'Rating', 'RatingCount', 'Runtime',
          'SeriesID', 'SeriesName', 'Status', 'actor_objects', 'added', 'addedBy',
          'api', 'banner', 'banner_objects', 'fanart', 'id', 'lang', 'language',
-         'lastupdated', 'poster', 'seriesid', 'zap2it_id']
+         'lastupdated', 'poster', 'seriesid', 'tms_wanted_old', 'zap2it_id']
 
     .. note:: When searching, thetvdb.com_ provides a basic set of attributes
         for the show. When the full data set is loaded thetvdb.com_ provides a
@@ -727,7 +727,7 @@ class TVDB(object):
             ...     print(show) # doctest: +ELLIPSIS
             <Show - House>
             ...
-            <Show - House Of Cards (2013)>
+            <Show - House of Cards (US)>
             ...
         """
 

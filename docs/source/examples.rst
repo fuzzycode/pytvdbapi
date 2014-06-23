@@ -185,8 +185,6 @@ Using keyword arguments::
 
     >>> len(show.actor_objects)
     26
-    >>> len(show.banner_objects)
-    231
     >>> print(show.actor_objects[0])
     <Actor - Michael C. Hall>
 
@@ -210,8 +208,6 @@ Using instance functions::
     <Actor - Michael C. Hall>
 
     >>> show.load_banners()  # Load banners
-    >>> len(show.banner_objects)
-    231
 
 Handle Network Issues
 ---------------------
