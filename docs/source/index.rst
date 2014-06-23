@@ -24,6 +24,13 @@ Modules
 
     api_index
 
+Development
+-----------
+.. toctree::
+    :maxdepth: 3
+
+    development
+
 Extras
 ------
 .. toctree::

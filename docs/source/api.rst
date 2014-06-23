@@ -6,7 +6,7 @@
 .. automodule:: pytvdbapi.api
 
 Languages
-----------
+---------
 
 .. autoclass:: pytvdbapi.api.Language
     :members:
@@ -44,3 +44,4 @@ API Access
     .. automethod:: pytvdbapi.api.TVDB.search(show, language, cache=True)
     .. automethod:: pytvdbapi.api.TVDB.get_series(series_id, language, id_type='tvdb', cache=True)
     .. automethod:: pytvdbapi.api.TVDB.get_episode(series_id, language, cache=True)
+    .. automethod:: pytvdbapi.api.TVDB.get_episode_by_air_date(self, series_id, air_date, cache=True)

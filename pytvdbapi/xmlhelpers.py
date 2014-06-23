@@ -35,10 +35,20 @@ except ImportError:
 from pytvdbapi import error
 from pytvdbapi._compat import make_bytes, make_unicode
 
-__all__ = ['generate_tree', 'parse_xml']
+__all__ = ['has_element', 'generate_tree', 'parse_xml']
 
 #Module level logger object
 logger = logging.getLogger(__name__)
+
+
+def has_element(etree, element):
+    """
+    :param etree: the element tree to check
+    :param element: the element to check for
+
+    Check if the elementree contains the provided element name
+    """
+    return etree.find(element) is not None
 
 
 def generate_tree(xml_data):

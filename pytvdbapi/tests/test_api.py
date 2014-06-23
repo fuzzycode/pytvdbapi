@@ -672,5 +672,59 @@ class TestGetEpisode(unittest.TestCase):
         self.assertRaises(error.TVDBIdError, api.get_episode, "", "en")
 
 
+class TestGetEpisodeByAirDate(unittest.TestCase):
+    """Test the get_episode_by_air_date function"""
+
+    def test_non_date(self):
+        """Function should raise an exception if the air_date parameter is of the wrong type"""
+        api = TVDB("B43FF87DE395DF56")
+
+        self.assertRaises(error.TVDBValueError, api.get_episode_by_air_date, 79349, 'en', 'foo')
+        self.assertRaises(error.TVDBValueError, api.get_episode_by_air_date, 79349, 'en', '2001-12-21')
+        self.assertRaises(error.TVDBValueError, api.get_episode_by_air_date, 79349, 'en', 2)
+
+    def test_valid_show(self):
+        """Given correct values, the function should return a valid Episode instance"""
+        api = TVDB("B43FF87DE395DF56")
+
+        # Second episode of dexter
+        ep = api.get_episode_by_air_date(79349, 'en', datetime.date(2006, 10, 8))
+
+        self.assertEqual(ep.id, 308834)
+        self.assertEqual(ep.EpisodeName, 'Crocodile')
+
+    def test_no_episode_found(self):
+        """Function should raise an exception if no episode can be found"""
+        api = TVDB("B43FF87DE395DF56")
+
+        self.assertRaises(error.TVDBNotFoundError,
+                          api.get_episode_by_air_date, 79349, 'en', datetime.date(2006, 10, 9))
+
+    def test_invalid_id(self):
+        """Function should raise an exception if an invalid id is used"""
+        api = TVDB("B43FF87DE395DF56")
+
+        self.assertRaises(error.TVDBNotFoundError,
+                          api.get_episode_by_air_date, 'foo', 'en', datetime.date(2006, 10, 8))
+
+        self.assertRaises(error.TVDBNotFoundError,
+                          api.get_episode_by_air_date, -1, 'en', datetime.date(2006, 10, 8))
+
+        self.assertRaises(error.TVDBNotFoundError,
+                          api.get_episode_by_air_date, 999999, 'en', datetime.date(2006, 10, 8))
+
+    def test_invalid_language(self):
+        """Function should raise an exception if an invalid language is passed"""
+        api = TVDB("B43FF87DE395DF56")
+
+        self.assertRaises(error.TVDBValueError,
+                          api.get_episode_by_air_date, 79349, 'foo', datetime.date(2006, 10, 8))
+
+        self.assertRaises(error.TVDBValueError,
+                          api.get_episode_by_air_date, 79349, 2, datetime.date(2006, 10, 8))
+
+        self.assertRaises(error.TVDBValueError,
+                          api.get_episode_by_air_date, 79349, 'english', datetime.date(2006, 10, 8))
+
 if __name__ == "__main__":
     sys.exit(unittest.main())

@@ -59,6 +59,7 @@ from __future__ import absolute_import, print_function
 import logging
 import tempfile
 import os
+import datetime
 from collections import Sequence
 
 # pylint: disable=E0611, F0401, W0622
@@ -79,7 +80,7 @@ from pytvdbapi.__init__ import __NAME__
 from pytvdbapi.loader import Loader
 from pytvdbapi.mirror import MirrorList, TypeMask
 from pytvdbapi.utils import merge
-from pytvdbapi.xmlhelpers import parse_xml, generate_tree
+from pytvdbapi.xmlhelpers import parse_xml, generate_tree, has_element
 
 # URL templates used for loading the data from thetvdb.com
 __mirrors__ = u"http://www.thetvdb.com/api/{api_key}/mirrors.xml"
@@ -666,12 +667,6 @@ class TVDB(object):
       case insensitive manner. If set to False, the default, all
       attributes will be case sensitive and retain the same casing
       as provided by `thetvdb.com <http://thetvdb.com>`_.
-
-    .. deprecated:: 0.4
-
-    * **force_lang** (default=False). It is no longer possible to reload the
-      language file. Using it will have no affect but will issue a warning in
-      the log file.
     """
 
     @unicode_arguments
@@ -680,12 +675,6 @@ class TVDB(object):
 
         #cache old searches to avoid hitting the server
         self.search_buffer = dict()
-
-        #Store the path to where we are
-        self.path = os.path.abspath(os.path.dirname(__file__))
-
-        if 'force_lang' in kwargs:
-            logger.warning(u"'force_lang' keyword argument is deprecated as of version 0.4")
 
         #extract all argument and store for later use
         self.config['api_key'] = api_key
@@ -882,6 +871,57 @@ class TVDB(object):
             data = generate_tree(data)
         else:
             raise error.BadData("Bad data received")
+
+        episodes = parse_xml(data, "Episode")
+
+        if len(episodes) == 0:
+            raise error.BadData("Bad data received")
+        else:
+            return Episode(episodes[0], None, self.config)
+
+    @unicode_arguments
+    def get_episode_by_air_date(self, series_id, language, air_date, cache=True):
+        """
+        .. versionadded:: 0.5
+
+        :param series_id: The TVDB series id of the episode
+        :param language: The language to search for. Should be a two letter abbreviation e.g. *en*.
+        :param air_date: The air date to search for. Should be of type :class:`datetime.date`
+        :type air_date: datetime.date
+        :param cache: If False, the local cache will not be used and the
+                    resources will be reloaded from server.
+
+        :return: If found, an :class:`Episode` instance
+        :raise: :exc:`pytvdbapi.error.TVDBValueError`
+
+
+        .. Note:: When the :class:`Episode()` is loaded using :func:`get_episode_by_air_date`
+            the *season* attribute used to link the episode with a season will be None.
+        """
+        if type(air_date) not in (datetime.date,):
+            raise error.TVDBValueError("air_date should be of type datetime.date")
+        elif language != 'all' and language not in __LANGUAGES__:
+            raise error.TVDBValueError(u"{0} is not a valid language".format(language))
+
+        context = {'seriesid': series_id, 'airdate': air_date, "language": language,
+                   'mirror': self.mirrors.get_mirror(TypeMask.XML).url, 'api_key': self.config['api_key']}
+
+        url = __airdate__.format(**context)
+        logger.debug(u'Getting episode from {0}'.format(url))
+
+        try:
+            data = self.loader.load(url, cache)
+        except error.TVDBNotFoundError:
+            raise
+
+        if data.strip():
+            data = generate_tree(data)
+        else:
+            raise error.BadData("Bad data received")
+
+        # The xml has an "Error" element in it if no episode was found
+        if has_element(data, 'Error'):
+            raise error.TVDBNotFoundError(u"".format())
 
         episodes = parse_xml(data, "Episode")
 
