@@ -510,17 +510,17 @@ class Show(Sequence):
 
         for episode_data in episodes:
             season_nr = int(episode_data['SeasonNumber'])
-            if not season_nr in self.seasons:
+            if season_nr not in self.seasons:
                 self.seasons[season_nr] = Season(season_nr, self)
 
             episode = Episode(episode_data, self.seasons[season_nr], self.config)
             self.seasons[season_nr].append(episode)
 
-        #If requested, load the extra actors data
+        # If requested, load the extra actors data
         if self.config.get('actors', False):
             self.load_actors()
 
-        #if requested, load the extra banners data
+        # if requested, load the extra banners data
         if self.config.get('banners', False):
             self.load_banners()
 
@@ -555,7 +555,7 @@ class Show(Sequence):
 
         mirror = self.api.mirrors.get_mirror(TypeMask.BANNER).url
 
-        #generate all the Actor objects
+        # generate all the Actor objects
         # pylint: disable=W0201
         self.actor_objects = [Actor(mirror, d, self)
                               for d in parse_xml(data, 'Actor')]
@@ -611,10 +611,10 @@ class Search(object):
     def __init__(self, result, search, language):
         self._result = result
 
-        #: The search term used to generate the search result
+        # The search term used to generate the search result
         self.search = search
 
-        #: The language used to perform the search
+        # The language used to perform the search
         self.language = language
 
     def __len__(self):
@@ -673,10 +673,10 @@ class TVDB(object):
     def __init__(self, api_key, **kwargs):
         self.config = dict()
 
-        #cache old searches to avoid hitting the server
+        # cache old searches to avoid hitting the server
         self.search_buffer = dict()
 
-        #extract all argument and store for later use
+        # extract all argument and store for later use
         self.config['api_key'] = api_key
         self.config['cache_dir'] = kwargs.get("cache_dir",
                                               make_unicode(os.path.join(tempfile.gettempdir(),  __NAME__)))
@@ -685,10 +685,10 @@ class TVDB(object):
         self.config['banners'] = kwargs.get('banners', False)
         self.config['ignore_case'] = kwargs.get('ignore_case', False)
 
-        #Create the loader object to use
+        # Create the loader object to use
         self.loader = Loader(self.config['cache_dir'])
 
-        #Create the list of available mirrors
+        # Create the list of available mirrors
         tree = generate_tree(self.loader.load(__mirrors__.format(**self.config)))
         self.mirrors = MirrorList(tree)
 
