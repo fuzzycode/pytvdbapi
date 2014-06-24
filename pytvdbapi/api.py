@@ -114,7 +114,7 @@ class Language(object):
     """
 
     def __init__(self, abbrev, name, id):
-        #: A two letter abbreviation representing the language, e.g. *en*.
+        # : A two letter abbreviation representing the language, e.g. *en*.
         #: This is what should be passed when specifying a language to the API.
         self.abbreviation = abbrev
 
@@ -128,6 +128,7 @@ class Language(object):
 
     def __repr__(self):
         return self.__str__()
+
 
 # The list of API supported languages
 __LANGUAGES__ = {u"da": Language(abbrev=u"da", name=u"Dansk", id=10),
@@ -498,9 +499,9 @@ class Show(Sequence):
 
         if self.full_data is None:
             context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
-                        'api_key': self.config['api_key'],
-                        'seriesid': self.id,
-                        'language': self.lang}
+                       'api_key': self.config['api_key'],
+                       'seriesid': self.id,
+                       'language': self.lang}
             url = __series__.format(**context)
             data = self.api.loader.load(url)
             data = generate_tree(data)
@@ -685,7 +686,7 @@ class TVDB(object):
         # extract all argument and store for later use
         self.config['api_key'] = api_key
         self.config['cache_dir'] = kwargs.get("cache_dir",
-                                              make_unicode(os.path.join(tempfile.gettempdir(),  __NAME__)))
+                                              make_unicode(os.path.join(tempfile.gettempdir(), __NAME__)))
 
         self.config['actors'] = kwargs.get('actors', False)
         self.config['banners'] = kwargs.get('banners', False)
