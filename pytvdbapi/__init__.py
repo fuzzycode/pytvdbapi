@@ -29,7 +29,7 @@ try:
 except ImportError:
     from pytvdbapi.backport import NullHandler
 
-__VERSION__ = (0, 4, 3)
+__VERSION__ = (0, 5, 0)
 __NAME__ = 'pytvdbapi'
 __EMAIL__ = 'develop@bjornlarsson.net'
 
