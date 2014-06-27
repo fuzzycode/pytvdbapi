@@ -45,5 +45,5 @@ The following issues/problems with *pytvdbapi* are known.
 
 
 .. _httplib2: http://code.google.com/p/httplib2/
-.. _pip: http://www.pip-installer.org/en/latest/index.html
+.. _pip: https://pip.pypa.io/en/latest/index.html
 .. _thetvdb.com: http://thetvdb.com

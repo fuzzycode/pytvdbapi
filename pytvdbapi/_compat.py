@@ -31,6 +31,7 @@ import sys
 __all__ = ['implements_to_string', 'make_unicode', 'make_bytes', 'text_type', 'string_types']
 
 PY2 = sys.version_info[0] == 2
+PY3 = sys.version_info[0] == 3
 
 __identity = lambda x: x
 

@@ -263,7 +263,6 @@ class Episode(object):
 
 @implements_to_string
 class Season(Sequence):
-    # pylint: disable=R0924
     """
     :raise: :exc:`pytvdbapi.error.TVDBIndexError`
 
@@ -357,7 +356,7 @@ class Season(Sequence):
 
 @implements_to_string
 class Show(Sequence):
-    # pylint: disable=R0924, R0902
+    # pylint: disable=R0902
     """
     :raise: :exc:`pytvdbapi.error.TVDBAttributeError`, :exc:`pytvdbapi.error.TVDBIndexError`
 
@@ -484,7 +483,7 @@ class Show(Sequence):
         """
         self._populate_data()
 
-    def _populate_data(self, full_data=None):
+    def _populate_data(self):
         """
         Populates the Show object with data. This will hit the network to
         download the XML data from `thetvdb.com <http://thetvdb.com>`_.
@@ -597,7 +596,6 @@ class Show(Sequence):
 
 
 class Search(object):
-    # pylint: disable=R0924
     """
     :raise: :exc:`pytvdbapi.error.TVDBIndexError`
 

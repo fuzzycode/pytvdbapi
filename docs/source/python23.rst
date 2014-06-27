@@ -48,4 +48,4 @@ And::
 
 
 .. rubric:: Footnotes
-.. [#] http://docs.python.org/3.3/howto/unicode.html
+.. [#] ttps://docs.python.org/3.3/howto/unicode.html

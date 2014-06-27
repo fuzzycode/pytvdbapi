@@ -124,4 +124,4 @@ LICENSE.txt file for more details.
 
 .. _thetvdb.com: http://thetvdb.com
 .. _PyPI: http://pypi.python.org/pypi
-.. _pip: http://www.pip-installer.org/en/latest/index.html
+.. _pip: https://pip.pypa.io/en/latest/index.html

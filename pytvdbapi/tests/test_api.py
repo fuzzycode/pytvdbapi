@@ -635,8 +635,7 @@ class TestGetSeries(unittest.TestCase):
     def test_bad_id(self):
         """Function should raise value error if a bad id is passed"""
         api = TVDB("B43FF87DE395DF56")
-
-        # self.assertRaises(error.TVDBValueError, api.get_series, api, 'en')
+        self.assertRaises(error.TVDBValueError, api.get_series, api, 'en', 'foo')
 
 
 class TestGetEpisode(unittest.TestCase):

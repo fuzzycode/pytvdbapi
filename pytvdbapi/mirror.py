@@ -56,7 +56,6 @@ class Mirror(object):
 
 
 class MirrorList(object):
-    # pylint: disable=R0924
     """
     Managing a list of available mirrors
 

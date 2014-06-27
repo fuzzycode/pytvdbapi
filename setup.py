@@ -29,7 +29,7 @@ import sys
 
 from pytvdbapi.__init__ import __NAME__, version
 
-#Make sure the user has an acceptable Python version
+# Make sure the user has an acceptable Python version
 if sys.version_info < (2, 6):
     raise SystemExit("Your Python is too old. Only Python >= 2.6 is supported.")
 
