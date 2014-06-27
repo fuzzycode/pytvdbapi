@@ -24,7 +24,11 @@ A module providing the default loader to use to load urls.
 import logging
 import os
 import zipfile
-from StringIO import StringIO
+
+try:
+    from StringIO import StringIO  # Python 2
+except ImportError:
+    from io import StringIO  # Python 3
 
 import httplib2
 
@@ -77,8 +81,6 @@ class Loader(object):
             zd = StringIO()
             zd.write(data)
             zf = zipfile.ZipFile(zd)
-            data = zf.open(
-                '{0}.xml'.format(os.path.basename(url)[:-4])
-            ).read()
+            data = zf.open('{0}.xml'.format(os.path.basename(url)[:-4])).read()
 
         return data
