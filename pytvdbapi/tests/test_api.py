@@ -403,7 +403,7 @@ class TestShow(unittest.TestCase):
 
         for attr_name in dir(self.friends):
             attr = getattr(self.friends, attr_name)
-            if type(attr) not in (float, int, bool, datetime.date, pytvdbapi.api.TVDB):
+            if type(attr) not in (float, int, bool, type(None), datetime.date, pytvdbapi.api.TVDB):
                 if type(attr) in (list,):
                     for a in attr:
                         self.assertEqual(type(a), _type,

@@ -393,7 +393,7 @@ class Show(Sequence):
         >>> dir(show)  # List the set of basic attributes # doctest: +NORMALIZE_WHITESPACE
         ['AliasNames', 'FirstAired', 'IMDB_ID', 'Network',
          'Overview', 'SeriesName', 'actor_objects', 'api',
-         'banner', 'banner_objects', 'id', 'lang', 'language',
+         'banner', 'banner_objects', 'full_data', 'id', 'lang', 'language',
          'seriesid', 'zap2it_id']
 
         >>> show.update()  # Load the full data set from the server
@@ -402,7 +402,7 @@ class Show(Sequence):
          'ContentRating', 'FirstAired', 'Genre', 'IMDB_ID', 'Language',
          'Network', 'NetworkID', 'Overview', 'Rating', 'RatingCount', 'Runtime',
          'SeriesID', 'SeriesName', 'Status', 'actor_objects', 'added', 'addedBy',
-         'api', 'banner', 'banner_objects', 'fanart', 'id', 'lang', 'language',
+         'api', 'banner', 'banner_objects', 'fanart', 'full_data', 'id', 'lang', 'language',
          'lastupdated', 'poster', 'seriesid', 'tms_wanted_old', 'zap2it_id']
 
     .. note:: When searching, thetvdb.com_ provides a basic set of attributes
