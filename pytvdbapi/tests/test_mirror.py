@@ -23,6 +23,7 @@ from __future__ import absolute_import, print_function
 import sys
 import unittest
 import os
+from io import StringIO
 
 from pytvdbapi import xmlhelpers, mirror, error
 from pytvdbapi.tests import utils, basetest
@@ -32,7 +33,7 @@ class TestMirror(basetest.pytvdbapiTest):
     def setUp(self):
         super(TestMirror, self).setUp()
 
-        data = utils.file_loader(os.path.join(self.path, "mirrors.xml"))
+        data = StringIO(utils.file_loader(os.path.join(self.path, "mirrors.xml")))
         self.mirrors = mirror.MirrorList(xmlhelpers.generate_tree(data))
 
     def tearDown(self):

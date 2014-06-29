@@ -22,12 +22,14 @@ from __future__ import absolute_import, print_function
 import sys
 import unittest
 import datetime
+from io import StringIO
 
 import pytvdbapi
 from pytvdbapi import error
 from pytvdbapi.api import TVDB
 from pytvdbapi.xmlhelpers import generate_tree
 from pytvdbapi.tests import basetest
+from pytvdbapi._compat import make_unicode
 
 
 def _load_show(show):
@@ -62,7 +64,8 @@ class TestApi(basetest.pytvdbapiTest):
         """
         The tree generator should raise BadData error when passed bad xml data
         """
-        data = '<?xml version="1.0" encoding="UTF-8" ?>\n<data>'
+
+        data = StringIO(make_unicode('<?xml version="1.0" encoding="UTF-8" ?>\n<data>'))
 
         self.assertRaises(error.BadData, generate_tree, data)
 

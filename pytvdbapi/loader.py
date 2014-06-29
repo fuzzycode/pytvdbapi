@@ -33,7 +33,6 @@ except ImportError:
 import httplib2
 
 from pytvdbapi import error
-from pytvdbapi._compat import make_unicode
 
 
 # Module logger object
@@ -75,12 +74,10 @@ class Loader(object):
         elif response.status not in [200, 304]:  # pragma: no cover
             raise error.ConnectionError(u"Bad status returned from server. {0}".format(response.status))
 
-        data = make_unicode(content)
+        data = StringIO(content)
 
         if response['content-type'] == "application/zip":
-            zd = StringIO()
-            zd.write(data)
-            zf = zipfile.ZipFile(zd)
-            data = zf.open('{0}.xml'.format(os.path.basename(url)[:-4])).read()
+            zf = zipfile.ZipFile(data)
+            data = zf.open('{0}.xml'.format(os.path.basename(url)[:-4]))
 
         return data

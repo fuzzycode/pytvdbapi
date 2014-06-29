@@ -811,10 +811,7 @@ class TVDB(object):
         except error.TVDBNotFoundError:
             raise error.TVDBIdError(u"Series id {0} not found".format(series_id))
 
-        if data.strip():
-            data = generate_tree(data)
-        else:
-            raise error.BadData("Bad data received")
+        data = generate_tree(data)
 
         series = parse_xml(data, "Series")
 
@@ -872,10 +869,7 @@ class TVDB(object):
         except error.TVDBNotFoundError:
             raise error.TVDBIdError(u"No Episode with id {0} found".format(episode_id))
 
-        if data.strip():
-            data = generate_tree(data)
-        else:
-            raise error.BadData("Bad data received")
+        data = generate_tree(data)
 
         episodes = parse_xml(data, "Episode")
 
@@ -919,10 +913,7 @@ class TVDB(object):
         except error.TVDBNotFoundError:
             raise
 
-        if data.strip():
-            data = generate_tree(data)
-        else:
-            raise error.BadData("Bad data received")
+        data = generate_tree(data)
 
         # The xml has an "Error" element in it if no episode was found
         if has_element(data, 'Error'):

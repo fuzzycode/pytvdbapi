@@ -33,7 +33,7 @@ except ImportError:
     from xml.parsers.expat import ExpatError as ParseError
 
 from pytvdbapi import error
-from pytvdbapi._compat import make_bytes, make_unicode
+from pytvdbapi._compat import make_unicode
 
 __all__ = ['has_element', 'generate_tree', 'parse_xml']
 
@@ -61,7 +61,7 @@ def generate_tree(xml_data):
     Converts the xml data into an element tree
     """
     try:
-        return eTree.fromstring(make_bytes(xml_data, 'utf-8'))
+        return eTree.parse(xml_data)
     except ParseError:
         raise error.BadData(u"Bad XML data received")
 
