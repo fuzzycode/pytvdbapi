@@ -30,6 +30,8 @@ try:
 except ImportError:
     from io import StringIO  # Python 3
 
+from io import BytesIO
+
 import httplib2
 
 from pytvdbapi import error
@@ -74,10 +76,8 @@ class Loader(object):
         elif response.status not in [200, 304]:  # pragma: no cover
             raise error.ConnectionError(u"Bad status returned from server. {0}".format(response.status))
 
-        data = StringIO(content)
-
         if response['content-type'] == "application/zip":
-            zf = zipfile.ZipFile(data)
-            data = zf.open('{0}.xml'.format(os.path.basename(url)[:-4]))
-
-        return data
+            zf = zipfile.ZipFile(BytesIO(content))
+            return zf.open('{0}.xml'.format(os.path.basename(url)[:-4]))
+        else:
+            return StringIO(content)
