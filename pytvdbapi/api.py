@@ -392,7 +392,7 @@ class Show(Sequence):
         >>> dir(show)  # List the set of basic attributes # doctest: +NORMALIZE_WHITESPACE
         ['AliasNames', 'FirstAired', 'IMDB_ID', 'Network',
          'Overview', 'SeriesName', 'actor_objects', 'api',
-         'banner', 'banner_objects', 'full_data', 'id', 'lang', 'language',
+         'banner', 'banner_objects', 'id', 'lang', 'language',
          'seriesid', 'zap2it_id']
 
         >>> show.update()  # Load the full data set from the server
@@ -401,7 +401,7 @@ class Show(Sequence):
          'ContentRating', 'FirstAired', 'Genre', 'IMDB_ID', 'Language',
          'Network', 'NetworkID', 'Overview', 'Rating', 'RatingCount', 'Runtime',
          'SeriesID', 'SeriesName', 'Status', 'actor_objects', 'added', 'addedBy',
-         'api', 'banner', 'banner_objects', 'fanart', 'full_data', 'id', 'lang', 'language',
+         'api', 'banner', 'banner_objects', 'fanart', 'id', 'lang', 'language',
          'lastupdated', 'poster', 'seriesid', 'tms_wanted_old', 'zap2it_id']
 
     .. note:: When searching, thetvdb.com_ provides a basic set of attributes
@@ -426,7 +426,8 @@ class Show(Sequence):
         self.data['actor_objects'] = list()
         self.data['banner_objects'] = list()
 
-        self.full_data = full_data
+        if full_data is not None:
+            self._populate_data(full_data)
 
     def __getattr__(self, item):
         try:
@@ -483,7 +484,7 @@ class Show(Sequence):
         """
         self._populate_data()
 
-    def _populate_data(self):
+    def _populate_data(self, data=None):
         """
         Populates the Show object with data. This will hit the network to
         download the XML data from `thetvdb.com <http://thetvdb.com>`_.
@@ -496,7 +497,7 @@ class Show(Sequence):
         """
         logger.debug(u"Populating season data from URL.")
 
-        if self.full_data is None:
+        if data is None:
             context = {'mirror': self.api.mirrors.get_mirror(TypeMask.XML).url,
                        'api_key': self.config['api_key'],
                        'seriesid': self.id,
@@ -504,8 +505,6 @@ class Show(Sequence):
             url = __series__.format(**context)
             data = self.api.loader.load(url)
             data = generate_tree(data)
-        else:
-            data = self.full_data
 
         episodes = [d for d in parse_xml(data, "Episode")]
 
@@ -731,8 +730,6 @@ class TVDB(object):
             >>> for show in result:
             ...     print(show) # doctest: +ELLIPSIS
             <Show - House>
-            ...
-            <Show - House of Cards (US)>
             ...
         """
 

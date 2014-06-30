@@ -456,10 +456,10 @@ class TestEpisode(unittest.TestCase):
 
         ep = self.friends[1][1]
 
-        self.assertEquals(True, hasattr(ep, 'Rating'))
-        self.assertEquals(False, hasattr(ep, 'foo'))
+        self.assertEqual(True, hasattr(ep, 'Rating'))
+        self.assertEqual(False, hasattr(ep, 'foo'))
 
-        self.assertEquals(getattr(ep, 'foo', 'baar'), 'baar')
+        self.assertEqual(getattr(ep, 'foo', 'baar'), 'baar')
 
     def test_episode_pickle(self):
         """It should be possible to pickle and unpickle an episode"""

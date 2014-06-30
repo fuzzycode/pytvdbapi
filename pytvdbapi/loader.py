@@ -24,17 +24,12 @@ A module providing the default loader to use to load urls.
 import logging
 import os
 import zipfile
-
-try:
-    from StringIO import StringIO  # Python 2
-except ImportError:
-    from io import StringIO  # Python 3
-
 from io import BytesIO
 
 import httplib2
 
 from pytvdbapi import error
+
 
 
 # Module logger object
@@ -77,7 +72,7 @@ class Loader(object):
             raise error.ConnectionError(u"Bad status returned from server. {0}".format(response.status))
 
         if response['content-type'] == "application/zip":
-            zf = zipfile.ZipFile(BytesIO(content))
-            return zf.open('{0}.xml'.format(os.path.basename(url)[:-4]))
+            zip_file = zipfile.ZipFile(BytesIO(content))
+            return zip_file.open('{0}.xml'.format(os.path.basename(url)[:-4]))
         else:
-            return StringIO(content)
+            return BytesIO(content)
