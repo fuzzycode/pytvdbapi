@@ -12,7 +12,7 @@ Key Features
 ------------
   * A clean and easy to use interface
   * A well documented API
-  * Support for Python 2.6, 2.7 and 3.3
+  * Support for Python 2.6, 2.7, 3.3 and 3.4
   * Thoroughly tested against all supported versions.
 
 
