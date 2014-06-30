@@ -73,6 +73,7 @@ class Loader(object):
 
         if response['content-type'] == "application/zip":
             zip_file = zipfile.ZipFile(BytesIO(content))
-            return zip_file.open('{0}.xml'.format(os.path.basename(url)[:-4]))
+            filename = os.path.splitext(os.path.basename(url))[0]
+            return zip_file.open('{0}.xml'.format(filename))
         else:
             return BytesIO(content)
