@@ -355,9 +355,14 @@ class Season(Sequence):
 
     def find(self, key):
         """
+        Return the first :class:`Episode` for witch :code:`key` returns :code:`True`
 
-        :rtype : :class:`Episode` or None
-        :param key:
+        .. note::
+            The order in which the :class:`Episode` instances are searched is not guaranteed and the first
+            match found is not necessarily the first one in a chronological sense.
+
+        :param key: A callable taking an :class:`Episode` instance as argument and returns a boolean
+        :returns: An :class:`Episode` instance or None if no match was found
         """
         try:
             return next(ep for ep in self.episodes.values() if key(ep))
@@ -368,10 +373,10 @@ class Season(Sequence):
 
     def filter(self, key):
         """
+        Return a list of all :class:`Episode` instances for witch :code:`key` returns :code:`True`
 
-
-        :rtype : list of :class:`Episode` or None
-        :param key:
+        :param key: A callable taking an :class:`Episode` instance as argument and returns a boolean
+        :returns: list with 0 or more :class:`Episode` instances
         """
         try:
             return filter(key, self.episodes.values())
