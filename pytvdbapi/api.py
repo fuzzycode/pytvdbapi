@@ -353,6 +353,32 @@ class Season(Sequence):
 
         self.episodes[int(episode.EpisodeNumber)] = episode
 
+    def find(self, key):
+        """
+
+        :rtype : :class:`Episode` or None
+        :param key:
+        """
+        try:
+            return next(ep for ep in self.episodes.values() if key(ep))
+        except StopIteration:  # Nothing found
+            return None
+        except TypeError as e:
+            raise error.TVDBTypeError(e.message)
+
+    def filter(self, key):
+        """
+
+
+        :rtype : list of :class:`Episode` or None
+        :param key:
+        """
+        try:
+            return filter(key, self.episodes.values())
+        except TypeError:
+            raise error.TVDBTypeError("")
+        except NameError:
+            raise error.TVDBNameError("")
 
 @implements_to_string
 class Show(Sequence):

@@ -26,7 +26,7 @@ from io import StringIO
 
 import pytvdbapi
 from pytvdbapi import error
-from pytvdbapi.api import TVDB
+from pytvdbapi.api import TVDB, Episode
 from pytvdbapi.xmlhelpers import generate_tree
 from pytvdbapi.tests import basetest
 from pytvdbapi._compat import make_unicode
@@ -727,6 +727,87 @@ class TestGetEpisodeByAirDate(unittest.TestCase):
 
         self.assertRaises(error.TVDBValueError,
                           api.get_episode_by_air_date, 79349, 'english', datetime.date(2006, 10, 8))
+
+
+class TestFindOnShow(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def test_bad_key_type(self):
+        pass
+
+    def test_find(self):
+        pass
+
+
+class TestFindOnSeason(unittest.TestCase):
+    def setUp(self):
+        self.friends = _load_show('friends')
+        self.friends.update()
+        self.season = self.friends[2]
+
+    def test_bad_key_type(self):
+        """If key is not callable, an exception should be raised"""
+        self.assertRaises(error.TVDBTypeError, self.season.find, 'foo')
+
+        foo = 2
+        self.assertRaises(error.TVDBTypeError, self.season.find, foo)
+
+    def test_not_found_find(self):
+        """If no object could be found, None should be returned"""
+        ep = self.season.find(key=lambda _ep: getattr(_ep, 'ProductionCode', 0) == -1)
+        self.assertEqual(ep, None)
+
+    def test_key_function(self):
+        """The key function should be passed an episode instance"""
+
+        def _func(_ep):
+            self.assertEqual(type(_ep), Episode)
+        self.season.find(key=_func)
+
+    def test_find(self):
+        """it should be possible to find an episode on the season instance"""
+        ep = self.season.find(key=lambda _ep: getattr(_ep, 'ProductionCode', 0) == 457301)
+        self.assertEqual(ep.id, 303845)
+
+
+class TestFilterShow(unittest.TestCase):
+    def setUp(self):
+        pass
+
+
+class TestFilterSeason(unittest.TestCase):
+    def setUp(self):
+        self.friends = _load_show('friends')
+        self.friends.update()
+        self.season = self.friends[2]
+
+    def test_bad_key_type(self):
+        """An exception should be raised if the key is not callable"""
+        self.assertRaises(error.TVDBTypeError, self.season.filter, "foo")
+
+        foo = 2
+        self.assertRaises(error.TVDBTypeError, self.season.filter, foo)
+
+    def test_filter_not_found(self):
+        """If no episode were found, an empty list should be returned"""
+        ep = self.season.filter(key=lambda _ep: getattr(_ep, "ProductionCode", 0) == -1)
+        self.assertNotEqual(ep, None)
+
+        self.assertEqual(len(ep), 0)
+        self.assertEqual(type(ep), list)
+
+    def test_key_function(self):
+        """The key function should be passed an episode instance"""
+
+        def _func(_ep):
+            self.assertEqual(type(_ep), Episode)
+        self.season.filter(key=_func)
+
+    def test_filter(self):
+        """It should be possible to filter the episodes on a season"""
+        eps = self.season.filter(key=lambda _ep: "Lauren Tom" in getattr(_ep, "GuestStars", list()))
+        self.assertEqual(len(eps), 6)
 
 if __name__ == "__main__":
     sys.exit(unittest.main())
