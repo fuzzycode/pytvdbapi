@@ -770,6 +770,15 @@ class TestFindOnSeason(unittest.TestCase):
         ep = self.season.find(key=lambda _ep: getattr(_ep, 'ProductionCode', 0) == 457301)
         self.assertEqual(ep.id, 303845)
 
+    def test_callable_function(self):
+        """It should be possible to use a callable function as key"""
+
+        class Key(object):
+            def __call__(self, _ep, *args, **kwargs):
+                return getattr(_ep, 'ProductionCode', 0) == 457301
+        ep = self.season.find(key=Key())
+        self.assertEqual(ep.id, 303845)
+
 
 class TestFilterShow(unittest.TestCase):
     def setUp(self):
@@ -807,6 +816,15 @@ class TestFilterSeason(unittest.TestCase):
     def test_filter(self):
         """It should be possible to filter the episodes on a season"""
         eps = self.season.filter(key=lambda _ep: "Lauren Tom" in getattr(_ep, "GuestStars", list()))
+        self.assertEqual(len(eps), 6)
+
+    def test_callable_function(self):
+        """It should be possible to use a callable function as key"""
+
+        class Key(object):
+            def __call__(self, ep, *args, **kwargs):
+                return "Lauren Tom" in getattr(ep, "GuestStars", list())
+        eps = self.season.filter(key=Key())
         self.assertEqual(len(eps), 6)
 
 if __name__ == "__main__":
