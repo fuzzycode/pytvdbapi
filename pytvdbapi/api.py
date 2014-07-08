@@ -358,7 +358,7 @@ class Season(Sequence):
         .. versionadded:: 0.5
 
         :param key: A callable taking an :class:`Episode` instance as argument and returns a boolean
-        :raises: :class:`error.TypeError`
+        :raises: :class:`pytvdbapi.error.TypeError`
         :returns: An :class:`Episode` instance or None if no match was found
 
         Return the first :class:`Episode` for witch :code:`key` returns :code:`True`
@@ -379,7 +379,7 @@ class Season(Sequence):
         .. versionadded:: 0.5
 
         :param key: A callable taking an :class:`Episode` instance as argument and returns a boolean
-        :raises: :class:`error.TypeError`
+        :raises: :class:`pytvdbapi.error.TypeError`
         :returns: list with 0 or more :class:`Episode` instances
 
         Return a list of all :class:`Episode` instances for witch :code:`key` returns :code:`True`
@@ -637,6 +637,12 @@ class Show(Sequence):
         :returns: An :class:`Episode` instance or None
 
         Finds the first :class:`Episode` for witch :code:`key` returns :code:`True`.
+
+        .. note::
+            The order in which the :class:`Episode` instances are searched is not guaranteed and the first
+            match found is not necessarily the first one in a chronological sense.
+
+        .. seealso:: :func:`Season.find` for information on finding an episode in a specific season
         """
         for s in self.seasons:
             ep = s.find(key=key)
@@ -652,6 +658,8 @@ class Show(Sequence):
         :returns: A list of 0 or more :class:`Episode` instances
 
         Finds all :class:`Episode` instances for witch :code:`key` returns :code:`True`.
+
+        .. seealso:: :func:`Season.filter` for information on filtering episodes in a specific season
         """
         l = list()
         for s in self.seasons:
