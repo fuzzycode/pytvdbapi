@@ -734,10 +734,19 @@ class TestFindOnShow(unittest.TestCase):
         pass
 
     def test_bad_key_type(self):
-        pass
+        """An exception should be raised if the key is not callable"""
 
-    def test_find(self):
-        pass
+    def test_filter_not_found(self):
+        """If no episode were found, an empty list should be returned"""
+
+    def test_key_function(self):
+        """The key function should be passed an episode instance"""
+
+    def test_filter(self):
+        """It should be possible to filter the episodes on a season"""
+
+    def test_callable_function(self):
+        """It should be possible to use a callable function as key"""
 
 
 class TestFindOnSeason(unittest.TestCase):
@@ -783,6 +792,21 @@ class TestFindOnSeason(unittest.TestCase):
 class TestFilterShow(unittest.TestCase):
     def setUp(self):
         pass
+
+    def test_bad_key_type(self):
+        """An exception should be raised if the key is not callable"""
+
+    def test_filter_not_found(self):
+        """If no episode were found, an empty list should be returned"""
+
+    def test_key_function(self):
+        """The key function should be passed an episode instance"""
+
+    def test_filter(self):
+        """It should be possible to filter the episodes on a season"""
+
+    def test_callable_function(self):
+        """It should be possible to use a callable function as key"""
 
 
 class TestFilterSeason(unittest.TestCase):

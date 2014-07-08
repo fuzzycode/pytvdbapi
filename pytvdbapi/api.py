@@ -355,14 +355,17 @@ class Season(Sequence):
 
     def find(self, key):
         """
+        .. versionadded:: 0.5
+
+        :param key: A callable taking an :class:`Episode` instance as argument and returns a boolean
+        :raises: :class:`error.TypeError`
+        :returns: An :class:`Episode` instance or None if no match was found
+
         Return the first :class:`Episode` for witch :code:`key` returns :code:`True`
 
         .. note::
             The order in which the :class:`Episode` instances are searched is not guaranteed and the first
             match found is not necessarily the first one in a chronological sense.
-
-        :param key: A callable taking an :class:`Episode` instance as argument and returns a boolean
-        :returns: An :class:`Episode` instance or None if no match was found
         """
         try:
             return next(ep for ep in self.episodes.values() if key(ep))
@@ -373,17 +376,19 @@ class Season(Sequence):
 
     def filter(self, key):
         """
-        Return a list of all :class:`Episode` instances for witch :code:`key` returns :code:`True`
+        .. versionadded:: 0.5
 
         :param key: A callable taking an :class:`Episode` instance as argument and returns a boolean
+        :raises: :class:`error.TypeError`
         :returns: list with 0 or more :class:`Episode` instances
+
+        Return a list of all :class:`Episode` instances for witch :code:`key` returns :code:`True`
         """
         try:
             return filter(key, self.episodes.values())
         except TypeError:
             raise error.TVDBTypeError("")
-        except NameError:
-            raise error.TVDBNameError("")
+
 
 @implements_to_string
 class Show(Sequence):
@@ -623,6 +628,35 @@ class Show(Sequence):
 
         # pylint: disable=W0201
         self.banner_objects = [Banner(mirror, b, self) for b in parse_xml(data, "Banner")]
+
+    def find(self, key):
+        """
+        .. versionadded:: 0.5
+
+        :param key:
+        :returns: An :class:`Episode` instance or None
+
+        Finds the first :class:`Episode` for witch :code:`key` returns :code:`True`.
+        """
+        for s in self.seasons:
+            ep = s.find(key=key)
+            if ep is not None:
+                return ep
+        return None
+
+    def filter(self, key):
+        """
+        .. versionadded:: 0.5
+
+        :param key:
+        :returns: A list of 0 or more :class:`Episode` instances
+
+        Finds all :class:`Episode` instances for witch :code:`key` returns :code:`True`.
+        """
+        l = list()
+        for s in self.seasons:
+            l.extend(s.filter(key=key))
+        return l
 
 
 class Search(object):

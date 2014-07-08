@@ -88,6 +88,8 @@ class TVDBNameError(PytvdbapiError, NameError):
 
 class TVDBTypeError(PytvdbapiError, TypeError):
     """
+    .. versionadded:: 0.5
+
     A replacement for the standard TypeError exception.
     """
     pass
