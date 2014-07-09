@@ -362,10 +362,6 @@ class Season(Sequence):
         :returns: An :class:`Episode` instance or None if no match was found
 
         Return the first :class:`Episode` for witch :code:`key` returns :code:`True`
-
-        .. note::
-            The order in which the :class:`Episode` instances are searched is not guaranteed and the first
-            match found is not necessarily the first one in a chronological sense.
         """
         try:
             return next(ep for ep in self.episodes.values() if key(ep))
@@ -576,11 +572,6 @@ class Show(Sequence):
         the actors will be loaded automatically and there is no need to use this
         function.
 
-        .. note::
-          The :class:`Show` instance always contain a list of actor names. If
-          that is all you need, do not use this function to avoid unnecessary
-          network traffic.
-
         .. seealso::
           :class:`TVDB` for information on how to use the *actors* keyword
           argument.
@@ -644,7 +635,7 @@ class Show(Sequence):
 
         .. seealso:: :func:`Season.find` for information on finding an episode in a specific season
         """
-        for s in self.seasons:
+        for s in self:
             ep = s.find(key=key)
             if ep is not None:
                 return ep
@@ -662,7 +653,7 @@ class Show(Sequence):
         .. seealso:: :func:`Season.filter` for information on filtering episodes in a specific season
         """
         l = list()
-        for s in self.seasons:
+        for s in self:
             l.extend(s.filter(key=key))
         return l
 

@@ -731,22 +731,41 @@ class TestGetEpisodeByAirDate(unittest.TestCase):
 
 class TestFindOnShow(unittest.TestCase):
     def setUp(self):
-        pass
+        self.friends = _load_show('friends')
+        self.friends.update()
 
     def test_bad_key_type(self):
         """An exception should be raised if the key is not callable"""
+        self.assertRaises(error.TVDBTypeError, self.friends.find, "foo")
+
+        foo = 2
+        self.assertRaises(error.TVDBTypeError, self.friends.find, foo)
 
     def test_filter_not_found(self):
         """If no episode were found, an empty list should be returned"""
+        ep = self.friends.find(key=lambda _ep: getattr(_ep, 'ProductionCode', 0) == -1)
+        self.assertEqual(ep, None)
 
     def test_key_function(self):
         """The key function should be passed an episode instance"""
+        def _func(_ep):
+            self.assertEqual(type(_ep), Episode)
+        self.friends.find(key=_func)
 
-    def test_filter(self):
-        """It should be possible to filter the episodes on a season"""
+    def test_find(self):
+        """It should be possible to find an episode on a show"""
+        ep = self.friends.find(key=lambda _ep: getattr(_ep, 'ProductionCode', 0) == 457301)
+        self.assertEqual(ep.id, 303845)
 
     def test_callable_function(self):
         """It should be possible to use a callable function as key"""
+
+        class Key(object):
+            def __call__(self, _ep, *args, **kwargs):
+                return getattr(_ep, 'ProductionCode', 0) == 457301
+
+        ep = self.friends.find(key=Key())
+        self.assertEqual(ep.id, 303845)
 
 
 class TestFindOnSeason(unittest.TestCase):
@@ -791,23 +810,44 @@ class TestFindOnSeason(unittest.TestCase):
 
 class TestFilterShow(unittest.TestCase):
     def setUp(self):
-        pass
+        self.friends = _load_show('friends')
+        self.friends.update()
 
     def test_bad_key_type(self):
         """An exception should be raised if the key is not callable"""
+        self.assertRaises(error.TVDBTypeError, self.friends.filter, "foo")
+
+        foo = 2
+        self.assertRaises(error.TVDBTypeError, self.friends.filter, foo)
 
     def test_filter_not_found(self):
         """If no episode were found, an empty list should be returned"""
+        ep = self.friends.filter(key=lambda _ep: getattr(_ep, "ProductionCode", 0) == -1)
+        self.assertNotEqual(ep, None)
+
+        self.assertEqual(len(ep), 0)
+        self.assertEqual(type(ep), list)
 
     def test_key_function(self):
         """The key function should be passed an episode instance"""
 
+        def _func(_ep):
+            self.assertEqual(type(_ep), Episode)
+        self.friends.filter(key=_func)
+
     def test_filter(self):
         """It should be possible to filter the episodes on a season"""
+        eps = self.friends.filter(key=lambda _ep: "Lauren Tom" in getattr(_ep, "GuestStars", list()))
+        self.assertEqual(len(eps), 7)
 
     def test_callable_function(self):
         """It should be possible to use a callable function as key"""
 
+        class Key(object):
+            def __call__(self, ep, *args, **kwargs):
+                return "Lauren Tom" in getattr(ep, "GuestStars", list())
+        eps = self.friends.filter(key=Key())
+        self.assertEqual(len(eps), 7)
 
 class TestFilterSeason(unittest.TestCase):
     def setUp(self):
