@@ -24,13 +24,18 @@ A helper module for parsing XML data.
 import datetime
 import logging
 import re
-import xml.etree.ElementTree as eTree
 
 try:
-    from xml.etree.ElementTree import ParseError  # pylint: disable=E0611
+    import xml.etree.cElementTree as eTree
+    from xml.etree.cElementTree import ParseError
 except ImportError:
-    # For Python 2.6
-    from xml.parsers.expat import ExpatError as ParseError
+    import xml.etree.ElementTree as eTree
+
+    try:
+        from xml.etree.ElementTree import ParseError
+    except ImportError:
+        # Python 2.6
+        from xml.parsers.expat import ExpatError as ParseError
 
 from pytvdbapi import error
 from pytvdbapi._compat import make_unicode

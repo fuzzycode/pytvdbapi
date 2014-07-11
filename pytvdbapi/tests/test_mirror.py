@@ -23,17 +23,17 @@ from __future__ import absolute_import, print_function
 import sys
 import unittest
 import os
-from io import StringIO
+from io import BytesIO
 
 from pytvdbapi import xmlhelpers, mirror, error
-from pytvdbapi.tests import utils, basetest
+from pytvdbapi.tests import basetest
 
 
 class TestMirror(basetest.pytvdbapiTest):
     def setUp(self):
         super(TestMirror, self).setUp()
 
-        data = StringIO(utils.file_loader(os.path.join(self.path, "mirrors.xml")))
+        data = BytesIO(open(os.path.join(self.path, "mirrors.xml"), 'rb').read())
         self.mirrors = mirror.MirrorList(xmlhelpers.generate_tree(data))
 
     def tearDown(self):

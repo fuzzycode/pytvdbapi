@@ -849,6 +849,7 @@ class TestFilterShow(unittest.TestCase):
         eps = self.friends.filter(key=Key())
         self.assertEqual(len(eps), 7)
 
+
 class TestFilterSeason(unittest.TestCase):
     def setUp(self):
         self.friends = _load_show('friends')
