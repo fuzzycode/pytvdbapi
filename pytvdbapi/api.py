@@ -367,8 +367,8 @@ class Season(Sequence):
             return next(ep for ep in self.episodes.values() if key(ep))
         except StopIteration:  # Nothing found
             return None
-        except TypeError as e:
-            raise error.TVDBTypeError(e.message)
+        except TypeError as _error:
+            raise error.TVDBTypeError("{0}".format(_error))
 
     def filter(self, key):
         """
@@ -381,9 +381,9 @@ class Season(Sequence):
         Return a list of all :class:`Episode` instances for witch :code:`key` returns :code:`True`
         """
         try:
-            return filter(key, self.episodes.values())
-        except TypeError:
-            raise error.TVDBTypeError("")
+            return [ep for ep in self.episodes.values() if key(ep)]
+        except TypeError as _error:
+            raise error.TVDBTypeError("{0}".format(_error))
 
 
 @implements_to_string
@@ -635,10 +635,10 @@ class Show(Sequence):
 
         .. seealso:: :func:`Season.find` for information on finding an episode in a specific season
         """
-        for s in self:
-            ep = s.find(key=key)
-            if ep is not None:
-                return ep
+        for season in self:
+            episode = season.find(key=key)
+            if episode is not None:
+                return episode
         return None
 
     def filter(self, key):
@@ -652,10 +652,10 @@ class Show(Sequence):
 
         .. seealso:: :func:`Season.filter` for information on filtering episodes in a specific season
         """
-        l = list()
-        for s in self:
-            l.extend(s.filter(key=key))
-        return l
+        result = list()
+        for season in self:
+            result.extend(season.filter(key=key))
+        return result
 
 
 class Search(object):

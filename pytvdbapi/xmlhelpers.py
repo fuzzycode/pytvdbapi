@@ -25,6 +25,7 @@ import datetime
 import logging
 import re
 
+# pylint: disable=E0611
 try:
     import xml.etree.cElementTree as eTree
     from xml.etree.cElementTree import ParseError
