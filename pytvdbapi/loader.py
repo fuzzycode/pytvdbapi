@@ -31,6 +31,7 @@ import httplib2
 from pytvdbapi import error
 
 
+
 # Module logger object
 logger = logging.getLogger(__name__)
 
@@ -48,7 +49,7 @@ class Loader(object):
         """
         :param url: The URL to be loaded
         :param cache: Optional. Set if the cache should be ignored or not.
-        :return: A :class:`BytesIO` instance representing the loaded file content
+        :return: A file like object representing the loaded file content
         :raise: ConnectionError if the url could not be loaded
 
         """
