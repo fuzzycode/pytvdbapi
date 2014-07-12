@@ -87,7 +87,7 @@ version over at `Readthedocs <http://pytvdbapi.readthedocs.org/en/latest/>`__.
 
 Known Issues
 ============
-  * At the moment, **pytvdbapi** only works with Python 2.6, 2.7, and 3.3,
+  * **pytvdbapi** only works with Python 2.6, 2.7, 3.3 and 3.4
     **NOT 3.0, 3.1 or 3.2**.
   * **pytvdbapi** does currently **NOT** support the use of Proxy Servers.
 
