@@ -274,7 +274,7 @@ class TestShow(unittest.TestCase):
         count = 0
         for s in self.friends:
             count += 1
-            self.assertEqual(type(s), pytvdbapi.api.Season)
+            self.assertEqual(type(s), pytvdbapi.season.Season)
 
         self.assertEqual(count, 11)
 
@@ -480,7 +480,7 @@ class TestEpisode(unittest.TestCase):
 
         for attr_name in dir(ep):
             attr = getattr(ep, attr_name)
-            if type(attr) not in (float, int, datetime.date, pytvdbapi.api.Season):
+            if type(attr) not in (float, int, datetime.date, pytvdbapi.season.Season):
                 if type(attr) in (list,):
                     for a in attr:
                         self.assertEqual(type(a), _type,
