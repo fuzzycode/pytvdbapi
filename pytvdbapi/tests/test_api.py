@@ -126,7 +126,7 @@ class TestSeason(unittest.TestCase):
     def test_seasons(self):
         """The seasons should function properly"""
 
-        self.assertEqual(len(self.friends), 11)
+        self.assertEqual(len(self.friends), 12)
 
     def test_invalid_season_index(self):
         """Season should raise exception if trying to access invalid
@@ -276,7 +276,7 @@ class TestShow(unittest.TestCase):
             count += 1
             self.assertEqual(type(s), pytvdbapi.season.Season)
 
-        self.assertEqual(count, 11)
+        self.assertEqual(count, 12)
 
     def test_show_sort_order(self):
         """The seasons should be sorted on season number when iterating over
