@@ -126,7 +126,7 @@ class TestSeason(unittest.TestCase):
     def test_seasons(self):
         """The seasons should function properly"""
 
-        self.assertEqual(len(self.friends), 12)
+        self.assertEqual(len(self.friends), 11)
 
     def test_invalid_season_index(self):
         """Season should raise exception if trying to access invalid
@@ -276,7 +276,7 @@ class TestShow(unittest.TestCase):
             count += 1
             self.assertEqual(type(s), pytvdbapi.season.Season)
 
-        self.assertEqual(count, 12)
+        self.assertEqual(count, 11)
 
     def test_show_sort_order(self):
         """The seasons should be sorted on season number when iterating over
@@ -648,7 +648,7 @@ class TestGetEpisode(unittest.TestCase):
         get episode instance.
         """
         api = TVDB("B43FF87DE395DF56")
-        ep = api.get_episode(308834, "en")
+        ep = api.get_episode(308834, "en", "id")
 
         self.assertEqual(ep.id, 308834)
         self.assertEqual(ep.EpisodeName, 'Crocodile')
@@ -669,9 +669,58 @@ class TestGetEpisode(unittest.TestCase):
         """
         api = TVDB("B43FF87DE395DF56")
 
-        self.assertRaises(error.TVDBIdError, api.get_episode, -1, "en")
-        self.assertRaises(error.TVDBIdError, api.get_episode, "foo", "en")
-        self.assertRaises(error.TVDBIdError, api.get_episode, "", "en")
+        self.assertRaises(error.TVDBNotFoundError, api.get_episode, -1, "en")
+        self.assertRaises(error.TVDBNotFoundError, api.get_episode, "foo", "en")
+        self.assertRaises(error.TVDBNotFoundError, api.get_episode, "", "en")
+
+    def test_episode_id_kwarg(self):
+        """It should be possible to load the episode passing the episode id as a kwarg"""
+        api = TVDB("B43FF87DE395DF56")
+
+        ep = api.get_episode(0, "en", "id", True, episodeid=308834)
+
+        self.assertEqual(ep.id, 308834)
+        self.assertEqual(ep.EpisodeName, 'Crocodile')
+
+    def test_dvd_order(self):
+        """it should be possible to get an episode using dvd sort ordering"""
+        api = TVDB("B43FF87DE395DF56")
+
+        ep = api.get_episode(0, "en", "dvd", True, seriesid=79349, seasonnumber=2, episodenumber=5)
+
+        self.assertEqual(ep.absolute_number, 17)
+
+    def test_default_order(self):
+        """It should be possible to get an episode using the default sort order"""
+        api = TVDB("B43FF87DE395DF56")
+
+        ep = api.get_episode(0, "en", "default", True, seriesid=79349, seasonnumber=2, episodenumber=5)
+
+        self.assertEqual(ep.absolute_number, 17)
+
+    def test_absolute_order(self):
+        """it should be possible to get an episode using absolute number"""
+        api = TVDB("B43FF87DE395DF56")
+
+        ep = api.get_episode(0, "en", "absolute", True, seriesid=81797, absolutenumber=62)
+        self.assertEqual(ep.EpisodeName, "The First Obstacle? Giant Whale Laboon Appears")
+
+    def test_invalid_method(self):
+        """Function should raise TVDBValueError if an invalid method is passed"""
+        api = TVDB("B43FF87DE395DF56")
+
+        self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "en", -1)
+        self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "en", "foo")
+        self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "en", "")
+
+    def test_missing_arguments(self):
+        """Function should raise TVDBValueError if arguments for the method is missing"""
+        api = TVDB("B43FF87DE395DF56")
+
+        # self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "en", "id")
+        self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "en", "default")
+        self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "en", "dvd")
+        self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "en", "absolute")
 
 
 class TestGetEpisodeByAirDate(unittest.TestCase):

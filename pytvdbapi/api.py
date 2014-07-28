@@ -62,7 +62,8 @@ import datetime
 
 from pytvdbapi.episode import Episode
 from pytvdbapi.show import Show
-from pytvdbapi.urls import mirrors, search, zap2itid, imdbid, series, episode, airdate
+from pytvdbapi.urls import mirrors, search, zap2itid, imdbid, series, episode, airdate, absolute_order, \
+    dvd_order, default_order
 from pytvdbapi.utils import unicode_arguments
 from pytvdbapi._compat import implements_to_string, make_bytes, make_unicode, text_type, int_types
 
@@ -383,18 +384,20 @@ class TVDB(object):
             return Show(series_data[0], self, language, self.config, data)
 
     @unicode_arguments
-    def get_episode(self, episode_id, language, cache=True):
+    def get_episode(self, episode_id, language, method="id", cache=True, **kwargs):
         """
         .. versionadded:: 0.4
+        .. versionchanged:: 0.5
 
-        :param episode_id: The Episode Id to fetch
+
+        :param episode_id:
         :param language: The language abbreviation to search for. E.g. "en"
         :param cache: If False, the local cache will not be used and the
                     resources will be reloaded from server.
+        :param method:
+        :param kwargs:
 
         :return: An :class:`Episode()` instance
-        :raise: :exc:`pytvdbapi.error.TVDBIdError` if no episode is found with the given Id
-
 
         Given a valid episode Id the corresponding episode data is fetched and
         the :class:`Episode()` instance is returned.
@@ -413,24 +416,32 @@ class TVDB(object):
         .. Note:: When the :class:`Episode()` is loaded using :func:`get_episode()`
             the *season* attribute used to link the episode with a season will be None.
         """
+        methods = {"default": default_order, "dvd": dvd_order, "absolute": absolute_order, "id": episode}
 
         logger.debug(u"Getting episode with id {0} with language {1}".format(episode_id, language))
 
         if language != 'all' and language not in __LANGUAGES__:
             raise error.TVDBValueError(u"{0} is not a valid language".format(language))
 
-        context = {'episodeid': episode_id, "language": language,
+        context = {'episodeid': kwargs.get('episodeid', episode_id), "language": language,
                    'mirror': self.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.config['api_key']}
 
-        url = episode.format(**context)
-        logger.debug(u'Getting episode from {0}'.format(url))
+        kwargs.update(context)
 
         try:
-            data = self.loader.load(url, cache)
-        except error.TVDBNotFoundError:
-            raise error.TVDBIdError(u"No Episode with id {0} found".format(episode_id))
+            url = methods[method]
+        except KeyError:
+            raise error.TVDBValueError(u"{0} is not a valid get method".format(method))
 
+        try:
+            url = url.format(**kwargs)
+        except KeyError as e:
+            raise error.TVDBValueError("")
+
+        logger.debug(u'Getting episode from {0}'.format(url))
+
+        data = self.loader.load(url, cache)
         data = generate_tree(data)
 
         episodes = parse_xml(data, "Episode")

@@ -30,6 +30,12 @@ episode = u"{mirror}/api/{api_key}/episodes/{episodeid}/{language}.xml"
 actors = u"{mirror}/api/{api_key}/series/{seriesid}/actors.xml"
 banners = u"{mirror}/api/{api_key}/series/{seriesid}/banners.xml"
 
+default_order = u"{mirror}/api/{api_key}/series/{seriesid}/default/{seasonnumber}/{episodenumber}/{" \
+                u"language}.xml"
+dvd_order = u"{mirror}/api/{api_key}/series/{seriesid}/dvd/{seasonnumber}/{episodenumber}/{" \
+                u"language}.xml"
+absolute_order = u"{mirror}/api/{api_key}/series/{seriesid}/absolute/{absolutenumber}/{language}.xml"
+
 imdbid = u"{mirror}/api/GetSeriesByRemoteID.php?imdbid={imdbid}&language=en"
 zap2itid = u"{mirror}/api/GetSeriesByRemoteID.php?language=en&zap2it={zap2itid}"
 # Language is deprecated and not used, it make no difference what value is provided
