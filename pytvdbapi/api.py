@@ -387,20 +387,40 @@ class TVDB(object):
     def get_episode(self, episode_id, language, method="id", cache=True, **kwargs):
         """
         .. versionadded:: 0.4
-        .. versionchanged:: 0.5
+        .. versionchanged:: 0.5 Added the possibility to get an episode using default, dvd, and absolute
+            sort order
 
 
-        :param episode_id:
+        :param episode_id: *Deprecated in 0.5* Use the *episodeid* keyword argument with the *id*
+            method instead
         :param language: The language abbreviation to search for. E.g. "en"
         :param cache: If False, the local cache will not be used and the
                     resources will be reloaded from server.
-        :param method:
-        :param kwargs:
+        :param method: (default=id) Specify what method should be used to get the episode. Depending on
+            what method is specified, different parameters must be passed as keyword arguments. Should be one
+            of (id, default, dvd, absolute).
+        :param kwargs: Depending on the method used, you need to pass the following arguments:
+
+            default:
+                seriesid
+                seasonnumber
+                episodenumber
+
+            dvd:
+                seriesid
+                seasonnumber
+                episodenumber
+
+            id:
+                episodeid
+
+            absolute:
+                seriesid
+                absolutenumber
 
         :return: An :class:`Episode()` instance
+        :raise: :exc:`pytvdbapi.error.TVDBValueError`
 
-        Given a valid episode Id the corresponding episode data is fetched and
-        the :class:`Episode()` instance is returned.
 
         Example::
 
