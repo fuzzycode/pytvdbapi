@@ -64,7 +64,7 @@ from pytvdbapi.episode import Episode
 from pytvdbapi.show import Show
 from pytvdbapi.urls import mirrors, search, zap2itid, imdbid, series, episode, airdate, absolute_order, \
     dvd_order, default_order
-from pytvdbapi.utils import unicode_arguments
+from pytvdbapi.utils import unicode_arguments, deprecate_episode_id
 from pytvdbapi._compat import implements_to_string, make_bytes, make_unicode, text_type, int_types
 
 
@@ -384,7 +384,8 @@ class TVDB(object):
             return Show(series_data[0], self, language, self.config, data)
 
     @unicode_arguments
-    def get_episode(self, episode_id, language, method="id", cache=True, **kwargs):
+    @deprecate_episode_id
+    def get_episode(self, language, method="id", cache=True, **kwargs):
         """
         .. versionadded:: 0.4
         .. versionchanged:: 0.5 Added the possibility to get an episode using default, dvd, and absolute
@@ -438,12 +439,10 @@ class TVDB(object):
         """
         methods = {"default": default_order, "dvd": dvd_order, "absolute": absolute_order, "id": episode}
 
-        logger.debug(u"Getting episode with id {0} with language {1}".format(episode_id, language))
-
         if language != 'all' and language not in __LANGUAGES__:
             raise error.TVDBValueError(u"{0} is not a valid language".format(language))
 
-        context = {'episodeid': kwargs.get('episodeid', episode_id), "language": language,
+        context = {"language": language,
                    'mirror': self.mirrors.get_mirror(TypeMask.XML).url,
                    'api_key': self.config['api_key']}
 

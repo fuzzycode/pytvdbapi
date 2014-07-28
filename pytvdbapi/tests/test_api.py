@@ -663,15 +663,14 @@ class TestGetEpisode(unittest.TestCase):
         self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "foo")
         self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "")
 
-    def test_invalid_id(self):
-        """
-        If the episode can not be found, a TVDBValueError should be raised.
-        """
+    def test_missing_id(self):
+        """It should be possible to call get_episode without passing id as positional argument"""
         api = TVDB("B43FF87DE395DF56")
 
-        self.assertRaises(error.TVDBNotFoundError, api.get_episode, -1, "en")
-        self.assertRaises(error.TVDBNotFoundError, api.get_episode, "foo", "en")
-        self.assertRaises(error.TVDBNotFoundError, api.get_episode, "", "en")
+        ep = api.get_episode("en", "id", True, episodeid=308834)
+
+        self.assertEqual(ep.id, 308834)
+        self.assertEqual(ep.EpisodeName, 'Crocodile')
 
     def test_episode_id_kwarg(self):
         """It should be possible to load the episode passing the episode id as a kwarg"""

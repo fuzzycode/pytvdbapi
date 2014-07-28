@@ -25,7 +25,9 @@ A module for utility functionality.
 
 from functools import wraps
 from collections import MutableMapping
-from pytvdbapi._compat import make_unicode
+
+from pytvdbapi._compat import make_unicode, int_types
+
 
 __all__ = ['unicode_arguments', 'merge', 'TransformedDictionary', 'InsensitiveDictionary']
 
@@ -44,6 +46,29 @@ def unicode_arguments(func):
         kwargs = dict((k, make_unicode(v)) for (k, v) in kwargs.items())
         return func(*args, **kwargs)
 
+    return __wrapper__
+
+
+def deprecate_episode_id(func):
+    """
+    Utility function to help deprecating the episode_id parameter without loosing backward compatibility.
+
+    :param func: The function to wrap
+    :type func: A function object
+    """
+    @wraps(func)
+    def __wrapper__(*args, **kwargs):
+        args = list(args)
+
+        # Check if the first argument is an int, and assume that it was the episode id
+        if isinstance(args[1], int_types):
+            episodeid = args[1]
+            if 'episodeid' not in kwargs:
+                kwargs['episodeid'] = episodeid
+
+            del args[1]
+
+        return func(*args, **kwargs)
     return __wrapper__
 
 
