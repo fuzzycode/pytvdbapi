@@ -32,8 +32,9 @@ from pytvdbapi.episode import Episode
 from pytvdbapi.mirror import TypeMask
 from pytvdbapi.season import Season
 from pytvdbapi.urls import series, actors, banners
-from pytvdbapi.utils import InsensitiveDictionary, merge
+from pytvdbapi.utils import InsensitiveDictionary
 from pytvdbapi.xmlhelpers import generate_tree, parse_xml
+
 
 
 # Module logger object
@@ -196,7 +197,7 @@ class Show(Sequence):
         show_data = parse_xml(data, "Series")
         assert len(show_data) == 1, u"Should only have 1 Show section"
 
-        self.data = merge(self.data, InsensitiveDictionary(show_data[0], ignore_case=self.ignore_case))
+        self.data.update(InsensitiveDictionary(show_data[0], ignore_case=self.ignore_case))
 
         for episode_data in episodes:
             season_nr = int(episode_data['SeasonNumber'])

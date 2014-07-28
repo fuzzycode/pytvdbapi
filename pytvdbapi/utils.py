@@ -29,7 +29,7 @@ from collections import MutableMapping
 from pytvdbapi._compat import make_unicode, int_types
 
 
-__all__ = ['unicode_arguments', 'merge', 'TransformedDictionary', 'InsensitiveDictionary']
+__all__ = ['unicode_arguments', 'deprecate_episode_id', 'TransformedDictionary', 'InsensitiveDictionary']
 
 
 def unicode_arguments(func):
@@ -70,26 +70,6 @@ def deprecate_episode_id(func):
 
         return func(*args, **kwargs)
     return __wrapper__
-
-
-def merge(dict1, dict2, decision=lambda x, y: y):
-    """
-    :param dict1: First dictionary to merge
-    :param dict2: Second dictionary to merge
-    :param decision: A callable taking two values v1, v2 returning the value
-        to keep. The default is to keep values in dict2.
-    :return: A new dictionary with the merged result
-
-    Merging two dictionaries together using *decision* to determine what
-    values will be used.
-    """
-    result = dict1
-    for key, value in list(dict2.items()):
-        if key in result:
-            result[key] = decision(result[key], value)
-        else:
-            result[key] = value
-    return result
 
 
 class TransformedDictionary(MutableMapping, object):
