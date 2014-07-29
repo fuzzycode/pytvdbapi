@@ -21,6 +21,8 @@
 URL configuration module. Store all URLs needed to access the backend service
 """
 
+# pylint: disable=C0103
+
 # URL templates used for loading the data from thetvdb.com
 mirrors = u"http://www.thetvdb.com/api/{api_key}/mirrors.xml"
 time = u"http://www.thetvdb.com/api/Updates.php?type=none"
@@ -33,7 +35,7 @@ banners = u"{mirror}/api/{api_key}/series/{seriesid}/banners.xml"
 default_order = u"{mirror}/api/{api_key}/series/{seriesid}/default/{seasonnumber}/{episodenumber}/{" \
                 u"language}.xml"
 dvd_order = u"{mirror}/api/{api_key}/series/{seriesid}/dvd/{seasonnumber}/{episodenumber}/{" \
-                u"language}.xml"
+            u"language}.xml"
 absolute_order = u"{mirror}/api/{api_key}/series/{seriesid}/absolute/{absolutenumber}/{language}.xml"
 
 imdbid = u"{mirror}/api/GetSeriesByRemoteID.php?imdbid={imdbid}&language=en"
@@ -41,4 +43,4 @@ zap2itid = u"{mirror}/api/GetSeriesByRemoteID.php?language=en&zap2it={zap2itid}"
 # Language is deprecated and not used, it make no difference what value is provided
 
 airdate = u"{mirror}/api/GetEpisodeByAirDate.php?apikey={api_key}&seriesid={seriesid}&" \
-              u"airdate={airdate}&language={language}"
+          u"airdate={airdate}&language={language}"

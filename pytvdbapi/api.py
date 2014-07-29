@@ -449,7 +449,7 @@ class Language(object):
         where the language can be specified.
     """
 
-    def __init__(self, abbrev, name, id):
+    def __init__(self, abbrev, name, language_id):
         # : A two letter abbreviation representing the language, e.g. *en*.
         #: This is what should be passed when specifying a language to the API.
         self.abbreviation = abbrev
@@ -457,7 +457,7 @@ class Language(object):
         #: The localised name of the language.
         self.name = name
 
-        self._id = id
+        self._id = language_id
 
     def __str__(self):
         return u'<{0} - {1}({2})>'.format(self.__class__.__name__, self.name, self.abbreviation)
@@ -467,29 +467,29 @@ class Language(object):
 
 
 # The list of API supported languages
-__LANGUAGES__ = {u"da": Language(abbrev=u"da", name=u"Dansk", id=10),
-                 u"fi": Language(abbrev=u"fi", name=u"Suomeksi", id=11),
-                 u"nl": Language(abbrev=u"nl", name=u"Nederlands", id=13),
-                 u"de": Language(abbrev=u"de", name=u"Deutsch", id=14),
-                 u"it": Language(abbrev=u"it", name=u"Italiano", id=15),
-                 u"es": Language(abbrev=u"es", name=u"Español", id=16),
-                 u"fr": Language(abbrev=u"fr", name=u"Français", id=17),
-                 u"pl": Language(abbrev=u"pl", name=u"Polski", id=18),
-                 u"hu": Language(abbrev=u"hu", name=u"Magyar", id=19),
-                 u"el": Language(abbrev=u"el", name=u"Ελληνικά", id=20),
-                 u"tr": Language(abbrev=u"tr", name=u"Türkçe", id=21),
-                 u"ru": Language(abbrev=u"ru", name=u"русский язык", id=22),
-                 u"he": Language(abbrev=u"he", name=u" עברית", id=24),
-                 u"ja": Language(abbrev=u"ja", name=u"日本語", id=25),
-                 u"pt": Language(abbrev=u"pt", name=u"Português", id=26),
-                 u"zh": Language(abbrev=u"zh", name=u"中文", id=27),
-                 u"cs": Language(abbrev=u"cs", name=u"čeština", id=28),
-                 u"sl": Language(abbrev=u"sl", name=u"Slovenski", id=30),
-                 u"hr": Language(abbrev=u"hr", name=u"Hrvatski", id=31),
-                 u"ko": Language(abbrev=u"ko", name=u"한국어", id=32),
-                 u"en": Language(abbrev=u"en", name=u"English", id=7),
-                 u"sv": Language(abbrev=u"sv", name=u"Svenska", id=8),
-                 u"no": Language(abbrev=u"no", name=u"Norsk", id=9)}
+__LANGUAGES__ = {u"da": Language(abbrev=u"da", name=u"Dansk", language_id=10),
+                 u"fi": Language(abbrev=u"fi", name=u"Suomeksi", language_id=11),
+                 u"nl": Language(abbrev=u"nl", name=u"Nederlands", language_id=13),
+                 u"de": Language(abbrev=u"de", name=u"Deutsch", language_id=14),
+                 u"it": Language(abbrev=u"it", name=u"Italiano", language_id=15),
+                 u"es": Language(abbrev=u"es", name=u"Español", language_id=16),
+                 u"fr": Language(abbrev=u"fr", name=u"Français", language_id=17),
+                 u"pl": Language(abbrev=u"pl", name=u"Polski", language_id=18),
+                 u"hu": Language(abbrev=u"hu", name=u"Magyar", language_id=19),
+                 u"el": Language(abbrev=u"el", name=u"Ελληνικά", language_id=20),
+                 u"tr": Language(abbrev=u"tr", name=u"Türkçe", language_id=21),
+                 u"ru": Language(abbrev=u"ru", name=u"русский язык", language_id=22),
+                 u"he": Language(abbrev=u"he", name=u" עברית", language_id=24),
+                 u"ja": Language(abbrev=u"ja", name=u"日本語", language_id=25),
+                 u"pt": Language(abbrev=u"pt", name=u"Português", language_id=26),
+                 u"zh": Language(abbrev=u"zh", name=u"中文", language_id=27),
+                 u"cs": Language(abbrev=u"cs", name=u"čeština", language_id=28),
+                 u"sl": Language(abbrev=u"sl", name=u"Slovenski", language_id=30),
+                 u"hr": Language(abbrev=u"hr", name=u"Hrvatski", language_id=31),
+                 u"ko": Language(abbrev=u"ko", name=u"한국어", language_id=32),
+                 u"en": Language(abbrev=u"en", name=u"English", language_id=7),
+                 u"sv": Language(abbrev=u"sv", name=u"Svenska", language_id=8),
+                 u"no": Language(abbrev=u"no", name=u"Norsk", language_id=9)}
 
 
 def languages():
@@ -533,11 +533,11 @@ class Search(object):
     .. seealso:: :func:`TVDB.search` for an example of how to use the search
     """
 
-    def __init__(self, result, search, language):
+    def __init__(self, result, search_phrase, language):
         self._result = result
 
         # The search term used to generate the search result
-        self.search = search
+        self.search = search_phrase
 
         # The language used to perform the search
         self.language = language
@@ -756,7 +756,6 @@ class TVDB(object):
             of (id, default, dvd, absolute).
         :param kwargs: *episodeid*, *seriesid*, *seasonnumber*, *episodenumber* and *absolutenumber*. See
             the examples for information on how to use them.
-
         :return: An :class:`Episode()` instance
         :raise: :exc:`pytvdbapi.error.TVDBValueError`, :exc:`pytvdbapi.error.BadData`
 
@@ -794,14 +793,14 @@ class TVDB(object):
         :exc:`pytvdbapi.error.BadData` to detect an issue downloading the episode.
 
             >>> from pytvdbapi.error import BadData, TVDBNotFoundError
-            >>> try:
-            >>>    ep = db.get_episode("en", episodeid=308834)
-            >>> except error.TVDBNotFoundError:
-            >>>    # this is the standard 404 error code returned rom the server
-            >>>    pass
-            >>> except BadData:
-            >>>     # This is when the server returns a 200 code but with a HTML page saying 404 Nothing found
-            >>>     pass
+            ... try:
+            ...    ep = db.get_episode("en", episodeid=308834)
+            ... except TVDBNotFoundError:
+            ...    # this is the standard 404 error code returned from the server
+            ...    pass
+            ... except BadData:
+            ...     # This is when the server returns a 200 code but with a HTML page saying 404 Nothing found
+            ...     pass
 
         .. Note:: When the :class:`Episode()` is loaded using :func:`get_episode()`
             the *season* attribute used to link the episode with a season will be None.
@@ -824,8 +823,8 @@ class TVDB(object):
 
         try:
             url = url.format(**kwargs)
-        except KeyError as e:
-            raise error.TVDBValueError("")
+        except KeyError:
+            raise error.TVDBValueError("Missing arguments for method {0}".format(method))
 
         logger.debug(u'Getting episode from {0}'.format(url))
 
@@ -916,8 +915,8 @@ class Season(Sequence):
         >>> print(season[2].EpisodeName)
         Waiting to Exhale
 
-        >>> for episode in season: #doctest: +ELLIPSIS
-        ...     print(episode.EpisodeName)
+        >>> for ep in season: #doctest: +ELLIPSIS
+        ...     print(ep.EpisodeName)
         ...
         It's Alive!
         Waiting to Exhale
