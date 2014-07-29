@@ -318,7 +318,7 @@ class Show(Sequence):
         """
         .. versionadded:: 0.5
 
-        :param key:
+        :param key: A callable taking an :class:`Episode` instance as argument and returns a boolean
         :returns: An :class:`Episode` instance or None
 
         Finds the first :class:`Episode` for witch :code:`key` returns :code:`True`.
@@ -330,16 +330,16 @@ class Show(Sequence):
         .. seealso:: :func:`Season.find` for information on finding an episode in a specific season
         """
         for season in self:
-            episode = season.find(key=key)
-            if episode is not None:
-                return episode
+            _episode = season.find(key=key)
+            if _episode is not None:
+                return _episode
         return None
 
     def filter(self, key):
         """
         .. versionadded:: 0.5
 
-        :param key:
+        :param key: A callable taking an :class:`Episode` instance as argument and returns a boolean
         :returns: A list of 0 or more :class:`Episode` instances
 
         Finds all :class:`Episode` instances for witch :code:`key` returns :code:`True`.
