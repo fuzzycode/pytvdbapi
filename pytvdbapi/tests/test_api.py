@@ -721,6 +721,18 @@ class TestGetEpisode(unittest.TestCase):
         self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "en", "dvd")
         self.assertRaises(error.TVDBValueError, api.get_episode, 308834, "en", "absolute")
 
+    def test_invalid_id(self):
+        """Function should raise bad data exception if an invalid id is passed"""
+        api = TVDB("B43FF87DE395DF56")
+
+        self.assertRaises(error.BadData, api.get_episode, "en", "id", True, episodeid=0, seriesid=81797)
+        self.assertRaises(error.TVDBNotFoundError,
+                          api.get_episode, "en", "id", True, episodeid=-1, seriesid=81797)
+        self.assertRaises(error.TVDBNotFoundError,
+                          api.get_episode, "en", "id", True, episodeid="foo", seriesid=81797)
+        self.assertRaises(error.BadData,
+                          api.get_episode, "en", "id", True, episodeid=99999999999, seriesid=81797)
+
 
 class TestGetEpisodeByAirDate(unittest.TestCase):
     """Test the get_episode_by_air_date function"""

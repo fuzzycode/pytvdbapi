@@ -388,9 +388,8 @@ class TVDB(object):
     def get_episode(self, language, method="id", cache=True, **kwargs):
         """
         .. versionadded:: 0.4
-        .. versionchanged:: 0.5 Added the possibility to get an episode using default, dvd, and absolute
+        .. versionchanged:: 0.5 Added the possibility to get an episode using *default*, *dvd*, and *absolute*
             sort order
-
 
         :param episode_id: *Deprecated in 0.5* Use the *episodeid* keyword argument with the *id*
             method instead
@@ -400,39 +399,54 @@ class TVDB(object):
         :param method: (default=id) Specify what method should be used to get the episode. Depending on
             what method is specified, different parameters must be passed as keyword arguments. Should be one
             of (id, default, dvd, absolute).
-        :param kwargs: Depending on the method used, you need to pass the following arguments:
-
-            default:
-                seriesid
-                seasonnumber
-                episodenumber
-
-            dvd:
-                seriesid
-                seasonnumber
-                episodenumber
-
-            id:
-                episodeid
-
-            absolute:
-                seriesid
-                absolutenumber
+        :param kwargs: *episodeid*, *seriesid*, *seasonnumber*, *episodenumber* and *absolutenumber*. See
+            the examples for information on how to use them.
 
         :return: An :class:`Episode()` instance
-        :raise: :exc:`pytvdbapi.error.TVDBValueError`
+        :raise: :exc:`pytvdbapi.error.TVDBValueError`, :exc:`pytvdbapi.error.BadData`
 
+        Retrieves a single episode. Depending on what method is specified different criteria can be used to
+        retrieve the episode.
 
-        Example::
+        Examples::
+
+        Load an episode using the episode id
 
             >>> from pytvdbapi import api
             >>> db = api.TVDB("B43FF87DE395DF56")
-            >>> episode = db.get_episode(308834, "en") # Load an episode of dexter
-            >>> print(episode.id)
-            308834
-
-            >>> print(episode.EpisodeName)
+            >>> ep = db.get_episode("en", episodeid=308834)  # id is the default method
+            >>> print(ep.EpisodeName)
             Crocodile
+
+        Load an episode using dvd and default sort order
+
+            >>> ep = db.get_episode("en", "dvd", seasonnumber=2, episodenumber=5, seriesid=79349)
+            >>> print(ep.EpisodeName)
+            The Dark Defender
+
+            >>> ep = db.get_episode("en", "default", seasonnumber=2, episodenumber=6, seriesid=79349)
+            >>> print(ep.EpisodeName)
+            Dex, Lies, and Videotape
+
+        Load an episode using the absolute number
+
+            >>> ep = db.get_episode("en", "absolute", absolutenumber=19, seriesid=79349)
+            >>> print(ep.EpisodeName)
+            That Night, A Forest Grew
+
+        The backend server sometimes does not reply with a proper error code, even though no episode could
+        be found. For that reason it is required to check for both :exc:`pytvdbapi.error.TVDBValueError` and
+        :exc:`pytvdbapi.error.BadData` to detect an issue downloading the episode.
+
+            >>> from pytvdbapi.error import BadData, TVDBNotFoundError
+            >>> try:
+            >>>    ep = db.get_episode("en", episodeid=308834)
+            >>> except error.TVDBNotFoundError:
+            >>>    # this is the standard 404 error code returned rom the server
+            >>>    pass
+            >>> except BadData:
+            >>>     # This is when the server returns a 200 code but with a HTML page saying 404 Nothing found
+            >>>     pass
 
         .. Note:: When the :class:`Episode()` is loaded using :func:`get_episode()`
             the *season* attribute used to link the episode with a season will be None.
@@ -500,10 +514,7 @@ class TVDB(object):
         url = airdate.format(**context)
         logger.debug(u'Getting episode from {0}'.format(url))
 
-        try:
-            data = self.loader.load(url, cache)
-        except error.TVDBNotFoundError:
-            raise
+        data = self.loader.load(url, cache)
 
         data = generate_tree(data)
 
