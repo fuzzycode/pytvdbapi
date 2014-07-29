@@ -26,7 +26,7 @@ from io import StringIO
 
 import pytvdbapi
 from pytvdbapi import error
-from pytvdbapi.api import TVDB, Episode
+from pytvdbapi.api import TVDB, Episode, Show
 from pytvdbapi.xmlhelpers import generate_tree
 from pytvdbapi.tests import basetest
 from pytvdbapi._compat import make_unicode
@@ -145,7 +145,7 @@ class TestSeason(unittest.TestCase):
         season1 = self.friends[1]
 
         for ep in season1:
-            self.assertEqual(type(ep), pytvdbapi.api.Episode)
+            self.assertEqual(type(ep), Episode)
 
     def test_season_sort_order(self):
         """The Episodes should be sorted on the episode number when iterating
@@ -274,7 +274,7 @@ class TestShow(unittest.TestCase):
         count = 0
         for s in self.friends:
             count += 1
-            self.assertEqual(type(s), pytvdbapi.season.Season)
+            self.assertEqual(type(s), pytvdbapi.api.Season)
 
         self.assertEqual(count, 11)
 
@@ -480,7 +480,7 @@ class TestEpisode(unittest.TestCase):
 
         for attr_name in dir(ep):
             attr = getattr(ep, attr_name)
-            if type(attr) not in (float, int, datetime.date, pytvdbapi.season.Season):
+            if type(attr) not in (float, int, datetime.date, pytvdbapi.api.Season):
                 if type(attr) in (list,):
                     for a in attr:
                         self.assertEqual(type(a), _type,
@@ -515,7 +515,7 @@ class TestSearch(unittest.TestCase):
         search = api.search("house", "en")
 
         for s in search:
-            self.assertEqual(type(s), pytvdbapi.api.Show)
+            self.assertEqual(type(s), Show)
 
     def test_search(self):
         """It should be possible to search for shows"""
