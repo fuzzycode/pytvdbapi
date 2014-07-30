@@ -31,14 +31,13 @@ import httplib2
 from pytvdbapi import error
 
 
-
 # Module logger object
 logger = logging.getLogger(__name__)
 
 
 class Loader(object):
     """
-    A object for loading data from a provided url.
+    An object for loading data from a provided url.
     Uses httplib2 to do the heavy lifting.
     """
 

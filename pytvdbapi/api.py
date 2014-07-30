@@ -61,6 +61,7 @@ import tempfile
 import os
 import datetime
 
+# pylint: disable=E0611, F0401
 try:
     from urllib import quote
 except ImportError:
@@ -244,8 +245,8 @@ class Show(Sequence):
             if season_nr not in self.seasons:
                 self.seasons[season_nr] = Season(season_nr, self)
 
-            episode = Episode(episode_data, self.seasons[season_nr], self.config)
-            self.seasons[season_nr].append(episode)
+            episode_instance = Episode(episode_data, self.seasons[season_nr], self.config)
+            self.seasons[season_nr].append(episode_instance)
 
         # If requested, load the extra actors data
         if self.config.get('actors', False):
@@ -762,45 +763,48 @@ class TVDB(object):
         Retrieves a single episode. Depending on what method is specified different criteria can be used to
         retrieve the episode.
 
-        Examples::
+        Examples:
 
         Load an episode using the episode id
 
-            >>> from pytvdbapi import api
-            >>> db = api.TVDB("B43FF87DE395DF56")
-            >>> ep = db.get_episode("en", episodeid=308834)  # id is the default method
-            >>> print(ep.EpisodeName)
-            Crocodile
+        >>> from pytvdbapi import api
+        >>> db = api.TVDB("B43FF87DE395DF56")
+        >>> ep = db.get_episode("en", episodeid=308834)  # id is the default method
+        >>> print(ep.EpisodeName)
+        Crocodile
 
         Load an episode using dvd and default sort order
 
-            >>> ep = db.get_episode("en", "dvd", seasonnumber=2, episodenumber=5, seriesid=79349)
-            >>> print(ep.EpisodeName)
-            The Dark Defender
+        >>> ep = db.get_episode("en", "dvd", seasonnumber=2, episodenumber=5, seriesid=79349)
+        >>> print(ep.EpisodeName)
+        The Dark Defender
 
-            >>> ep = db.get_episode("en", "default", seasonnumber=2, episodenumber=6, seriesid=79349)
-            >>> print(ep.EpisodeName)
-            Dex, Lies, and Videotape
+        >>> ep = db.get_episode("en", "default", seasonnumber=2, episodenumber=6, seriesid=79349)
+        >>> print(ep.EpisodeName)
+        Dex, Lies, and Videotape
 
         Load an episode using the absolute number
 
-            >>> ep = db.get_episode("en", "absolute", absolutenumber=19, seriesid=79349)
-            >>> print(ep.EpisodeName)
-            That Night, A Forest Grew
+        >>> ep = db.get_episode("en", "absolute", absolutenumber=19, seriesid=79349)
+        >>> print(ep.EpisodeName)
+        That Night, A Forest Grew
 
-        The backend server sometimes does not reply with a proper error code, even though no episode could
-        be found. For that reason it is required to check for both :exc:`pytvdbapi.error.TVDBValueError` and
-        :exc:`pytvdbapi.error.BadData` to detect an issue downloading the episode.
+        Under some circumstances the backend server fails to return a proper **404** file not found error
+        response when the requested episode can not be found, but instead returns a valid HTML file with
+        the content *404 file not found*. For this reason it is required to check for both
+        :exc:`pytvdbapi.error.TVDBValueError` and :exc:`pytvdbapi.error.BadData` to detect an issue
+        downloading the episode.
 
-            >>> from pytvdbapi.error import BadData, TVDBNotFoundError
-            ... try:
-            ...    ep = db.get_episode("en", episodeid=308834)
-            ... except TVDBNotFoundError:
-            ...    # this is the standard 404 error code returned from the server
-            ...    pass
-            ... except BadData:
-            ...     # This is when the server returns a 200 code but with a HTML page saying 404 Nothing found
-            ...     pass
+        >>> from pytvdbapi.error import BadData
+        >>> from pytvdbapi.error import TVDBNotFoundError
+        >>> try:
+        ...    ep = db.get_episode("en", episodeid=308834)
+        ... except TVDBNotFoundError:
+        ...    # this is the standard 404 error code returned from the server
+        ...    pass
+        ... except BadData:
+        ...     # This is when the server returns a 200 code but with a HTML page saying 404 Nothing found
+        ...     pass
 
         .. Note:: When the :class:`Episode()` is loaded using :func:`get_episode()`
             the *season* attribute used to link the episode with a season will be None.
@@ -963,18 +967,18 @@ class Season(Sequence):
     def __repr__(self):
         return self.__str__()
 
-    def append(self, episode):
+    def append(self, episode_instance):
         """
-        :param episode: The episode to append
-        :type episode: :class:`Episode`
+        :param episode_instance: The episode_instance to append
+        :type episode_instance: :class:`Episode`
 
-        Adds a new :class:`Episode` to the season. If an episode with the same
+        Adds a new :class:`Episode` to the season. If an episode_instance with the same
         EpisodeNumber already exists, it will be overwritten.
         """
-        assert type(episode) in (Episode,)
-        logger.debug(u"{0} adding episode {1}".format(self, episode))
+        assert type(episode_instance) in (Episode,)
+        logger.debug(u"{0} adding episode_instance {1}".format(self, episode_instance))
 
-        self.episodes[int(episode.EpisodeNumber)] = episode
+        self.episodes[int(episode_instance.EpisodeNumber)] = episode_instance
 
     def find(self, key):
         """
