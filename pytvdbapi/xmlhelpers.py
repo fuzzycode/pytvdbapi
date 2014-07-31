@@ -59,7 +59,7 @@ def has_element(etree, element):
 
 def generate_tree(xml_data):
     """
-    :param xml_data: The string xml data to generate the tree from
+    :param xml_data: A file like object containing the xml data
 
     :return: A new ElementTree
     :raise: :class:`pytvdbapi.error.BadData`
