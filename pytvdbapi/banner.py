@@ -112,7 +112,7 @@ class Banner(object):
         'banner_url', 'id']
 
         >>> print(fanart[0].BannerType2)
-        1920x1080
+        1280x720
 
 
         >>> posters = [b for b in show.banner_objects if b.BannerType == "poster"]
