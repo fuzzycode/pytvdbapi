@@ -3,13 +3,14 @@ CHANGELOG
 
 2014-06-22, 0.5
 -----------------
-  * Added *find* and *filter* functions to the Show and Season classes to allow searching for specific
+  * Added find and filter functions to the Show and Season classes to allow searching for specific
   episodes.
   * Added get_episode_by_air_date function to search for an episode by air date for a given series
   * Update the get_episode function to allow downloading using *default*, *dvd* or *absolute* sort order.
   * Update the get_series function to allow getting a series using imdb id and zap2it id.
   * Speed up load times when downloading data
   * Use zip format for retrieving series data.
+  * Bug fixes and code clean-up
 
 2013-11-22, 0.4.0
 -----------------

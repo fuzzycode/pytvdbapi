@@ -45,6 +45,9 @@ class BadData(PytvdbapiError):
     """
     Raised if there are issues parsing the XML data provided by
     `thetvdb.com <http://thetvdb.com>`_
+
+    Usualy a **BadData** exception is the result of a malfunctioning backend server. The problem is that the
+    server returns a *200 - OK* status code but fails to provide valid data in the response.
     """
     pass
 

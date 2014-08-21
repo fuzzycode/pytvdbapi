@@ -130,6 +130,37 @@ Access the containing season::
     >>> episode.season
     <Season 002>
 
+Searching and Filtering
+-----------------------
+It is possible to search and filter a show or season instance to find all episodes matching a certain
+criteria.
+
+Searching for all shows written by *Tim Schlattmann*::
+
+    >>> episodes = show.filter(key=lambda ep: ep.Writer == 'Tim Schlattmann')
+    >>> len(episodes)
+    7
+
+    >>> for ep in episodes:
+    ...     print(ep.EpisodeName)
+    ...
+    The Dark Defender
+    Turning Biminese
+    Go Your Own Way
+    Dirty Harry
+    First Blood
+    Once Upon a Time...
+    Scar Tissue
+
+Find the episode with production code 302::
+
+    >>> episode = show.find(key=lambda ep: ep.ProductionCode==302)
+    >>> print(episode.EpisodeName)
+    Finding Freebo
+
+    >>> print(episode.ProductionCode)
+    302
+
 Case insensitive attributes
 ---------------------------
 It is possible to tell the API to ignore casing when accessing the objects dynamic attributes. If you pass

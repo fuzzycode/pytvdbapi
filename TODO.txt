@@ -4,5 +4,4 @@ TODO
 * Add support for providing custom loaders
 * Implement offline loader to be able to test more classes in offline mode
 * Improve stability and reliability of the test
-* Add support for getting series, using imdb id and zap2it id
-* Add support for getting an episode by air date
+

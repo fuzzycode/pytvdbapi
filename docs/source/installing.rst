@@ -34,6 +34,7 @@ The following python versions are supported by *pytvdbapi*.
   * 2.6
   * 2.7
   * 3.3
+  * 3.4
 
 It may work on other Python versions but they are not actively supported and tested against.
 

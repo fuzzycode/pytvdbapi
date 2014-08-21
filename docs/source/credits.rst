@@ -8,3 +8,4 @@ Contributors
 - Alexander van Ratingen
 - Tobias Röttger
 - BenoitZugmeyer
+- Adam Whiteside
