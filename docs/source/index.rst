@@ -16,20 +16,12 @@ Basics
 
     info_index
 
-
 Modules
 -------
 .. toctree::
     :maxdepth: 3
 
     api_index
-
-Development
------------
-.. toctree::
-    :maxdepth: 3
-
-    development
 
 Extras
 ------

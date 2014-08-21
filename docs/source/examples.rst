@@ -21,7 +21,7 @@ You can easily loop all episodes in a show::
 
     >>> for season in show:
     ...    for episode in season:
-    ...        print(u"{0} - {1}".format(episode.EpisodeName, episode.FirstAired))  # doctest: +ELLIPSIS
+    ...        print("{0} - {1}".format(episode.EpisodeName, episode.FirstAired))  # doctest: +ELLIPSIS
     ...
     Early Cuts: Alex Timmons (Chapter 1) - 2009-10-25
     ...
