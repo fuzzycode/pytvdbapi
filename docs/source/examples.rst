@@ -214,8 +214,6 @@ Using keyword arguments::
     >>> show = result[0]
     >>> show.update()
 
-    >>> len(show.actor_objects)
-    26
     >>> print(show.actor_objects[0])
     <Actor - Michael C. Hall>
 
@@ -232,8 +230,8 @@ Using instance functions::
     0
 
     >>> show.load_actors()  # Load actors
-    >>> len(show.actor_objects)
-    26
+    >>> assert len(show.actor_objects) > 0
+
 
     >>> print(show.actor_objects[0])
     <Actor - Michael C. Hall>

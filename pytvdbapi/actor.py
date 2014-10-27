@@ -57,6 +57,7 @@ class Actor(object):
         Jimmy Smits - Miguel Prado
         Jaime Murray - Lila Tournay
         John Lithgow - Arthur Mitchell
+        ...
     """
     data = {}
 
