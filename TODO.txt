@@ -4,4 +4,3 @@ TODO
 * Add support for providing custom loaders
 * Implement offline loader to be able to test more classes in offline mode
 * Improve stability and reliability of the test
-
