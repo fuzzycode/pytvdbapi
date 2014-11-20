@@ -1,6 +1,6 @@
 pytvdbapi - A python API for thetvdb.com
 ========================================
-|statusimage| |coverageimage| |pypiimage| |rtdocsimage|
+|statusimage| |coverageimage| |pypiimage| |rtdocsimage| |licenseimage|
 
 **pytvdbapi** is a python API for thetvdb.com_ online database for tv-shows.
 The API is designed to be as easy and intuitive as possible to use.
@@ -33,7 +33,7 @@ commands.
 
 
 ArchLinux
-----------
+---------
 Tobias Röttger is kindly maintaining an ArchLinux package of **pytvdbapi** that
 can be found `here <https://aur.archlinux.org/packages.php?ID=58697>`_.
 
@@ -114,15 +114,17 @@ LICENSE.txt file for more details.
 
 
 
-.. |statusimage| image:: https://travis-ci.org/fuzzycode/pytvdbapi.png?branch=master
+.. |statusimage| image:: http://img.shields.io/travis/fuzzycode/pytvdbapi.svg
     :target: https://travis-ci.org/fuzzycode/pytvdbapi
-.. |coverageimage|  image:: https://coveralls.io/repos/fuzzycode/pytvdbapi/badge.png
+.. |coverageimage|  image:: http://img.shields.io/coveralls/pytvdbapi/pytvdbapi.svg
     :target: https://coveralls.io/r/fuzzycode/pytvdbapi
-.. |pypiimage| image:: https://pypip.in/v/pytvdbapi/badge.png
+.. |pypiimage| image:: http://img.shields.io/pypi/v/pytvdbapi.svg
     :target: https://crate.io/packages/pytvdbapi/
 .. |rtdocsimage| image:: https://readthedocs.org/projects/pytvdbapi/badge/?version=latest
     :target: https://readthedocs.org/projects/pytvdbapi/?badge=latest
     :alt: Documentation Status
+.. |licenseimage| image:: http://img.shields.io/pypi/l/pytvdbapi.svg
+    :target: http://opensource.org/licenses/LGPL-3.0
 
 .. _thetvdb.com: http://thetvdb.com
 .. _PyPI: http://pypi.python.org/pypi
