@@ -114,16 +114,16 @@ LICENSE.txt file for more details.
 
 
 
-.. |statusimage| image:: http://img.shields.io/travis/fuzzycode/pytvdbapi.svg
+.. |statusimage| image:: http://img.shields.io/travis/fuzzycode/pytvdbapi.svg?style=flat
     :target: https://travis-ci.org/fuzzycode/pytvdbapi
-.. |coverageimage|  image:: http://img.shields.io/coveralls/pytvdbapi/pytvdbapi.svg
+.. |coverageimage|  image:: http://img.shields.io/coveralls/fuzzycode/pytvdbapi.svg?style=flat
     :target: https://coveralls.io/r/fuzzycode/pytvdbapi
-.. |pypiimage| image:: http://img.shields.io/pypi/v/pytvdbapi.svg
+.. |pypiimage| image:: http://img.shields.io/pypi/v/pytvdbapi.svg?style=flat
     :target: https://crate.io/packages/pytvdbapi/
 .. |rtdocsimage| image:: https://readthedocs.org/projects/pytvdbapi/badge/?version=latest
     :target: https://readthedocs.org/projects/pytvdbapi/?badge=latest
     :alt: Documentation Status
-.. |licenseimage| image:: http://img.shields.io/pypi/l/pytvdbapi.svg
+.. |licenseimage| image:: http://img.shields.io/pypi/l/pytvdbapi.svg?style=flat
     :target: http://opensource.org/licenses/LGPL-3.0
 
 .. _thetvdb.com: http://thetvdb.com
