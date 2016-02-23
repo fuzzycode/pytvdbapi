@@ -41,8 +41,9 @@ class Loader(object):
     Uses httplib2 to do the heavy lifting.
     """
 
-    def __init__(self, cache_path):
-        self.http = httplib2.Http(cache=os.path.abspath(cache_path))
+    def __init__(self, cache_path, timeout=None):
+        self.http = httplib2.Http(cache=os.path.abspath(cache_path),
+                                  timeout=timeout)
 
     def load(self, url, cache=True):
         """

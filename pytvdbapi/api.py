@@ -593,6 +593,10 @@ class TVDB(object):
       case insensitive manner. If set to False, the default, all
       attributes will be case sensitive and retain the same casing
       as provided by `thetvdb.com <http://thetvdb.com>`_.
+
+    * **timeout** (default=None) When set to a number, will cause the http
+    request to timeout after that number of seconds.
+
     """
 
     @unicode_arguments
@@ -612,7 +616,7 @@ class TVDB(object):
         self.config['ignore_case'] = kwargs.get('ignore_case', False)
 
         # Create the loader object to use
-        self.loader = Loader(self.config['cache_dir'])
+        self.loader = Loader(self.config['cache_dir'], timeout=kwargs.get('timeout', None))
 
         # Create the list of available mirrors
         tree = generate_tree(self.loader.load(mirrors.format(**self.config)))
