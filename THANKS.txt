@@ -16,3 +16,5 @@ The Following people have in some way contributed to pytvdbapi
   - Alexander van Ratingen
   - BenoitZugmeyer
   - Adam Whiteside
+  - Jack Pugmire
+
